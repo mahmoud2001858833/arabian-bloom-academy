@@ -1,115 +1,125 @@
-import { BookOpen, Video, Award, Clock, Users, Headphones, CheckCircle2 } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import { Users, Award, Clock, Headphones, BookOpen, GraduationCap, Sparkles, Crown, Star } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 
 const features = [
   {
-    icon: Video,
-    title: 'فيديوهات عالية الجودة',
-    description: 'محتوى مرئي احترافي مع شرح واضح ومفصل لكل درس',
-    color: 'from-purple-500 to-purple-600',
+    icon: BookOpen,
+    title: 'محتوى متكامل',
+    description: 'مناهج تعليمية شاملة تغطي جميع جوانب اللغة العربية من القواعد إلى الأدب',
   },
   {
-    icon: BookOpen,
-    title: 'اختبارات تفاعلية',
-    description: 'اختبر معلوماتك بعد كل درس مع تقييم فوري لأدائك',
-    color: 'from-purple-600 to-purple-700',
+    icon: GraduationCap,
+    title: 'معلمون متخصصون',
+    description: 'فريق من أفضل معلمي اللغة العربية بخبرة واسعة في التعليم',
+  },
+  {
+    icon: Clock,
+    title: 'تعلم بمرونة',
+    description: 'تعلم في أي وقت ومن أي مكان بما يناسب جدولك الشخصي',
   },
   {
     icon: Award,
     title: 'شهادات معتمدة',
-    description: 'احصل على شهادة إتمام بعد إكمال كل كورس',
-    color: 'from-gold to-gold-dark',
+    description: 'احصل على شهادات إتمام معترف بها لتوثيق تقدمك',
   },
   {
-    icon: Clock,
-    title: 'تعلم بوقتك',
-    description: 'ادرس في أي وقت يناسبك بدون قيود زمنية',
-    color: 'from-purple-500 to-purple-600',
+    icon: Headphones,
+    title: 'دعم مستمر',
+    description: 'فريق دعم متواجد للإجابة على استفساراتك ومساعدتك',
   },
   {
     icon: Users,
     title: 'مجتمع تعليمي',
-    description: 'انضم لمجتمع من المتعلمين وشارك تجربتك معهم',
-    color: 'from-purple-600 to-purple-700',
-  },
-  {
-    icon: Headphones,
-    title: 'دعم متواصل',
-    description: 'فريق دعم جاهز للإجابة على جميع استفساراتك',
-    color: 'from-gold to-gold-dark',
+    description: 'انضم لمجتمع من المتعلمين وشارك تجربتك مع الآخرين',
   },
 ];
 
 const WhyUs = () => {
   return (
-    <section className="py-24 relative overflow-hidden">
-      {/* Background */}
-      <div className="absolute inset-0 bg-gradient-to-b from-background via-purple-50/50 to-background" />
-      
+    <section className="py-28 bg-secondary/30 relative overflow-hidden">
+      {/* Background Elements */}
+      <div className="absolute inset-0">
+        <div className="absolute top-1/4 left-1/4 w-[500px] h-[500px] bg-accent/5 rounded-full blur-[150px]" />
+        <div className="absolute bottom-1/4 right-1/4 w-[400px] h-[400px] bg-primary/5 rounded-full blur-[120px]" />
+      </div>
+
       {/* Floating Elements */}
-      <div className="absolute top-20 right-20 w-32 h-32 bg-primary/10 rounded-full blur-2xl animate-pulse" />
-      <div className="absolute bottom-20 left-20 w-40 h-40 bg-gold/10 rounded-full blur-2xl animate-pulse" style={{ animationDelay: '1s' }} />
+      <div className="absolute top-20 right-16 w-16 h-16 rounded-full bg-accent/10 border border-accent/20 flex items-center justify-center animate-float">
+        <Crown className="h-7 w-7 text-accent" />
+      </div>
+      <div className="absolute bottom-32 left-20 w-14 h-14 rounded-full bg-primary/10 border border-primary/20 flex items-center justify-center animate-float" style={{ animationDelay: '2s' }}>
+        <Star className="h-6 w-6 text-primary" />
+      </div>
 
       <div className="container mx-auto px-4 relative z-10">
         {/* Section Header */}
-        <div className="text-center max-w-3xl mx-auto mb-16">
-          <h2 className="text-4xl md:text-5xl font-black mb-6">
-            لماذا <span className="text-gradient">تختارنا؟</span>
+        <div className="text-center max-w-3xl mx-auto mb-20">
+          <div className="inline-flex items-center gap-2 bg-accent/10 backdrop-blur-sm px-6 py-3 rounded-full text-sm font-bold mb-8 border border-accent/30 text-accent">
+            <Sparkles className="h-5 w-5" />
+            لماذا تختارنا
+          </div>
+          <h2 className="text-4xl md:text-5xl lg:text-6xl font-black mb-8">
+            ما يميزنا عن{' '}
+            <span className="text-accent" style={{ textShadow: '0 0 30px rgba(212, 175, 55, 0.3)' }}>
+              الآخرين
+            </span>
           </h2>
-          <p className="text-xl text-muted-foreground">
-            نقدم لك تجربة تعليمية متكاملة ومميزة تساعدك على إتقان اللغة العربية
+          <p className="text-xl text-muted-foreground leading-relaxed">
+            نقدم تجربة تعليمية فريدة تجمع بين الجودة والاحترافية والمرونة
           </p>
         </div>
 
         {/* Features Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {features.map((feature, index) => (
-            <div
-              key={index}
-              className="group relative animate-fade-in"
-              style={{ animationDelay: `${index * 0.1}s` }}
-            >
-              {/* Hover Glow */}
-              <div className="absolute inset-0 bg-gradient-to-br from-primary/20 to-transparent rounded-3xl opacity-0 group-hover:opacity-100 blur-xl transition-opacity duration-500" />
-              
-              <div className="relative p-8 rounded-3xl bg-white border border-border/50 hover:border-primary/30 shadow-sm hover:shadow-purple transition-all duration-300 hover:-translate-y-2">
-                {/* Icon */}
-                <div className={`w-16 h-16 rounded-2xl bg-gradient-to-br ${feature.color} flex items-center justify-center mb-6 group-hover:scale-110 transition-transform shadow-lg`}>
-                  <feature.icon className="h-8 w-8 text-white" />
-                </div>
-                
-                {/* Content */}
-                <h3 className="text-xl font-bold mb-3 group-hover:text-primary transition-colors">
-                  {feature.title}
-                </h3>
-                <p className="text-muted-foreground leading-relaxed">
-                  {feature.description}
-                </p>
-                
-                {/* Decorative Check */}
-                <div className="absolute top-6 left-6 opacity-0 group-hover:opacity-100 transition-opacity">
-                  <CheckCircle2 className="h-6 w-6 text-primary" />
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-20">
+          {features.map((feature, index) => {
+            const IconComponent = feature.icon;
+            return (
+              <div 
+                key={index}
+                className="group animate-fade-in"
+                style={{ animationDelay: `${index * 0.1}s` }}
+              >
+                <div className="relative bg-card/70 backdrop-blur-md rounded-3xl p-8 border border-border/50 hover:border-accent/40 transition-all duration-300 hover:-translate-y-2 h-full">
+                  {/* Glow on Hover */}
+                  <div className="absolute inset-0 bg-gradient-to-br from-accent/10 to-transparent rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                  
+                  <div className="relative">
+                    <div className="w-14 h-14 rounded-2xl bg-accent/10 border border-accent/30 flex items-center justify-center mb-6 group-hover:scale-110 group-hover:bg-accent/20 transition-all">
+                      <IconComponent className="h-7 w-7 text-accent" />
+                    </div>
+                    <h3 className="text-xl font-bold mb-3 group-hover:text-accent transition-colors">{feature.title}</h3>
+                    <p className="text-muted-foreground leading-relaxed">{feature.description}</p>
+                  </div>
                 </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
 
-        {/* Bottom CTA */}
-        <div className="mt-20 text-center">
-          <div className="inline-block p-8 rounded-3xl bg-gradient-primary text-white shadow-purple">
-            <h3 className="text-2xl md:text-3xl font-bold mb-4">
-              جاهز لبدء رحلة التعلم؟
-            </h3>
-            <p className="text-white/80 mb-6 max-w-xl mx-auto">
-              انضم لآلاف الطلاب الذين يتعلمون اللغة العربية معنا
-            </p>
-            <a 
-              href="/auth?tab=signup"
-              className="inline-flex items-center gap-2 bg-white text-primary px-8 py-4 rounded-xl font-bold hover:bg-white/90 transition-all hover:scale-105 shadow-lg"
+        {/* CTA Section */}
+        <div className="text-center">
+          <div className="inline-flex flex-col sm:flex-row items-center gap-4">
+            <Button 
+              size="lg" 
+              className="rounded-2xl px-12 py-7 text-lg"
+              asChild
             >
-              ابدأ الآن مجاناً
-              <Award className="h-5 w-5" />
-            </a>
+              <Link to="/auth?tab=signup">
+                <Sparkles className="ml-2 h-5 w-5" />
+                ابدأ رحلة التعلم الآن
+              </Link>
+            </Button>
+            <Button 
+              size="lg" 
+              variant="outline"
+              className="rounded-2xl px-12 py-7 text-lg"
+              asChild
+            >
+              <Link to="/courses">
+                تصفح الكورسات
+              </Link>
+            </Button>
           </div>
         </div>
       </div>
