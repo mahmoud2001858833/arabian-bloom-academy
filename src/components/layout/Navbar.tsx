@@ -95,10 +95,10 @@ const Navbar = () => {
               </DropdownMenu>
             ) : (
               <>
-                <Button variant="ghost" className="font-semibold text-lg" asChild>
+                <Button variant="ghost" className="font-semibold text-lg hover:text-accent" asChild>
                   <Link to="/auth">تسجيل الدخول</Link>
                 </Button>
-                <Button className="bg-gradient-primary hover:opacity-90 rounded-xl px-6 font-bold shadow-purple" asChild>
+                <Button className="rounded-xl px-6 font-bold" asChild>
                   <Link to="/auth?tab=signup">إنشاء حساب</Link>
                 </Button>
               </>
@@ -149,13 +149,13 @@ const Navbar = () => {
                   </button>
                 </>
               ) : (
-                <div className="flex flex-col gap-3 pt-4 border-t border-primary/10">
+                <div className="flex flex-col gap-3 pt-4 border-t border-accent/20">
                   <Button variant="outline" className="rounded-xl" asChild>
                     <Link to="/auth" onClick={() => setIsOpen(false)}>
                       تسجيل الدخول
                     </Link>
                   </Button>
-                  <Button className="bg-gradient-primary rounded-xl" asChild>
+                  <Button className="rounded-xl" asChild>
                     <Link to="/auth?tab=signup" onClick={() => setIsOpen(false)}>
                       إنشاء حساب
                     </Link>

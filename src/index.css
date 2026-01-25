@@ -269,6 +269,21 @@
     animation: float 4s ease-in-out infinite;
   }
   
+  .animate-float-icon {
+    animation: float-icon 5s ease-in-out infinite;
+  }
+  
+  @keyframes float-icon {
+    0%, 100% {
+      transform: translate(-50%, -50%) translateY(0) scale(1);
+      opacity: 0.9;
+    }
+    50% {
+      transform: translate(-50%, -50%) translateY(-12px) scale(1.1);
+      opacity: 1;
+    }
+  }
+  
   .animate-shimmer {
     background: linear-gradient(90deg, transparent, hsl(270 70% 50% / 0.1), transparent);
     background-size: 200% 100%;
