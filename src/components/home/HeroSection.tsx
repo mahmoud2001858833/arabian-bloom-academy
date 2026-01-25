@@ -1,79 +1,46 @@
 import { Link } from 'react-router-dom';
-import { Play, BookOpen, Sparkles, Star, Crown, Gem, Award } from 'lucide-react';
+import { Play, BookOpen } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import logo from '@/assets/logo.png';
+import heroLogo from '@/assets/hero-logo.png';
 
-// Decorative Icons around Logo
-const DecorativeElements = () => {
-  const elements = [
-    { Icon: Star, angle: 0, distance: 160, size: 24, delay: '0s' },
-    { Icon: Crown, angle: 45, distance: 180, size: 28, delay: '0.3s' },
-    { Icon: Gem, angle: 90, distance: 155, size: 22, delay: '0.6s' },
-    { Icon: Sparkles, angle: 135, distance: 175, size: 26, delay: '0.9s' },
-    { Icon: Award, angle: 180, distance: 165, size: 24, delay: '1.2s' },
-    { Icon: Star, angle: 225, distance: 185, size: 20, delay: '1.5s' },
-    { Icon: Gem, angle: 270, distance: 160, size: 26, delay: '1.8s' },
-    { Icon: Crown, angle: 315, distance: 170, size: 22, delay: '2.1s' },
+// Floating Arabic Letters around the logo - ض is the leader
+const FloatingArabicLetters = () => {
+  const letters = [
+    { letter: 'ض', angle: 270, distance: 180, size: 'text-5xl md:text-6xl', isLeader: true },
+    { letter: 'ع', angle: 315, distance: 165, size: 'text-3xl md:text-4xl', isLeader: false },
+    { letter: 'ر', angle: 0, distance: 175, size: 'text-3xl md:text-4xl', isLeader: false },
+    { letter: 'ب', angle: 45, distance: 160, size: 'text-3xl md:text-4xl', isLeader: false },
+    { letter: 'ي', angle: 90, distance: 170, size: 'text-3xl md:text-4xl', isLeader: false },
+    { letter: 'ة', angle: 135, distance: 165, size: 'text-3xl md:text-4xl', isLeader: false },
+    { letter: 'ل', angle: 180, distance: 175, size: 'text-3xl md:text-4xl', isLeader: false },
+    { letter: 'ن', angle: 225, distance: 160, size: 'text-3xl md:text-4xl', isLeader: false },
   ];
 
   return (
     <>
-      {elements.map((item, index) => {
+      {letters.map((item, index) => {
         const x = Math.cos((item.angle * Math.PI) / 180) * item.distance;
         const y = Math.sin((item.angle * Math.PI) / 180) * item.distance;
-        const IconComponent = item.Icon;
-        
-        return (
-          <div
-            key={index}
-            className="absolute animate-float-icon"
-            style={{
-              left: `calc(50% + ${x}px)`,
-              top: `calc(50% + ${y}px)`,
-              transform: 'translate(-50%, -50%)',
-              animationDelay: item.delay,
-            }}
-          >
-            <div className="relative">
-              <div className="absolute inset-0 bg-gold/30 blur-lg rounded-full" />
-              <IconComponent 
-                size={item.size} 
-                className="relative text-gold drop-shadow-lg"
-                style={{ filter: 'drop-shadow(0 0 8px rgba(212, 175, 55, 0.6))' }}
-              />
-            </div>
-          </div>
-        );
-      })}
-    </>
-  );
-};
-
-// Floating Arabic Letters
-const FloatingLetters = () => {
-  const letters = ['ع', 'ر', 'ب', 'ي', 'ة'];
-  
-  return (
-    <>
-      {letters.map((letter, index) => {
-        const angle = (index * 72) + 18; // Distribute evenly
-        const distance = 220 + (index % 2) * 20;
-        const x = Math.cos((angle * Math.PI) / 180) * distance;
-        const y = Math.sin((angle * Math.PI) / 180) * distance;
         
         return (
           <span
             key={index}
-            className="absolute text-4xl md:text-5xl font-black text-gold/30 select-none animate-float-letter"
+            className={`absolute ${item.size} font-black select-none animate-float-letter ${
+              item.isLeader 
+                ? 'text-primary drop-shadow-lg' 
+                : 'text-primary/40'
+            }`}
             style={{
               left: `calc(50% + ${x}px)`,
               top: `calc(50% + ${y}px)`,
               transform: 'translate(-50%, -50%)',
-              animationDelay: `${index * 0.5}s`,
-              textShadow: '0 0 20px rgba(212, 175, 55, 0.3)',
+              animationDelay: `${index * 0.3}s`,
+              textShadow: item.isLeader 
+                ? '0 0 30px hsl(var(--primary) / 0.5)' 
+                : '0 0 15px hsl(var(--primary) / 0.2)',
             }}
           >
-            {letter}
+            {item.letter}
           </span>
         );
       })}
@@ -83,39 +50,40 @@ const FloatingLetters = () => {
 
 const HeroSection = () => {
   return (
-    <section className="relative min-h-screen flex items-center overflow-hidden bg-gradient-hero">
-      {/* Animated Background */}
+    <section className="relative min-h-screen flex items-center overflow-hidden bg-gradient-to-b from-white via-purple-50/50 to-white">
+      {/* Animated Background Elements */}
       <div className="absolute inset-0">
-        <div className="absolute inset-0 bg-gradient-to-br from-purple-950 via-purple-900 to-purple-950" />
+        {/* Soft Purple Gradient Orbs */}
+        <div className="absolute top-1/4 right-1/4 w-[600px] h-[600px] bg-primary/5 rounded-full blur-[150px] animate-pulse" />
+        <div className="absolute bottom-1/4 left-1/4 w-[500px] h-[500px] bg-gold/5 rounded-full blur-[120px] animate-pulse" style={{ animationDelay: '1s' }} />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[700px] bg-purple-200/20 rounded-full blur-[180px]" />
         
-        {/* Gradient Orbs */}
-        <div className="absolute top-1/4 right-1/3 w-[500px] h-[500px] bg-purple-600/20 rounded-full blur-[120px] animate-pulse" />
-        <div className="absolute bottom-1/3 left-1/4 w-[400px] h-[400px] bg-gold/10 rounded-full blur-[100px] animate-pulse" style={{ animationDelay: '1s' }} />
-        
-        {/* Star Particles */}
-        {[...Array(30)].map((_, i) => (
+        {/* Floating Particles */}
+        {[...Array(25)].map((_, i) => (
           <div
             key={i}
             className="absolute rounded-full animate-pulse"
             style={{
-              width: `${2 + Math.random() * 3}px`,
-              height: `${2 + Math.random() * 3}px`,
-              background: i % 3 === 0 ? 'rgba(212, 175, 55, 0.6)' : 'rgba(255, 255, 255, 0.4)',
+              width: `${3 + Math.random() * 4}px`,
+              height: `${3 + Math.random() * 4}px`,
+              background: i % 2 === 0 
+                ? 'hsl(270 70% 50% / 0.3)' 
+                : 'hsl(42 95% 55% / 0.4)',
               top: `${Math.random() * 100}%`,
               left: `${Math.random() * 100}%`,
               animationDelay: `${Math.random() * 3}s`,
-              animationDuration: `${2 + Math.random() * 2}s`,
+              animationDuration: `${2 + Math.random() * 3}s`,
             }}
           />
         ))}
       </div>
 
-      {/* Subtle Pattern */}
+      {/* Subtle Grid Pattern */}
       <div 
-        className="absolute inset-0 opacity-[0.02]"
+        className="absolute inset-0 opacity-[0.03]"
         style={{
-          backgroundImage: `radial-gradient(circle at 1px 1px, white 1px, transparent 1px)`,
-          backgroundSize: '32px 32px',
+          backgroundImage: `radial-gradient(circle at 1px 1px, hsl(var(--primary)) 1px, transparent 1px)`,
+          backgroundSize: '40px 40px',
         }}
       />
 
@@ -123,42 +91,39 @@ const HeroSection = () => {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center min-h-[85vh]">
           
           {/* Right Side - Logo Section */}
-          <div className="order-1 lg:order-2 flex justify-center">
-            <div className="relative w-[380px] h-[380px] md:w-[480px] md:h-[480px]">
+          <div className="order-1 lg:order-2 flex justify-center animate-scale-in" style={{ animationDelay: '0.2s' }}>
+            <div className="relative w-[400px] h-[400px] md:w-[500px] md:h-[500px]">
               
-              {/* Outer Decorative Ring */}
-              <div className="absolute inset-0 rounded-full border-2 border-gold/20 animate-spin-slow" style={{ animationDuration: '60s' }} />
-              <div className="absolute inset-4 rounded-full border border-gold/10 animate-spin-slow" style={{ animationDuration: '45s', animationDirection: 'reverse' }} />
+              {/* Outer Decorative Rings */}
+              <div className="absolute inset-0 rounded-full border-2 border-primary/20 animate-spin-slow" style={{ animationDuration: '50s' }} />
+              <div className="absolute inset-6 rounded-full border border-primary/10 animate-spin-slow" style={{ animationDuration: '40s', animationDirection: 'reverse' }} />
+              <div className="absolute inset-12 rounded-full border border-gold/20 animate-spin-slow" style={{ animationDuration: '60s' }} />
               
               {/* Glow Background */}
-              <div className="absolute inset-12 rounded-full bg-gradient-to-br from-gold/20 via-purple-500/10 to-gold/20 blur-2xl" />
+              <div className="absolute inset-16 rounded-full bg-gradient-to-br from-primary/10 via-gold/5 to-primary/10 blur-2xl" />
               
               {/* Main Glass Circle */}
-              <div className="absolute inset-16 md:inset-20 rounded-full bg-white/5 backdrop-blur-xl border-2 border-gold/30 shadow-2xl">
-                <div className="absolute inset-0 rounded-full bg-gradient-to-br from-gold/10 to-transparent" />
+              <div className="absolute inset-20 md:inset-24 rounded-full bg-white/80 backdrop-blur-xl border-2 border-primary/20 shadow-2xl">
+                <div className="absolute inset-0 rounded-full bg-gradient-to-br from-primary/5 to-transparent" />
               </div>
               
-              {/* Inner Gold Ring */}
-              <div className="absolute inset-[4.5rem] md:inset-24 rounded-full border border-gold/40" />
+              {/* Inner Purple Ring */}
+              <div className="absolute inset-[5.5rem] md:inset-28 rounded-full border border-primary/30" />
               
               {/* Logo */}
               <div className="absolute inset-0 flex items-center justify-center z-20">
                 <div className="relative">
-                  <div className="absolute inset-0 bg-gold/20 blur-2xl rounded-full scale-150" />
+                  <div className="absolute inset-0 bg-gold/15 blur-3xl rounded-full scale-150" />
                   <img 
-                    src={logo} 
+                    src={heroLogo} 
                     alt="منصة العربية" 
-                    className="w-28 h-28 md:w-36 md:h-36 object-contain relative z-10 drop-shadow-2xl"
-                    style={{ filter: 'drop-shadow(0 0 25px rgba(212, 175, 55, 0.5))' }}
+                    className="w-32 h-32 md:w-44 md:h-44 object-contain relative z-10 drop-shadow-xl"
                   />
                 </div>
               </div>
               
-              {/* Decorative Icons */}
-              <DecorativeElements />
-              
               {/* Floating Arabic Letters */}
-              <FloatingLetters />
+              <FloatingArabicLetters />
             </div>
           </div>
 
@@ -166,45 +131,47 @@ const HeroSection = () => {
           <div className="order-2 lg:order-1 text-center lg:text-right space-y-8">
             
             {/* Premium Badge */}
-            <div className="inline-flex items-center gap-3 bg-gold/10 backdrop-blur-md text-gold px-6 py-3 rounded-full border border-gold/30 animate-fade-in">
-              <Crown className="h-5 w-5" />
+            <div 
+              className="inline-flex items-center gap-3 bg-primary/10 backdrop-blur-md text-primary px-6 py-3 rounded-full border border-primary/20 animate-fade-in"
+              style={{ animationDelay: '0.1s' }}
+            >
+              <span className="text-lg font-bold">ض</span>
               <span className="font-bold">المنصة الأولى لتعلم اللغة العربية</span>
-              <Sparkles className="h-4 w-4" />
+              <span className="text-gold">✦</span>
             </div>
 
             {/* Main Heading */}
-            <div className="space-y-4 animate-fade-in" style={{ animationDelay: '0.15s' }}>
-              <h1 className="text-5xl md:text-6xl lg:text-7xl font-black leading-tight text-white">
+            <div className="space-y-4 animate-fade-in" style={{ animationDelay: '0.2s' }}>
+              <h1 className="text-5xl md:text-6xl lg:text-7xl font-black leading-tight text-foreground">
                 أتقن{' '}
                 <span className="relative inline-block">
-                  <span className="text-gold" style={{ textShadow: '0 0 30px rgba(212, 175, 55, 0.5)' }}>
+                  <span className="text-primary" style={{ textShadow: '0 0 40px hsl(var(--primary) / 0.3)' }}>
                     العربية
                   </span>
                 </span>
               </h1>
-              <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-white/80">
-                بطريقة <span className="text-gold/80">احترافية</span> ومبتكرة
+              <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-muted-foreground">
+                بطريقة <span className="text-primary/80">احترافية</span> ومبتكرة
               </h2>
             </div>
 
             {/* Description */}
             <p 
-              className="text-lg md:text-xl text-white/60 max-w-xl leading-relaxed animate-fade-in"
-              style={{ animationDelay: '0.25s' }}
+              className="text-lg md:text-xl text-muted-foreground max-w-xl leading-relaxed animate-fade-in"
+              style={{ animationDelay: '0.3s' }}
             >
               انطلق في رحلة تعلم اللغة العربية مع أفضل المعلمين والمناهج التفاعلية.
               كورسات متنوعة تناسب جميع المستويات.
             </p>
 
-            {/* CTA Buttons - Gold Theme */}
+            {/* CTA Buttons - Purple Theme */}
             <div 
               className="flex flex-col sm:flex-row items-center lg:justify-end justify-center gap-4 animate-fade-in"
-              style={{ animationDelay: '0.35s' }}
+              style={{ animationDelay: '0.4s' }}
             >
               <Button 
                 size="lg" 
-                className="bg-gold hover:bg-gold-dark text-purple-950 text-lg px-10 py-7 rounded-2xl font-bold shadow-lg transition-all hover:scale-105 group" 
-                style={{ boxShadow: '0 10px 40px -10px rgba(212, 175, 55, 0.5)' }}
+                className="bg-primary hover:bg-primary/90 text-primary-foreground text-lg px-10 py-7 rounded-2xl font-bold shadow-lg shadow-primary/25 transition-all hover:scale-105 hover:shadow-xl hover:shadow-primary/30 group" 
                 asChild
               >
                 <Link to="/courses">
@@ -214,7 +181,8 @@ const HeroSection = () => {
               </Button>
               <Button 
                 size="lg" 
-                className="text-lg px-10 py-7 rounded-2xl font-bold border-2 border-gold/50 text-gold bg-gold/10 backdrop-blur-sm hover:bg-gold/20 hover:border-gold transition-all hover:scale-105 group" 
+                variant="outline"
+                className="text-lg px-10 py-7 rounded-2xl font-bold border-2 border-primary/40 text-primary bg-primary/5 backdrop-blur-sm hover:bg-primary/10 hover:border-primary/60 transition-all hover:scale-105 group" 
                 asChild
               >
                 <Link to="/auth?tab=signup">
@@ -227,18 +195,18 @@ const HeroSection = () => {
             {/* Feature Tags */}
             <div 
               className="flex flex-wrap items-center lg:justify-end justify-center gap-3 pt-2 animate-fade-in"
-              style={{ animationDelay: '0.45s' }}
+              style={{ animationDelay: '0.5s' }}
             >
               {[
-                { icon: Award, text: 'شهادات معتمدة' },
-                { icon: Star, text: 'محتوى حصري' },
-                { icon: Gem, text: 'جودة عالية' },
+                { icon: '🏆', text: 'شهادات معتمدة' },
+                { icon: '⭐', text: 'محتوى حصري' },
+                { icon: '💎', text: 'جودة عالية' },
               ].map((item, index) => (
                 <span 
                   key={index}
-                  className="inline-flex items-center gap-2 bg-white/5 backdrop-blur-sm px-4 py-2 rounded-full text-sm text-white/70 border border-white/10 hover:border-gold/30 hover:text-gold/80 transition-all cursor-default"
+                  className="inline-flex items-center gap-2 bg-white/80 backdrop-blur-sm px-4 py-2 rounded-full text-sm text-foreground/80 border border-primary/10 hover:border-primary/30 hover:bg-primary/5 transition-all cursor-default shadow-sm"
                 >
-                  <item.icon className="h-4 w-4 text-gold/70" />
+                  <span>{item.icon}</span>
                   {item.text}
                 </span>
               ))}
