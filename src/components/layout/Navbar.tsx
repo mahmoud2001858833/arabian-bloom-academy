@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Menu, X, User, LogOut, LayoutDashboard } from 'lucide-react';
+import { Menu, X, User, LogOut, LayoutDashboard, ChevronDown } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useAuth } from '@/contexts/AuthContext';
 import logo from '@/assets/logo.png';
@@ -30,23 +30,24 @@ const Navbar = () => {
   ];
 
   return (
-    <nav className="fixed top-0 right-0 left-0 z-50 glass-effect border-b border-border/50">
+    <nav className="fixed top-0 right-0 left-0 z-50 bg-white/80 backdrop-blur-xl border-b border-primary/10 shadow-sm">
       <div className="container mx-auto px-4">
-        <div className="flex items-center justify-between h-16">
+        <div className="flex items-center justify-between h-20">
           {/* Logo */}
-          <Link to="/" className="flex items-center gap-2">
-            <img src={logo} alt="منصة العربية" className="h-10 w-auto" />
+          <Link to="/" className="flex items-center gap-3 group">
+            <img src={logo} alt="منصة العربية" className="h-12 w-auto transition-transform group-hover:scale-105" />
           </Link>
 
           {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center gap-8">
+          <div className="hidden md:flex items-center gap-10">
             {navLinks.map((link) => (
               <Link
                 key={link.href}
                 to={link.href}
-                className="text-foreground/80 hover:text-primary transition-colors font-medium"
+                className="relative text-foreground/80 hover:text-primary transition-colors font-semibold text-lg group"
               >
                 {link.label}
+                <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-primary group-hover:w-full transition-all duration-300" />
               </Link>
             ))}
           </div>
@@ -56,37 +57,37 @@ const Navbar = () => {
             {user ? (
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" className="relative h-10 w-10 rounded-full">
-                    <Avatar className="h-10 w-10 border-2 border-primary/20">
+                  <Button variant="ghost" className="relative flex items-center gap-3 h-12 px-4 rounded-xl hover:bg-primary/5">
+                    <Avatar className="h-9 w-9 border-2 border-primary/20">
                       <AvatarImage src={user.user_metadata?.avatar_url} />
-                      <AvatarFallback className="bg-primary text-primary-foreground">
+                      <AvatarFallback className="bg-gradient-primary text-white font-bold">
                         {user.email?.charAt(0).toUpperCase()}
                       </AvatarFallback>
                     </Avatar>
+                    <span className="font-semibold">{user.user_metadata?.full_name || 'مستخدم'}</span>
+                    <ChevronDown className="h-4 w-4 text-muted-foreground" />
                   </Button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent className="w-56" align="end">
-                  <div className="flex items-center justify-start gap-2 p-2">
-                    <div className="flex flex-col space-y-1 leading-none">
-                      <p className="font-medium">{user.user_metadata?.full_name || 'مستخدم'}</p>
-                      <p className="text-xs text-muted-foreground">{user.email}</p>
-                    </div>
+                <DropdownMenuContent className="w-56 bg-white border shadow-xl rounded-xl p-2" align="end">
+                  <div className="px-3 py-2 mb-2">
+                    <p className="font-semibold">{user.user_metadata?.full_name || 'مستخدم'}</p>
+                    <p className="text-xs text-muted-foreground">{user.email}</p>
                   </div>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem asChild>
-                    <Link to={isAdmin ? '/admin' : '/dashboard'} className="cursor-pointer">
+                    <Link to={isAdmin ? '/admin' : '/dashboard'} className="cursor-pointer rounded-lg">
                       <LayoutDashboard className="ml-2 h-4 w-4" />
                       {isAdmin ? 'لوحة التحكم' : 'لوحة الطالب'}
                     </Link>
                   </DropdownMenuItem>
                   <DropdownMenuItem asChild>
-                    <Link to="/profile" className="cursor-pointer">
+                    <Link to="/profile" className="cursor-pointer rounded-lg">
                       <User className="ml-2 h-4 w-4" />
                       الملف الشخصي
                     </Link>
                   </DropdownMenuItem>
                   <DropdownMenuSeparator />
-                  <DropdownMenuItem onClick={handleSignOut} className="cursor-pointer text-destructive">
+                  <DropdownMenuItem onClick={handleSignOut} className="cursor-pointer text-destructive rounded-lg">
                     <LogOut className="ml-2 h-4 w-4" />
                     تسجيل الخروج
                   </DropdownMenuItem>
@@ -94,10 +95,10 @@ const Navbar = () => {
               </DropdownMenu>
             ) : (
               <>
-                <Button variant="ghost" asChild>
+                <Button variant="ghost" className="font-semibold text-lg" asChild>
                   <Link to="/auth">تسجيل الدخول</Link>
                 </Button>
-                <Button className="bg-gradient-primary hover:opacity-90" asChild>
+                <Button className="bg-gradient-primary hover:opacity-90 rounded-xl px-6 font-bold shadow-purple" asChild>
                   <Link to="/auth?tab=signup">إنشاء حساب</Link>
                 </Button>
               </>
@@ -106,7 +107,7 @@ const Navbar = () => {
 
           {/* Mobile Menu Button */}
           <button
-            className="md:hidden p-2"
+            className="md:hidden p-2 rounded-xl hover:bg-primary/5 transition-colors"
             onClick={() => setIsOpen(!isOpen)}
             aria-label="Toggle menu"
           >
@@ -116,13 +117,13 @@ const Navbar = () => {
 
         {/* Mobile Navigation */}
         {isOpen && (
-          <div className="md:hidden py-4 border-t border-border/50">
+          <div className="md:hidden py-6 border-t border-primary/10 animate-fade-in">
             <div className="flex flex-col gap-4">
               {navLinks.map((link) => (
                 <Link
                   key={link.href}
                   to={link.href}
-                  className="text-foreground/80 hover:text-primary transition-colors font-medium py-2"
+                  className="text-foreground/80 hover:text-primary transition-colors font-semibold py-3 px-4 rounded-xl hover:bg-primary/5"
                   onClick={() => setIsOpen(false)}
                 >
                   {link.label}
@@ -132,7 +133,7 @@ const Navbar = () => {
                 <>
                   <Link
                     to={isAdmin ? '/admin' : '/dashboard'}
-                    className="text-foreground/80 hover:text-primary transition-colors font-medium py-2"
+                    className="text-foreground/80 hover:text-primary transition-colors font-semibold py-3 px-4 rounded-xl hover:bg-primary/5"
                     onClick={() => setIsOpen(false)}
                   >
                     {isAdmin ? 'لوحة التحكم' : 'لوحة الطالب'}
@@ -142,19 +143,19 @@ const Navbar = () => {
                       handleSignOut();
                       setIsOpen(false);
                     }}
-                    className="text-destructive hover:text-destructive/80 transition-colors font-medium py-2 text-right"
+                    className="text-destructive hover:text-destructive/80 transition-colors font-semibold py-3 px-4 rounded-xl hover:bg-destructive/5 text-right"
                   >
                     تسجيل الخروج
                   </button>
                 </>
               ) : (
-                <div className="flex flex-col gap-2 pt-2">
-                  <Button variant="outline" asChild>
+                <div className="flex flex-col gap-3 pt-4 border-t border-primary/10">
+                  <Button variant="outline" className="rounded-xl" asChild>
                     <Link to="/auth" onClick={() => setIsOpen(false)}>
                       تسجيل الدخول
                     </Link>
                   </Button>
-                  <Button className="bg-gradient-primary" asChild>
+                  <Button className="bg-gradient-primary rounded-xl" asChild>
                     <Link to="/auth?tab=signup" onClick={() => setIsOpen(false)}>
                       إنشاء حساب
                     </Link>
