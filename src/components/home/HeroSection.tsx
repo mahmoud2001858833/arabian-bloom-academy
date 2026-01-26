@@ -173,7 +173,7 @@ const HeroSection = () => {
               className="inline-flex items-center gap-3 bg-primary/10 backdrop-blur-md text-primary px-6 py-3 rounded-full border border-primary/20 animate-fade-in"
               style={{ animationDelay: '0.1s' }}
             >
-              <span className="text-lg font-bold">ض</span>
+              <span className="text-lg font-bold">النجاة</span>
               <span className="font-bold">المنصة الأولى لتعلم اللغة العربية</span>
               <span className="text-accent">✦</span>
             </div>
