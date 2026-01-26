@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { Facebook, Twitter, Instagram, Youtube, Mail, Phone, MapPin, ArrowUp } from 'lucide-react';
+import { ArrowUp } from 'lucide-react';
 import logo from '@/assets/logo.png';
 import { Button } from '@/components/ui/button';
 
@@ -34,17 +34,11 @@ const Footer = () => {
             <p className="text-white/70 leading-relaxed">
               منصة تعليمية متكاملة لتعلم اللغة العربية بطريقة سهلة وممتعة. نقدم لك أفضل الكورسات التعليمية مع متابعة لتقدمك.
             </p>
-            {/* Social Links */}
-            <div className="flex gap-3">
-              {[Facebook, Twitter, Instagram, Youtube].map((Icon, i) => (
-                <a
-                  key={i}
-                  href="#"
-                  className="w-10 h-10 rounded-xl bg-white/10 hover:bg-gold hover:text-purple-900 flex items-center justify-center transition-all"
-                >
-                  <Icon className="h-5 w-5" />
-                </a>
-              ))}
+            {/* Islamic Decorative Element */}
+            <div className="flex gap-4 text-3xl text-gold/60">
+              <span>۞</span>
+              <span>﴾</span>
+              <span>﴿</span>
             </div>
           </div>
 
@@ -91,29 +85,15 @@ const Footer = () => {
             </ul>
           </div>
 
-          {/* Contact */}
-          <div>
-            <h3 className="text-lg font-bold mb-6 text-gold">تواصل معنا</h3>
-            <ul className="space-y-4">
-              <li className="flex items-center gap-3 text-white/70">
-                <div className="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center">
-                  <Mail className="h-5 w-5 text-gold" />
-                </div>
-                <span>info@arabicplatform.com</span>
-              </li>
-              <li className="flex items-center gap-3 text-white/70">
-                <div className="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center">
-                  <Phone className="h-5 w-5 text-gold" />
-                </div>
-                <span dir="ltr">+966 50 123 4567</span>
-              </li>
-              <li className="flex items-center gap-3 text-white/70">
-                <div className="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center">
-                  <MapPin className="h-5 w-5 text-gold" />
-                </div>
-                <span>المملكة العربية السعودية</span>
-              </li>
-            </ul>
+          {/* Islamic Pattern / Decorative */}
+          <div className="text-center md:text-right">
+            <h3 className="text-lg font-bold mb-6 text-gold">رسالتنا</h3>
+            <p className="text-white/70 leading-relaxed mb-6">
+              نسعى لنشر جمال اللغة العربية وتعليمها بأساليب حديثة ومبتكرة
+            </p>
+            <div className="flex justify-center md:justify-start gap-3 text-4xl text-gold/40">
+              <span>﷽</span>
+            </div>
           </div>
         </div>
 

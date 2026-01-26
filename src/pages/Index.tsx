@@ -6,9 +6,9 @@ import WhyUs from '@/components/home/WhyUs';
 
 const Index = () => {
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-screen flex flex-col bg-gradient-to-br from-purple-50/50 via-white to-purple-100/30">
       <Navbar />
-      <main className="flex-1 pt-16">
+      <main className="flex-1 pt-24">
         <HeroSection />
         <FeaturedCourses />
         <WhyUs />
