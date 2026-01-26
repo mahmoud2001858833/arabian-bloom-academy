@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { Menu, X, User, LogOut, LayoutDashboard, ChevronDown } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useAuth } from '@/contexts/AuthContext';
-import logo from '@/assets/logo.png';
+import logo from '@/assets/navbar-logo.png';
 import {
   DropdownMenu,
   DropdownMenuContent,
