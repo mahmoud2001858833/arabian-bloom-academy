@@ -50,25 +50,36 @@ const FloatingArabicLetters = () => {
 
 const HeroSection = () => {
   return (
-    <section className="relative min-h-screen flex items-center overflow-hidden bg-gradient-to-b from-white via-purple-50/50 to-white">
+    <section className="relative min-h-screen flex items-center overflow-hidden bg-gradient-to-br from-purple-100 via-white to-purple-50">
+      {/* Islamic Pattern Background */}
+      <div className="absolute inset-0 opacity-[0.04]" style={{
+        backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M30 0L30 60M0 30L60 30M0 0L60 60M60 0L0 60' stroke='%238B5CF6' stroke-width='0.5' fill='none'/%3E%3C/svg%3E")`,
+      }} />
+
       {/* Animated Background Elements */}
       <div className="absolute inset-0">
-        {/* Soft Purple Gradient Orbs */}
-        <div className="absolute top-1/4 right-1/4 w-[600px] h-[600px] bg-primary/5 rounded-full blur-[150px] animate-pulse" />
-        <div className="absolute bottom-1/4 left-1/4 w-[500px] h-[500px] bg-gold/5 rounded-full blur-[120px] animate-pulse" style={{ animationDelay: '1s' }} />
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[700px] bg-purple-200/20 rounded-full blur-[180px]" />
+        {/* Strong Purple & Gold Gradient Orbs */}
+        <div className="absolute top-1/4 right-1/4 w-[700px] h-[700px] bg-primary/15 rounded-full blur-[150px] animate-pulse" />
+        <div className="absolute bottom-1/4 left-1/4 w-[600px] h-[600px] bg-accent/20 rounded-full blur-[120px] animate-pulse" style={{ animationDelay: '1s' }} />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-primary/10 rounded-full blur-[200px]" />
         
-        {/* Floating Particles */}
-        {[...Array(25)].map((_, i) => (
+        {/* Golden Accents */}
+        <div className="absolute top-20 left-20 w-[300px] h-[300px] bg-accent/15 rounded-full blur-[100px]" />
+        <div className="absolute bottom-20 right-20 w-[250px] h-[250px] bg-accent/20 rounded-full blur-[80px]" />
+        
+        {/* Floating Particles - More Purple & Gold */}
+        {[...Array(35)].map((_, i) => (
           <div
             key={i}
             className="absolute rounded-full animate-pulse"
             style={{
-              width: `${3 + Math.random() * 4}px`,
-              height: `${3 + Math.random() * 4}px`,
-              background: i % 2 === 0 
-                ? 'hsl(270 70% 50% / 0.3)' 
-                : 'hsl(42 95% 55% / 0.4)',
+              width: `${4 + Math.random() * 6}px`,
+              height: `${4 + Math.random() * 6}px`,
+              background: i % 3 === 0 
+                ? 'hsl(270 70% 50% / 0.5)' 
+                : i % 3 === 1 
+                  ? 'hsl(42 95% 55% / 0.6)' 
+                  : 'hsl(270 70% 60% / 0.4)',
               top: `${Math.random() * 100}%`,
               left: `${Math.random() * 100}%`,
               animationDelay: `${Math.random() * 3}s`,
@@ -76,14 +87,21 @@ const HeroSection = () => {
             }}
           />
         ))}
+        
+        {/* Islamic Decorative Symbols */}
+        <div className="absolute top-32 left-16 text-6xl text-primary/10 animate-float" style={{ animationDelay: '0s' }}>۞</div>
+        <div className="absolute top-48 right-24 text-5xl text-accent/20 animate-float" style={{ animationDelay: '1s' }}>﴾</div>
+        <div className="absolute bottom-40 left-32 text-5xl text-accent/20 animate-float" style={{ animationDelay: '2s' }}>﴿</div>
+        <div className="absolute bottom-60 right-16 text-6xl text-primary/10 animate-float" style={{ animationDelay: '1.5s' }}>۝</div>
+        <div className="absolute top-1/3 left-10 text-4xl text-primary/15 animate-float" style={{ animationDelay: '0.5s' }}>﷽</div>
       </div>
 
       {/* Subtle Grid Pattern */}
       <div 
-        className="absolute inset-0 opacity-[0.03]"
+        className="absolute inset-0 opacity-[0.02]"
         style={{
           backgroundImage: `radial-gradient(circle at 1px 1px, hsl(var(--primary)) 1px, transparent 1px)`,
-          backgroundSize: '40px 40px',
+          backgroundSize: '50px 50px',
         }}
       />
 
@@ -100,11 +118,12 @@ const HeroSection = () => {
               <div className="absolute inset-12 rounded-full border border-gold/20 animate-spin-slow" style={{ animationDuration: '60s' }} />
               
               {/* Glow Background */}
-              <div className="absolute inset-16 rounded-full bg-gradient-to-br from-primary/10 via-gold/5 to-primary/10 blur-2xl" />
+              <div className="absolute inset-16 rounded-full bg-gradient-to-br from-primary/20 via-accent/10 to-primary/15 blur-2xl" />
               
-              {/* Main Glass Circle */}
-              <div className="absolute inset-20 md:inset-24 rounded-full bg-white/80 backdrop-blur-xl border-2 border-primary/20 shadow-2xl">
-                <div className="absolute inset-0 rounded-full bg-gradient-to-br from-primary/5 to-transparent" />
+              {/* Main Glass Circle - Enhanced Glassmorphism */}
+              <div className="absolute inset-20 md:inset-24 rounded-full bg-white/60 backdrop-blur-2xl border-2 border-primary/30 shadow-2xl shadow-primary/20">
+                <div className="absolute inset-0 rounded-full bg-gradient-to-br from-primary/10 via-accent/5 to-transparent" />
+                <div className="absolute inset-2 rounded-full border border-gold/20" />
               </div>
               
               {/* Inner Purple Ring */}

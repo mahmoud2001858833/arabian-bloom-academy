@@ -30,12 +30,12 @@ const Navbar = () => {
   ];
 
   return (
-    <nav className="fixed top-0 right-0 left-0 z-50 bg-white/80 backdrop-blur-xl border-b border-primary/10 shadow-sm">
+    <nav className="fixed top-0 right-0 left-0 z-50 bg-white/70 backdrop-blur-2xl border-b border-primary/15 shadow-lg shadow-primary/5">
       <div className="container mx-auto px-4">
-        <div className="flex items-center justify-between h-20">
+        <div className="flex items-center justify-between h-24">
           {/* Logo */}
           <Link to="/" className="flex items-center gap-3 group">
-            <img src={logo} alt="منصة العربية" className="h-12 w-auto transition-transform group-hover:scale-105" />
+            <img src={logo} alt="منصة العربية" className="h-16 w-auto transition-transform group-hover:scale-105" />
           </Link>
 
           {/* Desktop Navigation */}
