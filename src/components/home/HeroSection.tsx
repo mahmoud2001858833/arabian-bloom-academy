@@ -180,10 +180,10 @@ const HeroSection = () => {
 
             {/* Main Heading */}
             <div className="space-y-4 animate-fade-in" style={{ animationDelay: '0.2s' }}>
-              <h1 className="text-5xl md:text-6xl lg:text-7xl font-black leading-tight text-foreground">
+              <h1 className="text-5xl md:text-7xl lg:text-8xl font-black leading-tight text-foreground">
                 أتقن{' '}
                 <span className="relative inline-block">
-                  <span className="text-primary" style={{ textShadow: '0 0 40px hsl(var(--primary) / 0.3)' }}>
+                  <span className="text-primary text-6xl md:text-8xl lg:text-9xl" style={{ textShadow: '0 0 60px hsl(var(--primary) / 0.4)' }}>
                     العربية
                   </span>
                 </span>
@@ -202,9 +202,9 @@ const HeroSection = () => {
               كورسات متنوعة تناسب جميع المستويات.
             </p>
 
-            {/* CTA Buttons - Purple Theme */}
+            {/* CTA Buttons - Right Aligned */}
             <div 
-              className="flex flex-col sm:flex-row items-center lg:justify-end justify-center gap-4 animate-fade-in"
+              className="flex flex-col sm:flex-row items-center lg:items-end lg:justify-end justify-end gap-4 animate-fade-in"
               style={{ animationDelay: '0.4s' }}
             >
               <Button 
