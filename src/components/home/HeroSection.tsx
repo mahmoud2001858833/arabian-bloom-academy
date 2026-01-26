@@ -146,9 +146,21 @@ const HeroSection = () => {
               
               {/* Logo - BIGGER with Enhanced Animation */}
               <div className="absolute inset-0 flex items-center justify-center z-20">
-                <div className="relative animate-logo-appear">
+                <div className="relative animate-logo-appear flex flex-col items-center">
                   <div className="absolute inset-0 bg-accent/20 blur-[60px] rounded-full scale-[2] animate-pulse" style={{ animationDuration: '2s' }} />
                   <div className="absolute inset-0 bg-primary/15 blur-[40px] rounded-full scale-[1.5] animate-pulse" style={{ animationDuration: '2.5s', animationDelay: '0.5s' }} />
+                  
+                  {/* النص الذهبي فوق اللوقو */}
+                  <span 
+                    className="text-xl md:text-2xl font-black text-accent mb-2 relative z-10 animate-fade-in"
+                    style={{ 
+                      textShadow: '0 0 20px hsl(var(--accent) / 0.6), 0 0 40px hsl(var(--accent) / 0.3)',
+                      animationDelay: '0.3s'
+                    }}
+                  >
+                    وقل ربي زدني علماً
+                  </span>
+                  
                   <img 
                     src={heroLogo} 
                     alt="منصة العربية" 
