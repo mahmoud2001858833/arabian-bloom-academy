@@ -6,14 +6,14 @@ import heroLogo from '@/assets/hero-logo.png';
 // Floating Arabic Letters around the logo - ض is the leader
 const FloatingArabicLetters = () => {
   const letters = [
-    { letter: 'ض', angle: 270, distance: 180, size: 'text-5xl md:text-6xl', isLeader: true },
-    { letter: 'ع', angle: 315, distance: 165, size: 'text-3xl md:text-4xl', isLeader: false },
-    { letter: 'ر', angle: 0, distance: 175, size: 'text-3xl md:text-4xl', isLeader: false },
-    { letter: 'ب', angle: 45, distance: 160, size: 'text-3xl md:text-4xl', isLeader: false },
-    { letter: 'ي', angle: 90, distance: 170, size: 'text-3xl md:text-4xl', isLeader: false },
-    { letter: 'ة', angle: 135, distance: 165, size: 'text-3xl md:text-4xl', isLeader: false },
-    { letter: 'ل', angle: 180, distance: 175, size: 'text-3xl md:text-4xl', isLeader: false },
-    { letter: 'ن', angle: 225, distance: 160, size: 'text-3xl md:text-4xl', isLeader: false },
+    { letter: 'ض', angle: 270, distance: 220, size: 'text-6xl md:text-7xl', isLeader: true },
+    { letter: 'ع', angle: 315, distance: 200, size: 'text-4xl md:text-5xl', isLeader: false },
+    { letter: 'ر', angle: 0, distance: 210, size: 'text-4xl md:text-5xl', isLeader: false },
+    { letter: 'ب', angle: 45, distance: 195, size: 'text-4xl md:text-5xl', isLeader: false },
+    { letter: 'ي', angle: 90, distance: 205, size: 'text-4xl md:text-5xl', isLeader: false },
+    { letter: 'ة', angle: 135, distance: 200, size: 'text-4xl md:text-5xl', isLeader: false },
+    { letter: 'ل', angle: 180, distance: 210, size: 'text-4xl md:text-5xl', isLeader: false },
+    { letter: 'ن', angle: 225, distance: 195, size: 'text-4xl md:text-5xl', isLeader: false },
   ];
 
   return (
@@ -25,19 +25,19 @@ const FloatingArabicLetters = () => {
         return (
           <span
             key={index}
-            className={`absolute ${item.size} font-black select-none animate-float-letter ${
+            className={`absolute ${item.size} font-black select-none ${
               item.isLeader 
-                ? 'text-primary drop-shadow-lg' 
-                : 'text-primary/40'
+                ? 'text-primary drop-shadow-lg animate-logo-bounce' 
+                : 'text-primary/50 animate-float-letter'
             }`}
             style={{
               left: `calc(50% + ${x}px)`,
               top: `calc(50% + ${y}px)`,
               transform: 'translate(-50%, -50%)',
-              animationDelay: `${index * 0.3}s`,
+              animationDelay: `${index * 0.15}s`,
               textShadow: item.isLeader 
-                ? '0 0 30px hsl(var(--primary) / 0.5)' 
-                : '0 0 15px hsl(var(--primary) / 0.2)',
+                ? '0 0 40px hsl(var(--primary) / 0.6), 0 0 80px hsl(var(--primary) / 0.3)' 
+                : '0 0 20px hsl(var(--primary) / 0.3)',
             }}
           >
             {item.letter}
@@ -50,93 +50,112 @@ const FloatingArabicLetters = () => {
 
 const HeroSection = () => {
   return (
-    <section className="relative min-h-screen flex items-center overflow-hidden bg-gradient-to-br from-purple-100 via-white to-purple-50">
+    <section className="relative min-h-screen flex items-center overflow-hidden bg-gradient-to-br from-purple-50 via-white to-purple-100/50">
+      {/* Purple & Gold Decorative Section at Top */}
+      <div className="absolute top-0 left-0 right-0 h-2 bg-gradient-to-r from-primary via-accent to-primary" />
+      
       {/* Islamic Pattern Background */}
-      <div className="absolute inset-0 opacity-[0.04]" style={{
-        backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M30 0L30 60M0 30L60 30M0 0L60 60M60 0L0 60' stroke='%238B5CF6' stroke-width='0.5' fill='none'/%3E%3C/svg%3E")`,
+      <div className="absolute inset-0 opacity-[0.05]" style={{
+        backgroundImage: `url("data:image/svg+xml,%3Csvg width='80' height='80' viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M40 0L40 80M0 40L80 40M0 0L80 80M80 0L0 80' stroke='%238B5CF6' stroke-width='0.5' fill='none'/%3E%3Ccircle cx='40' cy='40' r='20' stroke='%238B5CF6' stroke-width='0.3' fill='none'/%3E%3C/svg%3E")`,
       }} />
 
       {/* Animated Background Elements */}
       <div className="absolute inset-0">
         {/* Strong Purple & Gold Gradient Orbs */}
-        <div className="absolute top-1/4 right-1/4 w-[700px] h-[700px] bg-primary/15 rounded-full blur-[150px] animate-pulse" />
-        <div className="absolute bottom-1/4 left-1/4 w-[600px] h-[600px] bg-accent/20 rounded-full blur-[120px] animate-pulse" style={{ animationDelay: '1s' }} />
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-primary/10 rounded-full blur-[200px]" />
+        <div className="absolute top-1/4 right-1/4 w-[800px] h-[800px] bg-primary/20 rounded-full blur-[180px] animate-pulse" />
+        <div className="absolute bottom-1/4 left-1/4 w-[700px] h-[700px] bg-accent/25 rounded-full blur-[150px] animate-pulse" style={{ animationDelay: '1s' }} />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[900px] h-[900px] bg-primary/15 rounded-full blur-[220px]" />
         
-        {/* Golden Accents */}
-        <div className="absolute top-20 left-20 w-[300px] h-[300px] bg-accent/15 rounded-full blur-[100px]" />
-        <div className="absolute bottom-20 right-20 w-[250px] h-[250px] bg-accent/20 rounded-full blur-[80px]" />
+        {/* Golden Accents - Enhanced */}
+        <div className="absolute top-10 left-10 w-[400px] h-[400px] bg-accent/20 rounded-full blur-[120px] animate-pulse" style={{ animationDelay: '0.5s' }} />
+        <div className="absolute bottom-10 right-10 w-[350px] h-[350px] bg-accent/25 rounded-full blur-[100px] animate-pulse" style={{ animationDelay: '1.5s' }} />
+        <div className="absolute top-1/3 right-10 w-[300px] h-[300px] bg-primary/20 rounded-full blur-[90px]" />
         
-        {/* Floating Particles - More Purple & Gold */}
-        {[...Array(35)].map((_, i) => (
+        {/* Floating Particles - More Dense Purple & Gold */}
+        {[...Array(50)].map((_, i) => (
           <div
             key={i}
-            className="absolute rounded-full animate-pulse"
+            className="absolute rounded-full animate-float-particle"
             style={{
-              width: `${4 + Math.random() * 6}px`,
-              height: `${4 + Math.random() * 6}px`,
-              background: i % 3 === 0 
-                ? 'hsl(270 70% 50% / 0.5)' 
-                : i % 3 === 1 
-                  ? 'hsl(42 95% 55% / 0.6)' 
-                  : 'hsl(270 70% 60% / 0.4)',
+              width: `${3 + Math.random() * 8}px`,
+              height: `${3 + Math.random() * 8}px`,
+              background: i % 4 === 0 
+                ? 'hsl(270 70% 50% / 0.6)' 
+                : i % 4 === 1 
+                  ? 'hsl(42 95% 55% / 0.7)' 
+                  : i % 4 === 2
+                    ? 'hsl(270 70% 65% / 0.5)'
+                    : 'hsl(42 95% 60% / 0.5)',
               top: `${Math.random() * 100}%`,
               left: `${Math.random() * 100}%`,
-              animationDelay: `${Math.random() * 3}s`,
-              animationDuration: `${2 + Math.random() * 3}s`,
+              animationDelay: `${Math.random() * 5}s`,
+              animationDuration: `${3 + Math.random() * 4}s`,
+              boxShadow: i % 3 === 0 
+                ? '0 0 10px hsl(270 70% 50% / 0.4)' 
+                : '0 0 8px hsl(42 95% 55% / 0.4)',
             }}
           />
         ))}
         
-        {/* Islamic Decorative Symbols */}
-        <div className="absolute top-32 left-16 text-6xl text-primary/10 animate-float" style={{ animationDelay: '0s' }}>۞</div>
-        <div className="absolute top-48 right-24 text-5xl text-accent/20 animate-float" style={{ animationDelay: '1s' }}>﴾</div>
-        <div className="absolute bottom-40 left-32 text-5xl text-accent/20 animate-float" style={{ animationDelay: '2s' }}>﴿</div>
-        <div className="absolute bottom-60 right-16 text-6xl text-primary/10 animate-float" style={{ animationDelay: '1.5s' }}>۝</div>
-        <div className="absolute top-1/3 left-10 text-4xl text-primary/15 animate-float" style={{ animationDelay: '0.5s' }}>﷽</div>
+        {/* Islamic Decorative Symbols - Enhanced */}
+        <div className="absolute top-24 left-12 text-7xl text-primary/15 animate-float-symbol" style={{ animationDelay: '0s' }}>۞</div>
+        <div className="absolute top-40 right-20 text-6xl text-accent/30 animate-float-symbol" style={{ animationDelay: '0.8s' }}>﴾</div>
+        <div className="absolute bottom-32 left-24 text-6xl text-accent/30 animate-float-symbol" style={{ animationDelay: '1.6s' }}>﴿</div>
+        <div className="absolute bottom-48 right-12 text-7xl text-primary/15 animate-float-symbol" style={{ animationDelay: '1.2s' }}>۝</div>
+        <div className="absolute top-1/4 left-8 text-5xl text-primary/20 animate-float-symbol" style={{ animationDelay: '0.4s' }}>﷽</div>
+        <div className="absolute bottom-1/4 right-8 text-5xl text-accent/25 animate-float-symbol" style={{ animationDelay: '2s' }}>۩</div>
+        <div className="absolute top-1/2 left-4 text-4xl text-primary/15 animate-float-symbol" style={{ animationDelay: '2.5s' }}>٭</div>
+        <div className="absolute top-16 left-1/3 text-4xl text-accent/20 animate-float-symbol" style={{ animationDelay: '1.8s' }}>❁</div>
       </div>
 
       {/* Subtle Grid Pattern */}
       <div 
-        className="absolute inset-0 opacity-[0.02]"
+        className="absolute inset-0 opacity-[0.03]"
         style={{
           backgroundImage: `radial-gradient(circle at 1px 1px, hsl(var(--primary)) 1px, transparent 1px)`,
-          backgroundSize: '50px 50px',
+          backgroundSize: '40px 40px',
         }}
       />
 
       <div className="container mx-auto px-4 relative z-10">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center min-h-[85vh]">
           
-          {/* Right Side - Logo Section */}
-          <div className="order-1 lg:order-2 flex justify-center animate-scale-in" style={{ animationDelay: '0.2s' }}>
-            <div className="relative w-[400px] h-[400px] md:w-[500px] md:h-[500px]">
+          {/* Right Side - Logo Section - BIGGER */}
+          <div className="order-1 lg:order-2 flex justify-center">
+            <div className="relative w-[450px] h-[450px] md:w-[580px] md:h-[580px] animate-logo-container">
               
-              {/* Outer Decorative Rings */}
-              <div className="absolute inset-0 rounded-full border-2 border-primary/20 animate-spin-slow" style={{ animationDuration: '50s' }} />
-              <div className="absolute inset-6 rounded-full border border-primary/10 animate-spin-slow" style={{ animationDuration: '40s', animationDirection: 'reverse' }} />
-              <div className="absolute inset-12 rounded-full border border-gold/20 animate-spin-slow" style={{ animationDuration: '60s' }} />
+              {/* Outer Decorative Rings - Enhanced */}
+              <div className="absolute inset-0 rounded-full border-2 border-primary/30 animate-spin-slow" style={{ animationDuration: '60s' }} />
+              <div className="absolute inset-4 rounded-full border-2 border-accent/20 animate-spin-slow" style={{ animationDuration: '45s', animationDirection: 'reverse' }} />
+              <div className="absolute inset-8 rounded-full border border-primary/15 animate-spin-slow" style={{ animationDuration: '50s' }} />
+              <div className="absolute inset-12 rounded-full border border-accent/15 animate-spin-slow" style={{ animationDuration: '55s', animationDirection: 'reverse' }} />
               
-              {/* Glow Background */}
-              <div className="absolute inset-16 rounded-full bg-gradient-to-br from-primary/20 via-accent/10 to-primary/15 blur-2xl" />
+              {/* Glow Background - Enhanced */}
+              <div className="absolute inset-16 rounded-full bg-gradient-to-br from-primary/25 via-accent/15 to-primary/20 blur-3xl animate-pulse" style={{ animationDuration: '3s' }} />
               
               {/* Main Glass Circle - Enhanced Glassmorphism */}
-              <div className="absolute inset-20 md:inset-24 rounded-full bg-white/60 backdrop-blur-2xl border-2 border-primary/30 shadow-2xl shadow-primary/20">
-                <div className="absolute inset-0 rounded-full bg-gradient-to-br from-primary/10 via-accent/5 to-transparent" />
-                <div className="absolute inset-2 rounded-full border border-gold/20" />
+              <div className="absolute inset-20 md:inset-24 rounded-full bg-white/70 backdrop-blur-3xl border-2 border-primary/40 shadow-2xl shadow-primary/30 animate-glass-appear">
+                <div className="absolute inset-0 rounded-full bg-gradient-to-br from-primary/15 via-accent/10 to-transparent" />
+                <div className="absolute inset-2 rounded-full border border-accent/30" />
+                <div className="absolute inset-4 rounded-full border border-primary/15" />
               </div>
               
-              {/* Inner Purple Ring */}
-              <div className="absolute inset-[5.5rem] md:inset-28 rounded-full border border-primary/30" />
+              {/* Inner Purple Ring with Gold Accent */}
+              <div className="absolute inset-[5rem] md:inset-[6.5rem] rounded-full border-2 border-primary/40 animate-pulse-glow" />
+              <div className="absolute inset-[5.5rem] md:inset-[7rem] rounded-full border border-accent/30" />
               
-              {/* Logo */}
+              {/* Logo - BIGGER with Enhanced Animation */}
               <div className="absolute inset-0 flex items-center justify-center z-20">
-                <div className="relative">
-                  <div className="absolute inset-0 bg-gold/15 blur-3xl rounded-full scale-150" />
+                <div className="relative animate-logo-appear">
+                  <div className="absolute inset-0 bg-accent/20 blur-[60px] rounded-full scale-[2] animate-pulse" style={{ animationDuration: '2s' }} />
+                  <div className="absolute inset-0 bg-primary/15 blur-[40px] rounded-full scale-[1.5] animate-pulse" style={{ animationDuration: '2.5s', animationDelay: '0.5s' }} />
                   <img 
                     src={heroLogo} 
                     alt="منصة العربية" 
-                    className="w-32 h-32 md:w-44 md:h-44 object-contain relative z-10 drop-shadow-xl"
+                    className="w-44 h-44 md:w-60 md:h-60 object-contain relative z-10 drop-shadow-2xl animate-logo-float"
+                    style={{
+                      filter: 'drop-shadow(0 0 30px hsl(var(--primary) / 0.3)) drop-shadow(0 0 60px hsl(var(--accent) / 0.2))',
+                    }}
                   />
                 </div>
               </div>
@@ -156,7 +175,7 @@ const HeroSection = () => {
             >
               <span className="text-lg font-bold">ض</span>
               <span className="font-bold">المنصة الأولى لتعلم اللغة العربية</span>
-              <span className="text-gold">✦</span>
+              <span className="text-accent">✦</span>
             </div>
 
             {/* Main Heading */}
@@ -234,8 +253,11 @@ const HeroSection = () => {
         </div>
       </div>
 
-      {/* Bottom Gradient Fade */}
-      <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-background to-transparent" />
+      {/* Purple & Gold Bottom Accent */}
+      <div className="absolute bottom-0 left-0 right-0">
+        <div className="h-1 bg-gradient-to-r from-transparent via-accent/50 to-transparent" />
+        <div className="h-32 bg-gradient-to-t from-background to-transparent" />
+      </div>
     </section>
   );
 };

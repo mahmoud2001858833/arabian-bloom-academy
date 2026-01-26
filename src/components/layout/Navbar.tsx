@@ -35,7 +35,7 @@ const Navbar = () => {
         <div className="flex items-center justify-between h-24">
           {/* Logo */}
           <Link to="/" className="flex items-center gap-3 group">
-            <img src={logo} alt="منصة العربية" className="h-16 w-auto transition-transform group-hover:scale-105" />
+            <img src={logo} alt="منصة العربية" className="h-20 w-auto transition-all duration-500 group-hover:scale-110 group-hover:drop-shadow-lg" />
           </Link>
 
           {/* Desktop Navigation */}
