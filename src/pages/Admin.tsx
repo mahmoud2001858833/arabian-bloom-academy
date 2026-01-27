@@ -69,7 +69,7 @@ const Admin = () => {
     price: 0,
     is_free: true,
     level: 'beginner',
-    is_published: false,
+    is_published: true,
   });
   
   const [lessonForm, setLessonForm] = useState({
@@ -289,7 +289,7 @@ const Admin = () => {
       price: 0,
       is_free: true,
       level: 'beginner',
-      is_published: false,
+      is_published: true,
     });
     setShowCourseDialog(true);
   };
