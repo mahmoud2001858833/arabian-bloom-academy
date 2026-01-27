@@ -1,1 +1,4 @@
 project_id = "jysmsvdjablmirloluiy"
+
+[functions.upload-video-cloudflare]
+verify_jwt = false
