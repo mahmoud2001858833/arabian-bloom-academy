@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { 
   Users, BookOpen, DollarSign, TrendingUp, Plus, Video, 
   Edit, Trash2, Eye, EyeOff, Save, Layers, Crown, Sparkles,
-  Calendar, CheckCircle, BarChart3
+  Calendar, CheckCircle, BarChart3, CreditCard
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
@@ -16,12 +16,14 @@ import { Switch } from '@/components/ui/switch';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Progress } from '@/components/ui/progress';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
 import Navbar from '@/components/layout/Navbar';
 import DualVideoUploader from '@/components/dashboard/DualVideoUploader';
 import VideoPlayer from '@/components/dashboard/VideoPlayer';
+import PaymentManagement from '@/components/admin/PaymentManagement';
 
 interface Course {
   id: string;
@@ -51,6 +53,7 @@ const Admin = () => {
   const { toast } = useToast();
 
   // State
+  const [activeMainTab, setActiveMainTab] = useState('courses');
   const [courses, setCourses] = useState<Course[]>([]);
   const [lessons, setLessons] = useState<Lesson[]>([]);
   const [selectedCourse, setSelectedCourse] = useState<Course | null>(null);
@@ -560,13 +563,28 @@ const Admin = () => {
             </div>
           </motion.div>
 
-          {/* Main Content */}
-          <motion.div 
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.2 }}
-            className="grid grid-cols-1 lg:grid-cols-3 gap-6"
-          >
+          {/* Main Tabs */}
+          <Tabs value={activeMainTab} onValueChange={setActiveMainTab} className="mb-6">
+            <TabsList className="bg-white/10 p-1">
+              <TabsTrigger value="courses" className="gap-2 data-[state=active]:bg-accent data-[state=active]:text-accent-foreground">
+                <BookOpen className="h-4 w-4" />
+                إدارة الكورسات
+              </TabsTrigger>
+              <TabsTrigger value="payments" className="gap-2 data-[state=active]:bg-accent data-[state=active]:text-accent-foreground">
+                <CreditCard className="h-4 w-4" />
+                إدارة المدفوعات
+              </TabsTrigger>
+            </TabsList>
+
+            {/* Courses Tab */}
+            <TabsContent value="courses">
+              {/* Main Content */}
+              <motion.div 
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: 0.2 }}
+                className="grid grid-cols-1 lg:grid-cols-3 gap-6"
+              >
             {/* Courses List */}
             <div className="lg:col-span-1 glass-purple rounded-2xl overflow-hidden">
               <div className="p-6 border-b border-white/10">
@@ -774,6 +792,13 @@ const Admin = () => {
               </div>
             </div>
           </motion.div>
+            </TabsContent>
+
+            {/* Payments Tab */}
+            <TabsContent value="payments">
+              <PaymentManagement />
+            </TabsContent>
+          </Tabs>
         </div>
       </main>
 

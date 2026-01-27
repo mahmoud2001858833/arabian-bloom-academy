@@ -164,6 +164,86 @@ export type Database = {
           },
         ]
       }
+      payment_settings: {
+        Row: {
+          account_name: string
+          account_number: string
+          created_at: string | null
+          id: string
+          instructions: string | null
+          is_active: boolean | null
+          payment_method: string
+          updated_at: string | null
+        }
+        Insert: {
+          account_name: string
+          account_number: string
+          created_at?: string | null
+          id?: string
+          instructions?: string | null
+          is_active?: boolean | null
+          payment_method?: string
+          updated_at?: string | null
+        }
+        Update: {
+          account_name?: string
+          account_number?: string
+          created_at?: string | null
+          id?: string
+          instructions?: string | null
+          is_active?: boolean | null
+          payment_method?: string
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      pending_payments: {
+        Row: {
+          admin_notes: string | null
+          amount: number
+          course_id: string
+          created_at: string | null
+          id: string
+          receipt_url: string
+          reviewed_at: string | null
+          reviewed_by: string | null
+          status: string | null
+          user_id: string
+        }
+        Insert: {
+          admin_notes?: string | null
+          amount: number
+          course_id: string
+          created_at?: string | null
+          id?: string
+          receipt_url: string
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          status?: string | null
+          user_id: string
+        }
+        Update: {
+          admin_notes?: string | null
+          amount?: number
+          course_id?: string
+          created_at?: string | null
+          id?: string
+          receipt_url?: string
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          status?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "pending_payments_course_id_fkey"
+            columns: ["course_id"]
+            isOneToOne: false
+            referencedRelation: "courses"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       profiles: {
         Row: {
           avatar_url: string | null
