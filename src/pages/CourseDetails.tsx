@@ -6,6 +6,7 @@ import VideoPlayer from '@/components/dashboard/VideoPlayer';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
 import PageTransition from '@/components/layout/PageTransition';
+import ClickPaymentModal from '@/components/payment/ClickPaymentModal';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -18,7 +19,8 @@ import {
   BookOpen, 
   ChevronLeft,
   Lock,
-  GraduationCap
+  GraduationCap,
+  CreditCard
 } from 'lucide-react';
 import { toast } from 'sonner';
 
@@ -58,6 +60,7 @@ const CourseDetails = () => {
   const [selectedLesson, setSelectedLesson] = useState<Lesson | null>(null);
   const [loading, setLoading] = useState(true);
   const [enrolling, setEnrolling] = useState(false);
+  const [showPaymentModal, setShowPaymentModal] = useState(false);
 
   useEffect(() => {
     if (courseId) {
@@ -136,6 +139,13 @@ const CourseDetails = () => {
       return;
     }
 
+    // إذا كان الكورس مدفوع، نعرض نافذة الدفع
+    if (!course?.is_free && course?.price && course.price > 0) {
+      setShowPaymentModal(true);
+      return;
+    }
+
+    // إذا كان الكورس مجاني، نسجل مباشرة
     try {
       setEnrolling(true);
       
@@ -156,6 +166,12 @@ const CourseDetails = () => {
     } finally {
       setEnrolling(false);
     }
+  };
+
+  const handlePaymentSuccess = () => {
+    // تحديث البيانات بعد إرسال طلب الدفع
+    fetchCourseData();
+    toast.success('تم إرسال طلب الدفع! سيتم تفعيل اشتراكك بعد المراجعة');
   };
 
   const markLessonComplete = async (lessonId: string) => {
@@ -364,7 +380,7 @@ const CourseDetails = () => {
                       {lessons.length} درس
                     </Badge>
                     {course.is_free ? (
-                      <Badge variant="outline" className="bg-green-500/20 text-green-400 border-green-500/30">
+                      <Badge variant="outline" className="bg-primary/20 text-primary border-primary/30">
                         مجاني
                       </Badge>
                     ) : (
@@ -386,13 +402,22 @@ const CourseDetails = () => {
                 </CardHeader>
                 <CardContent className="space-y-4">
                   {!isEnrolled ? (
-                    <Button 
-                      onClick={handleEnroll} 
-                      className="w-full gap-2"
-                      disabled={enrolling}
-                    >
-                      {enrolling ? 'جاري التسجيل...' : 'التسجيل في الكورس'}
-                    </Button>
+                    <div className="space-y-3">
+                      <Button 
+                        onClick={handleEnroll} 
+                        className="w-full gap-2"
+                        disabled={enrolling}
+                        variant={course.is_free ? 'default' : 'gold'}
+                      >
+                        {!course.is_free && <CreditCard className="h-4 w-4" />}
+                        {enrolling ? 'جاري التسجيل...' : (course.is_free ? 'التسجيل في الكورس' : `اشتري الآن - ${course.price} ر.س`)}
+                      </Button>
+                      {!course.is_free && (
+                        <p className="text-xs text-center text-muted-foreground">
+                          الدفع عبر الكلك
+                        </p>
+                      )}
+                    </div>
                   ) : (
                     <div className="space-y-3">
                       <div className="flex items-center justify-between text-sm">
@@ -486,6 +511,18 @@ const CourseDetails = () => {
         </main>
 
         <Footer />
+
+        {/* نافذة الدفع عبر الكلك */}
+        {course && (
+          <ClickPaymentModal
+            open={showPaymentModal}
+            onOpenChange={setShowPaymentModal}
+            courseId={course.id}
+            courseTitle={course.title}
+            coursePrice={course.price || 0}
+            onSuccess={handlePaymentSuccess}
+          />
+        )}
       </div>
     </PageTransition>
   );
