@@ -2,7 +2,8 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { 
   Users, BookOpen, DollarSign, TrendingUp, Plus, Video, 
-  Edit, Trash2, Eye, EyeOff, Save, Layers, Crown, Sparkles
+  Edit, Trash2, Eye, EyeOff, Save, Layers, Crown, Sparkles,
+  Calendar, CheckCircle, BarChart3
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
@@ -14,6 +15,7 @@ import { Badge } from '@/components/ui/badge';
 import { Switch } from '@/components/ui/switch';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Progress } from '@/components/ui/progress';
 import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
@@ -86,6 +88,9 @@ const Admin = () => {
   const [totalStudents, setTotalStudents] = useState(0);
   const [totalRevenue, setTotalRevenue] = useState(0);
   const [newEnrollments, setNewEnrollments] = useState(0);
+  const [recentEnrollments, setRecentEnrollments] = useState<{course_title: string; date: string}[]>([]);
+  const [totalLessons, setTotalLessons] = useState(0);
+  const [publishedCourses, setPublishedCourses] = useState(0);
 
   useEffect(() => {
     if (!loading && !user) {
@@ -138,10 +143,48 @@ const Admin = () => {
       if (!recentError && recentEnrollments) {
         setNewEnrollments(recentEnrollments.length);
       }
+
+      // Get recent enrollments with course titles
+      const { data: latestEnrollments } = await supabase
+        .from('enrollments')
+        .select('course_id, enrolled_at')
+        .order('enrolled_at', { ascending: false })
+        .limit(5);
+
+      if (latestEnrollments) {
+        const enrichedEnrollments = await Promise.all(
+          latestEnrollments.map(async (enrollment) => {
+            const { data: course } = await supabase
+              .from('courses')
+              .select('title')
+              .eq('id', enrollment.course_id)
+              .single();
+            
+            return {
+              course_title: course?.title || 'كورس غير معروف',
+              date: new Date(enrollment.enrolled_at).toLocaleDateString('ar-SA'),
+            };
+          })
+        );
+        setRecentEnrollments(enrichedEnrollments);
+      }
+
+      // Get total lessons count
+      const { data: lessonsData } = await supabase
+        .from('lessons')
+        .select('id');
+      
+      setTotalLessons(lessonsData?.length || 0);
     } catch (error) {
       console.error('Error fetching stats:', error);
     }
   };
+
+  // Update published courses count when courses change
+  useEffect(() => {
+    const published = courses.filter(c => c.is_published).length;
+    setPublishedCourses(published);
+  }, [courses]);
 
   const fetchCourses = async () => {
     setIsLoading(true);
@@ -381,10 +424,16 @@ const Admin = () => {
   }
 
   const stats = [
-    { icon: Users, label: 'إجمالي الطلاب', value: totalStudents.toString(), color: 'primary' },
-    { icon: BookOpen, label: 'الكورسات', value: courses.length.toString(), color: 'primary' },
-    { icon: DollarSign, label: 'الإيرادات', value: `${totalRevenue} ر.س`, color: 'accent' },
-    { icon: TrendingUp, label: 'التسجيلات الجديدة', value: newEnrollments.toString(), color: 'primary' },
+    { icon: Users, label: 'إجمالي الطلاب', value: totalStudents.toString(), color: 'primary', subtitle: 'طالب مسجل' },
+    { icon: BookOpen, label: 'الكورسات', value: courses.length.toString(), color: 'primary', subtitle: `${publishedCourses} منشور` },
+    { icon: DollarSign, label: 'الإيرادات', value: `${totalRevenue}`, color: 'accent', subtitle: 'ريال سعودي' },
+    { icon: TrendingUp, label: 'التسجيلات الجديدة', value: newEnrollments.toString(), color: 'primary', subtitle: 'آخر 7 أيام' },
+  ];
+
+  const quickStats = [
+    { label: 'إجمالي الدروس', value: totalLessons, icon: Video },
+    { label: 'الكورسات المنشورة', value: publishedCourses, icon: CheckCircle },
+    { label: 'معدل التحويل', value: totalStudents > 0 ? `${Math.round((newEnrollments / totalStudents) * 100)}%` : '0%', icon: BarChart3 },
   ];
 
   const levelLabels = {
@@ -437,24 +486,78 @@ const Admin = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.1 }}
-            className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-10"
+            className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6"
           >
             {stats.map((stat, i) => (
-              <div 
+              <motion.div 
                 key={i} 
                 className="glass-purple rounded-2xl p-6 hover-lift transition-all"
+                whileHover={{ scale: 1.02 }}
               >
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="text-sm text-white/60 font-medium">{stat.label}</p>
                     <p className="text-3xl font-black text-white mt-2">{stat.value}</p>
+                    <p className="text-xs text-white/40 mt-1">{stat.subtitle}</p>
                   </div>
                   <div className={`p-4 rounded-2xl ${stat.color === 'accent' ? 'bg-accent/20' : 'bg-white/10'} backdrop-blur`}>
                     <stat.icon className={`h-6 w-6 ${stat.color === 'accent' ? 'text-accent' : 'text-white'}`} />
                   </div>
                 </div>
-              </div>
+              </motion.div>
             ))}
+          </motion.div>
+
+          {/* Quick Stats & Recent Activity */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.15 }}
+            className="grid grid-cols-1 lg:grid-cols-3 gap-4 mb-10"
+          >
+            {/* Quick Stats */}
+            <div className="glass-purple rounded-2xl p-6">
+              <div className="flex items-center gap-2 mb-4">
+                <BarChart3 className="h-5 w-5 text-accent" />
+                <h3 className="font-bold text-white">إحصائيات سريعة</h3>
+              </div>
+              <div className="space-y-4">
+                {quickStats.map((stat, i) => (
+                  <div key={i} className="flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                      <div className="p-2 rounded-lg bg-white/10">
+                        <stat.icon className="h-4 w-4 text-white/70" />
+                      </div>
+                      <span className="text-white/70 text-sm">{stat.label}</span>
+                    </div>
+                    <span className="text-white font-bold">{stat.value}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Recent Enrollments */}
+            <div className="lg:col-span-2 glass-purple rounded-2xl p-6">
+              <div className="flex items-center gap-2 mb-4">
+                <Calendar className="h-5 w-5 text-accent" />
+                <h3 className="font-bold text-white">آخر التسجيلات</h3>
+              </div>
+              {recentEnrollments.length === 0 ? (
+                <p className="text-white/50 text-sm">لا توجد تسجيلات حديثة</p>
+              ) : (
+                <div className="space-y-3">
+                  {recentEnrollments.map((enrollment, i) => (
+                    <div key={i} className="flex items-center justify-between py-2 border-b border-white/10 last:border-0">
+                      <div className="flex items-center gap-3">
+                        <div className="w-2 h-2 rounded-full bg-accent" />
+                        <span className="text-white text-sm">{enrollment.course_title}</span>
+                      </div>
+                      <span className="text-white/50 text-xs">{enrollment.date}</span>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
           </motion.div>
 
           {/* Main Content */}
