@@ -279,16 +279,34 @@ const CourseDetails = () => {
               {/* مشغل الفيديو */}
               <Card className="overflow-hidden bg-card/50 backdrop-blur-sm border-border/50">
                 <CardContent className="p-0">
-                  {selectedLesson?.video_url ? (
-                    <VideoPlayer 
-                      videoKey={selectedLesson.video_url} 
-                      className="w-full"
-                    />
+                  {/* التحقق من الاشتراك قبل عرض الفيديو */}
+                  {isEnrolled || course.is_free ? (
+                    selectedLesson?.video_url ? (
+                      <VideoPlayer 
+                        videoKey={selectedLesson.video_url} 
+                        className="w-full"
+                      />
+                    ) : (
+                      <div className="aspect-video bg-muted flex items-center justify-center">
+                        <div className="text-center text-muted-foreground">
+                          <PlayCircle className="w-16 h-16 mx-auto mb-4 opacity-50" />
+                          <p>لا يوجد فيديو لهذا الدرس</p>
+                        </div>
+                      </div>
+                    )
                   ) : (
-                    <div className="aspect-video bg-muted flex items-center justify-center">
-                      <div className="text-center text-muted-foreground">
-                        <PlayCircle className="w-16 h-16 mx-auto mb-4 opacity-50" />
-                        <p>لا يوجد فيديو لهذا الدرس</p>
+                    <div className="aspect-video bg-gradient-to-br from-muted to-muted/50 flex items-center justify-center">
+                      <div className="text-center p-8">
+                        <div className="w-20 h-20 mx-auto mb-6 rounded-full bg-accent/10 flex items-center justify-center">
+                          <Lock className="w-10 h-10 text-accent" />
+                        </div>
+                        <h3 className="text-xl font-bold mb-2">المحتوى مقفل</h3>
+                        <p className="text-muted-foreground mb-6 max-w-sm">
+                          اشترك في الكورس للوصول إلى جميع الدروس والفيديوهات
+                        </p>
+                        <Button onClick={handleEnroll} disabled={enrolling} className="gap-2">
+                          {enrolling ? 'جاري التسجيل...' : 'اشترك الآن'}
+                        </Button>
                       </div>
                     </div>
                   )}
