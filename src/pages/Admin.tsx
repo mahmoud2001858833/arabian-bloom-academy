@@ -82,6 +82,11 @@ const Admin = () => {
     order_index: 0,
   });
 
+  // Stats state
+  const [totalStudents, setTotalStudents] = useState(0);
+  const [totalRevenue, setTotalRevenue] = useState(0);
+  const [newEnrollments, setNewEnrollments] = useState(0);
+
   useEffect(() => {
     if (!loading && !user) {
       navigate('/auth');
@@ -94,8 +99,49 @@ const Admin = () => {
   useEffect(() => {
     if (isAdmin) {
       fetchCourses();
+      fetchStats();
     }
   }, [isAdmin]);
+
+  const fetchStats = async () => {
+    try {
+      // Get total unique students (from enrollments)
+      const { data: enrollmentsData, error: enrollmentsError } = await supabase
+        .from('enrollments')
+        .select('user_id');
+      
+      if (!enrollmentsError && enrollmentsData) {
+        const uniqueStudents = new Set(enrollmentsData.map(e => e.user_id));
+        setTotalStudents(uniqueStudents.size);
+      }
+
+      // Get total revenue from completed purchases
+      const { data: purchasesData, error: purchasesError } = await supabase
+        .from('purchases')
+        .select('amount')
+        .eq('status', 'completed');
+      
+      if (!purchasesError && purchasesData) {
+        const revenue = purchasesData.reduce((sum, p) => sum + (p.amount || 0), 0);
+        setTotalRevenue(revenue);
+      }
+
+      // Get new enrollments in last 7 days
+      const sevenDaysAgo = new Date();
+      sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+      
+      const { data: recentEnrollments, error: recentError } = await supabase
+        .from('enrollments')
+        .select('id')
+        .gte('enrolled_at', sevenDaysAgo.toISOString());
+      
+      if (!recentError && recentEnrollments) {
+        setNewEnrollments(recentEnrollments.length);
+      }
+    } catch (error) {
+      console.error('Error fetching stats:', error);
+    }
+  };
 
   const fetchCourses = async () => {
     setIsLoading(true);
@@ -335,10 +381,10 @@ const Admin = () => {
   }
 
   const stats = [
-    { icon: Users, label: 'إجمالي الطلاب', value: '---', color: 'primary' },
+    { icon: Users, label: 'إجمالي الطلاب', value: totalStudents.toString(), color: 'primary' },
     { icon: BookOpen, label: 'الكورسات', value: courses.length.toString(), color: 'primary' },
-    { icon: DollarSign, label: 'الإيرادات', value: '---', color: 'accent' },
-    { icon: TrendingUp, label: 'التسجيلات الجديدة', value: '---', color: 'primary' },
+    { icon: DollarSign, label: 'الإيرادات', value: `${totalRevenue} ر.س`, color: 'accent' },
+    { icon: TrendingUp, label: 'التسجيلات الجديدة', value: newEnrollments.toString(), color: 'primary' },
   ];
 
   const levelLabels = {

@@ -226,6 +226,7 @@ const Courses = () => {
                       whileHover={{ y: -8, transition: { duration: 0.3 } }}
                       className="group"
                     >
+                      <Link to={`/courses/${course.id}`} className="block">
                       <div className="relative bg-white/60 backdrop-blur-xl border border-primary/20 rounded-3xl overflow-hidden hover:shadow-2xl hover:shadow-primary/20 transition-all duration-500">
                         {/* Thumbnail */}
                         <div className="relative h-52 overflow-hidden">
@@ -295,6 +296,7 @@ const Courses = () => {
                           ض
                         </div>
                       </div>
+                      </Link>
                     </motion.div>
                   ))}
                 </motion.div>
