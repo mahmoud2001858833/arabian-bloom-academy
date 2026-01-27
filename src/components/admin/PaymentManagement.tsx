@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -7,14 +7,23 @@ import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { Calendar } from '@/components/ui/calendar';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { toast } from 'sonner';
+import { cn } from '@/lib/utils';
+import { format } from 'date-fns';
+import { ar } from 'date-fns/locale';
 import { 
   CreditCard, Settings, FileCheck, XCircle, CheckCircle, Clock, 
-  Save, Eye, Loader2, RefreshCw, Image
+  Save, Eye, Loader2, RefreshCw, Image, BarChart3, CalendarIcon,
+  Filter, Download, TrendingUp, DollarSign, FileText
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import PaymentReports from './PaymentReports';
 
 interface PaymentSettings {
   id?: string;
@@ -270,10 +279,14 @@ const PaymentManagement = () => {
   return (
     <div className="space-y-6">
       <Tabs value={activeTab} onValueChange={setActiveTab}>
-        <TabsList className="grid w-full grid-cols-2 bg-white/10">
+        <TabsList className="grid w-full grid-cols-3 bg-white/10">
           <TabsTrigger value="requests" className="gap-2">
             <FileCheck className="h-4 w-4" />
             طلبات الدفع
+          </TabsTrigger>
+          <TabsTrigger value="reports" className="gap-2">
+            <BarChart3 className="h-4 w-4" />
+            التقارير
           </TabsTrigger>
           <TabsTrigger value="settings" className="gap-2">
             <Settings className="h-4 w-4" />
@@ -371,6 +384,11 @@ const PaymentManagement = () => {
               )}
             </CardContent>
           </Card>
+        </TabsContent>
+
+        {/* Reports Tab */}
+        <TabsContent value="reports" className="mt-6">
+          <PaymentReports payments={pendingPayments} />
         </TabsContent>
 
         {/* Settings Tab */}
