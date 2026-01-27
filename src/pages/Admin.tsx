@@ -18,6 +18,8 @@ import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
 import Navbar from '@/components/layout/Navbar';
+import DualVideoUploader from '@/components/dashboard/DualVideoUploader';
+import VideoPlayer from '@/components/dashboard/VideoPlayer';
 
 interface Course {
   id: string;
@@ -768,14 +770,19 @@ const Admin = () => {
             </div>
             
             <div className="grid gap-2">
-              <Label htmlFor="video-url" className="font-bold">رابط الفيديو (YouTube/Vimeo)</Label>
-              <Input
-                id="video-url"
-                value={lessonForm.video_url}
-                onChange={(e) => setLessonForm({ ...lessonForm, video_url: e.target.value })}
-                placeholder="https://www.youtube.com/watch?v=..."
-                className="rounded-xl border-border"
+              <Label className="font-bold">فيديو الدرس</Label>
+              <DualVideoUploader
+                currentVideoUrl={lessonForm.video_url}
+                onUploadComplete={(url, key) => {
+                  setLessonForm({ ...lessonForm, video_url: url });
+                }}
               />
+              {lessonForm.video_url && (
+                <div className="mt-4">
+                  <Label className="font-bold mb-2 block">معاينة الفيديو</Label>
+                  <VideoPlayer videoKey={lessonForm.video_url} className="max-h-64" />
+                </div>
+              )}
             </div>
             
             <div className="grid gap-2">
