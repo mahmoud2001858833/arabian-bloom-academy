@@ -50,7 +50,6 @@ const Footer = () => {
                 { href: '/', label: 'الرئيسية' },
                 { href: '/courses', label: 'الكورسات' },
                 { href: '/about', label: 'من نحن' },
-                { href: '/contact', label: 'اتصل بنا' },
               ].map((link) => (
                 <li key={link.href}>
                   <Link
