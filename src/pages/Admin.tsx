@@ -735,7 +735,7 @@ const Admin = () => {
 
       {/* Lesson Dialog */}
       <Dialog open={showLessonDialog} onOpenChange={setShowLessonDialog}>
-        <DialogContent className="max-w-xl bg-card border-border">
+        <DialogContent className="max-w-xl bg-card border-border max-h-[90vh] overflow-hidden flex flex-col">
           <DialogHeader>
             <DialogTitle className="text-2xl font-black">
               {lessonForm.id ? 'تعديل الدرس' : 'درس جديد'}
@@ -745,7 +745,7 @@ const Admin = () => {
             </DialogDescription>
           </DialogHeader>
           
-          <div className="grid gap-6 py-4">
+          <div className="grid gap-6 py-4 overflow-y-auto flex-1 pr-2">
             <div className="grid gap-2">
               <Label htmlFor="lesson-title" className="font-bold">عنوان الدرس *</Label>
               <Input
@@ -774,7 +774,8 @@ const Admin = () => {
               <DualVideoUploader
                 currentVideoUrl={lessonForm.video_url}
                 onUploadComplete={(url, key) => {
-                  setLessonForm({ ...lessonForm, video_url: url });
+                  // نخزن key بدلاً من url لأن VideoPlayer يستخدم key
+                  setLessonForm({ ...lessonForm, video_url: key });
                 }}
               />
               {lessonForm.video_url && (
