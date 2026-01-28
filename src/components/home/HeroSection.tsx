@@ -248,20 +248,14 @@ const HeroSection = () => {
               كورسات متنوعة تناسب جميع المستويات.
             </p>
 
-            {/* CTA Buttons - Right Aligned */}
-            <div className="flex flex-col sm:flex-row items-center lg:items-end lg:justify-end justify-end gap-4 animate-fade-in" style={{
+            {/* CTA Button */}
+            <div className="flex items-center lg:justify-end justify-center animate-fade-in" style={{
             animationDelay: '0.4s'
           }}>
               <Button size="lg" className="bg-primary hover:bg-primary/90 text-primary-foreground text-lg px-10 py-7 rounded-2xl font-bold shadow-lg shadow-primary/25 transition-all hover:scale-105 hover:shadow-xl hover:shadow-primary/30 group" asChild>
                 <Link to="/courses">
                   <BookOpen className="ml-3 h-6 w-6 group-hover:rotate-6 transition-transform" />
                   تصفح الكورسات
-                </Link>
-              </Button>
-              <Button size="lg" variant="outline" className="text-lg px-10 py-7 rounded-2xl font-bold border-2 border-primary/40 text-primary bg-primary/5 backdrop-blur-sm hover:bg-primary/10 hover:border-primary/60 transition-all hover:scale-105 group" asChild>
-                <Link to="/auth?tab=signup">
-                  <Play className="ml-3 h-6 w-6 group-hover:scale-110 transition-transform" />
-                  ابدأ مجاناً
                 </Link>
               </Button>
             </div>
