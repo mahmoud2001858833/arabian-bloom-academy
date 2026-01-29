@@ -1,8 +1,29 @@
 import { Link } from 'react-router-dom';
 import { ArrowLeft, Sparkles, BookOpen, Award, Gem } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { useLanguage } from '@/i18n/LanguageContext';
 
 const FeaturedCourses = () => {
+  const { t } = useLanguage();
+
+  const features = [
+    {
+      icon: BookOpen,
+      title: t('home.interactiveContent'),
+      description: t('home.interactiveContentDesc'),
+    },
+    {
+      icon: Award,
+      title: t('home.certifiedCerts'),
+      description: t('home.certifiedCertsDesc'),
+    },
+    {
+      icon: Gem,
+      title: t('home.highQualityContent'),
+      description: t('home.highQualityContentDesc'),
+    },
+  ];
+
   return (
     <section className="py-28 bg-gradient-to-br from-white via-purple-50/70 to-white relative overflow-hidden">
       {/* Background Elements - Enhanced Purple & Gold */}
@@ -26,38 +47,22 @@ const FeaturedCourses = () => {
         <div className="text-center max-w-3xl mx-auto mb-20">
           <div className="inline-flex items-center gap-2 bg-accent/10 backdrop-blur-sm px-6 py-3 rounded-full text-sm font-bold mb-8 border border-accent/30 text-accent">
             <Sparkles className="h-5 w-5" />
-            رحلة التعلم تبدأ هنا
+            {t('home.learningStartsHere')}
           </div>
           <h2 className="text-4xl md:text-5xl lg:text-6xl font-black mb-8">
-            ابدأ رحلتك مع{' '}
+            {t('home.startJourneyWith')}{' '}
             <span className="text-accent" style={{ textShadow: '0 0 30px rgba(212, 175, 55, 0.3)' }}>
-              العربية
+              {t('home.arabic')}
             </span>
           </h2>
           <p className="text-xl text-muted-foreground leading-relaxed">
-            منصتنا توفر لك تجربة تعليمية فريدة مع محتوى عربي أصيل ومعلمين متخصصين
+            {t('home.featuredDescription')}
           </p>
         </div>
 
         {/* Features Grid */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-20">
-          {[
-            {
-              icon: BookOpen,
-              title: 'محتوى تفاعلي',
-              description: 'دروس فيديو عالية الجودة مع تمارين تفاعلية وأنشطة متنوعة تناسب جميع الأعمار',
-            },
-            {
-              icon: Award,
-              title: 'شهادات معتمدة',
-              description: 'احصل على شهادات إتمام معتمدة بعد إنهاء كل كورس تثبت تقدمك',
-            },
-            {
-              icon: Gem,
-              title: 'جودة عالية',
-              description: 'محتوى مصمم بعناية من قبل خبراء في تعليم اللغة العربية',
-            },
-          ].map((feature, index) => {
+          {features.map((feature, index) => {
             const IconComponent = feature.icon;
             return (
               <div 
@@ -97,11 +102,11 @@ const FeaturedCourses = () => {
             </div>
             
             <h3 className="text-3xl md:text-4xl lg:text-5xl font-black mb-6">
-              مستعد لبدء{' '}
-              <span className="text-accent">رحلة التعلم</span>؟
+              {t('home.readyToStart')}{' '}
+              <span className="text-accent">{t('home.learningJourney')}</span>؟
             </h3>
             <p className="text-lg md:text-xl text-muted-foreground mb-10 max-w-2xl mx-auto leading-relaxed">
-              انضم إلى آلاف الطلاب الذين يتعلمون اللغة العربية معنا. ابدأ اليوم واكتشف جمال اللغة العربية.
+              {t('home.joinThousands')}
             </p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
               <Button 
@@ -110,7 +115,7 @@ const FeaturedCourses = () => {
                 asChild
               >
                 <Link to="/courses">
-                  تصفح الكورسات
+                  {t('home.browseCourses')}
                   <ArrowLeft className="mr-2 h-5 w-5" />
                 </Link>
               </Button>
@@ -121,7 +126,7 @@ const FeaturedCourses = () => {
                 asChild
               >
                 <Link to="/auth?tab=signup">
-                  إنشاء حساب مجاني
+                  {t('home.createFreeAccount')}
                 </Link>
               </Button>
             </div>

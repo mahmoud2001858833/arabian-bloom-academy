@@ -7,6 +7,7 @@ import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from '@/hooks/use-toast';
+import { useLanguage } from '@/i18n/LanguageContext';
 
 interface Message {
   id: string;
@@ -16,12 +17,13 @@ interface Message {
 }
 
 const AIGuide = () => {
+  const { t } = useLanguage();
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState<Message[]>([
     {
       id: '1',
       role: 'assistant',
-      content: 'مرحباً! أنا المرشد الذكي لمنصة Arabian Bloom Academy. كيف يمكنني مساعدتك اليوم؟ 🌸'
+      content: t('guide.greeting')
     }
   ]);
   const [input, setInput] = useState('');
@@ -29,6 +31,15 @@ const AIGuide = () => {
   const [pendingNavigation, setPendingNavigation] = useState<string | null>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
+
+  // Update initial message when language changes
+  useEffect(() => {
+    setMessages([{
+      id: '1',
+      role: 'assistant',
+      content: t('guide.greeting')
+    }]);
+  }, [t]);
 
   useEffect(() => {
     if (scrollRef.current) {
@@ -95,8 +106,8 @@ const AIGuide = () => {
     } catch (error) {
       console.error('AI Guide error:', error);
       toast({
-        title: 'خطأ',
-        description: 'حدث خطأ في الاتصال بالمرشد الذكي',
+        title: t('guide.error'),
+        description: t('guide.connectionError'),
         variant: 'destructive'
       });
     } finally {
@@ -110,8 +121,8 @@ const AIGuide = () => {
       setPendingNavigation(null);
       setIsOpen(false);
       toast({
-        title: 'تم الانتقال',
-        description: 'تم نقلك إلى الصفحة المطلوبة'
+        title: t('guide.navigated'),
+        description: t('guide.navigatedTo')
       });
     }
   };
@@ -153,8 +164,8 @@ const AIGuide = () => {
                   <Bot className="h-5 w-5" />
                 </div>
                 <div>
-                  <h3 className="font-bold">المرشد الذكي</h3>
-                  <p className="text-xs opacity-80">متاح دائماً لمساعدتك</p>
+                  <h3 className="font-bold">{t('guide.smartGuide')}</h3>
+                  <p className="text-xs opacity-80">{t('guide.alwaysAvailable')}</p>
                 </div>
               </div>
               <Button
@@ -199,7 +210,7 @@ const AIGuide = () => {
                           className="mt-2 w-full bg-accent hover:bg-accent/90"
                         >
                           <Navigation className="h-4 w-4 ml-2" />
-                          نعم، انقلني
+                          {t('guide.yesNavigate')}
                         </Button>
                       )}
                     </div>
@@ -230,7 +241,7 @@ const AIGuide = () => {
                   value={input}
                   onChange={(e) => setInput(e.target.value)}
                   onKeyDown={handleKeyPress}
-                  placeholder="اكتب رسالتك..."
+                  placeholder={t('guide.typeMessage')}
                   className="flex-1 rounded-xl border-primary/20 focus-visible:ring-primary"
                   disabled={isLoading}
                 />

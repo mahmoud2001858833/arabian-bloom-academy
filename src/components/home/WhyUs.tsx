@@ -1,41 +1,44 @@
 import { Link } from 'react-router-dom';
 import { Users, Award, Clock, Headphones, BookOpen, GraduationCap, Sparkles } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-
-const features = [
-  {
-    icon: BookOpen,
-    title: 'محتوى متكامل',
-    description: 'مناهج تعليمية شاملة تغطي جميع جوانب اللغة العربية من القواعد إلى الأدب',
-  },
-  {
-    icon: GraduationCap,
-    title: 'معلمون متخصصون',
-    description: 'فريق من أفضل معلمي اللغة العربية بخبرة واسعة في التعليم',
-  },
-  {
-    icon: Clock,
-    title: 'تعلم بمرونة',
-    description: 'تعلم في أي وقت ومن أي مكان بما يناسب جدولك الشخصي',
-  },
-  {
-    icon: Award,
-    title: 'شهادات معتمدة',
-    description: 'احصل على شهادات إتمام معترف بها لتوثيق تقدمك',
-  },
-  {
-    icon: Headphones,
-    title: 'دعم مستمر',
-    description: 'فريق دعم متواجد للإجابة على استفساراتك ومساعدتك',
-  },
-  {
-    icon: Users,
-    title: 'مجتمع تعليمي',
-    description: 'انضم لمجتمع من المتعلمين وشارك تجربتك مع الآخرين',
-  },
-];
+import { useLanguage } from '@/i18n/LanguageContext';
 
 const WhyUs = () => {
+  const { t } = useLanguage();
+
+  const features = [
+    {
+      icon: BookOpen,
+      title: t('home.integratedContent'),
+      description: t('home.integratedContentDesc'),
+    },
+    {
+      icon: GraduationCap,
+      title: t('home.specializedTeachers'),
+      description: t('home.specializedTeachersDesc'),
+    },
+    {
+      icon: Clock,
+      title: t('home.flexibleLearning'),
+      description: t('home.flexibleLearningDesc'),
+    },
+    {
+      icon: Award,
+      title: t('home.certifiedCertificates2'),
+      description: t('home.certifiedCertificatesDesc'),
+    },
+    {
+      icon: Headphones,
+      title: t('home.continuousSupport'),
+      description: t('home.continuousSupportDesc'),
+    },
+    {
+      icon: Users,
+      title: t('home.learningCommunity'),
+      description: t('home.learningCommunityDesc'),
+    },
+  ];
+
   return (
     <section className="py-28 bg-gradient-to-br from-purple-100/60 via-white to-purple-50/80 relative overflow-hidden">
       {/* Background Elements - Enhanced */}
@@ -59,16 +62,16 @@ const WhyUs = () => {
         <div className="text-center max-w-3xl mx-auto mb-20">
           <div className="inline-flex items-center gap-2 bg-accent/10 backdrop-blur-sm px-6 py-3 rounded-full text-sm font-bold mb-8 border border-accent/30 text-accent">
             <Sparkles className="h-5 w-5" />
-            لماذا تختارنا
+            {t('home.whyChooseUs')}
           </div>
           <h2 className="text-4xl md:text-5xl lg:text-6xl font-black mb-8">
-            ما يميزنا عن{' '}
+            {t('home.whatMakesUsDifferent')}{' '}
             <span className="text-accent" style={{ textShadow: '0 0 30px rgba(212, 175, 55, 0.3)' }}>
-              الآخرين
+              {t('home.others')}
             </span>
           </h2>
           <p className="text-xl text-muted-foreground leading-relaxed">
-            نقدم تجربة تعليمية فريدة تجمع بين الجودة والاحترافية والمرونة
+            {t('home.whyUsDescription')}
           </p>
         </div>
 
@@ -109,7 +112,7 @@ const WhyUs = () => {
             >
               <Link to="/auth?tab=signup">
                 <Sparkles className="ml-2 h-5 w-5" />
-                ابدأ رحلة التعلم الآن
+                {t('home.startLearningNow')}
               </Link>
             </Button>
             <Button 
@@ -119,7 +122,7 @@ const WhyUs = () => {
               asChild
             >
               <Link to="/courses">
-                تصفح الكورسات
+                {t('home.browseCourses')}
               </Link>
             </Button>
           </div>

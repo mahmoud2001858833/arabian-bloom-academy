@@ -1,14 +1,28 @@
 import { Link } from 'react-router-dom';
 import { ArrowUp } from 'lucide-react';
-import logo from '@/assets/logo.png';
 import { Button } from '@/components/ui/button';
+import { useLanguage } from '@/i18n/LanguageContext';
+import logo from '@/assets/logo.png';
 
 const Footer = () => {
+  const { t } = useLanguage();
   const currentYear = new Date().getFullYear();
 
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
+
+  const quickLinks = [
+    { href: '/', label: t('nav.home') },
+    { href: '/courses', label: t('nav.courses') },
+    { href: '/about', label: t('nav.about') },
+  ];
+
+  const levelLinks = [
+    { href: '/courses?level=beginner', label: t('footer.beginnerLevel') },
+    { href: '/courses?level=intermediate', label: t('footer.intermediateLevel') },
+    { href: '/courses?level=advanced', label: t('footer.advancedLevel') },
+  ];
 
   return (
     <footer className="relative bg-gradient-hero text-white overflow-hidden">
@@ -30,9 +44,9 @@ const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10">
           {/* Logo & Description */}
           <div className="space-y-6">
-            <img src={logo} alt="منصة العربية" className="h-14 w-auto" />
+            <img src={logo} alt={t('footer.platformName')} className="h-14 w-auto" />
             <p className="text-white/70 leading-relaxed">
-              منصة تعليمية متكاملة لتعلم اللغة العربية بطريقة سهلة وممتعة. نقدم لك أفضل الكورسات التعليمية مع متابعة لتقدمك.
+              {t('footer.description')}
             </p>
             {/* Islamic Decorative Element */}
             <div className="flex gap-4 text-3xl text-gold/60">
@@ -44,13 +58,9 @@ const Footer = () => {
 
           {/* Quick Links */}
           <div>
-            <h3 className="text-lg font-bold mb-6 text-gold">روابط سريعة</h3>
+            <h3 className="text-lg font-bold mb-6 text-gold">{t('footer.quickLinks')}</h3>
             <ul className="space-y-3">
-              {[
-                { href: '/', label: 'الرئيسية' },
-                { href: '/courses', label: 'الكورسات' },
-                { href: '/about', label: 'من نحن' },
-              ].map((link) => (
+              {quickLinks.map((link) => (
                 <li key={link.href}>
                   <Link
                     to={link.href}
@@ -65,13 +75,9 @@ const Footer = () => {
 
           {/* Categories */}
           <div>
-            <h3 className="text-lg font-bold mb-6 text-gold">مستويات التعلم</h3>
+            <h3 className="text-lg font-bold mb-6 text-gold">{t('footer.learningLevels')}</h3>
             <ul className="space-y-3">
-              {[
-                { href: '/courses?level=beginner', label: 'المستوى المبتدئ' },
-                { href: '/courses?level=intermediate', label: 'المستوى المتوسط' },
-                { href: '/courses?level=advanced', label: 'المستوى المتقدم' },
-              ].map((link) => (
+              {levelLinks.map((link) => (
                 <li key={link.href}>
                   <Link
                     to={link.href}
@@ -86,9 +92,9 @@ const Footer = () => {
 
           {/* Islamic Pattern / Decorative */}
           <div className="text-center md:text-right">
-            <h3 className="text-lg font-bold mb-6 text-gold">رسالتنا</h3>
+            <h3 className="text-lg font-bold mb-6 text-gold">{t('footer.ourMission')}</h3>
             <p className="text-white/70 leading-relaxed mb-6">
-              نسعى لنشر جمال اللغة العربية وتعليمها بأساليب حديثة ومبتكرة
+              {t('footer.missionText')}
             </p>
             <div className="flex justify-center md:justify-start gap-3 text-4xl text-gold/40">
               <span>﷽</span>
@@ -99,11 +105,11 @@ const Footer = () => {
         {/* Bottom Bar */}
         <div className="border-t border-white/10 mt-12 pt-8 flex flex-col md:flex-row items-center justify-between gap-4">
           <p className="text-white/60 text-sm">
-            © {currentYear} منصة العربية. جميع الحقوق محفوظة.
+            © {currentYear} {t('footer.platformName')}. {t('footer.allRightsReserved')}
           </p>
           <div className="flex gap-6 text-sm text-white/60">
-            <Link to="/terms" className="hover:text-gold transition-colors">شروط الاستخدام</Link>
-            <Link to="/privacy" className="hover:text-gold transition-colors">سياسة الخصوصية</Link>
+            <Link to="/terms" className="hover:text-gold transition-colors">{t('footer.termsOfUse')}</Link>
+            <Link to="/privacy" className="hover:text-gold transition-colors">{t('footer.privacyPolicy')}</Link>
           </div>
         </div>
       </div>
