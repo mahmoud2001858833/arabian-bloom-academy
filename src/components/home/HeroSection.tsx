@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom';
 import { BookOpen } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useLanguage } from '@/i18n/LanguageContext';
-import heroLogo from '@/assets/hero-logo.png';
+import heroLogo from '@/assets/new-logo.png';
 
 // Floating Arabic Letters around the logo - ض is the leader
 const FloatingArabicLetters = () => {
