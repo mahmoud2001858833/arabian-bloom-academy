@@ -4,74 +4,6 @@ import { Button } from '@/components/ui/button';
 import { useLanguage } from '@/i18n/LanguageContext';
 import heroLogo from '@/assets/new-logo.png';
 
-// Floating Arabic Letters around the logo - ض is the leader
-const FloatingArabicLetters = () => {
-  const letters = [{
-    letter: 'ض',
-    angle: 270,
-    distance: 220,
-    size: 'text-6xl md:text-7xl',
-    isLeader: true
-  }, {
-    letter: 'ع',
-    angle: 315,
-    distance: 200,
-    size: 'text-4xl md:text-5xl',
-    isLeader: false
-  }, {
-    letter: 'ر',
-    angle: 0,
-    distance: 210,
-    size: 'text-4xl md:text-5xl',
-    isLeader: false
-  }, {
-    letter: 'ب',
-    angle: 45,
-    distance: 195,
-    size: 'text-4xl md:text-5xl',
-    isLeader: false
-  }, {
-    letter: 'ي',
-    angle: 90,
-    distance: 205,
-    size: 'text-4xl md:text-5xl',
-    isLeader: false
-  }, {
-    letter: 'ة',
-    angle: 135,
-    distance: 200,
-    size: 'text-4xl md:text-5xl',
-    isLeader: false
-  }, {
-    letter: 'ل',
-    angle: 180,
-    distance: 210,
-    size: 'text-4xl md:text-5xl',
-    isLeader: false
-  }, {
-    letter: 'ن',
-    angle: 225,
-    distance: 195,
-    size: 'text-4xl md:text-5xl',
-    isLeader: false
-  }];
-  return <>
-      {letters.map((item, index) => {
-      const x = Math.cos(item.angle * Math.PI / 180) * item.distance;
-      const y = Math.sin(item.angle * Math.PI / 180) * item.distance;
-      return <span key={index} className={`absolute ${item.size} font-black select-none ${item.isLeader ? 'text-primary drop-shadow-lg animate-logo-bounce' : 'text-primary/50 animate-float-letter'}`} style={{
-        left: `calc(50% + ${x}px)`,
-        top: `calc(50% + ${y}px)`,
-        transform: 'translate(-50%, -50%)',
-        animationDelay: `${index * 0.15}s`,
-        textShadow: item.isLeader ? '0 0 40px hsl(var(--primary) / 0.6), 0 0 80px hsl(var(--primary) / 0.3)' : '0 0 20px hsl(var(--primary) / 0.3)'
-      }}>
-            {item.letter}
-          </span>;
-    })}
-    </>;
-};
-
 const HeroSection = () => {
   const { t } = useLanguage();
 
@@ -80,131 +12,65 @@ const HeroSection = () => {
       <div className="absolute top-0 left-0 right-0 h-2 bg-gradient-to-r from-primary via-accent to-primary" />
       
       {/* Islamic Pattern Background */}
-      <div className="absolute inset-0 opacity-[0.05]" style={{
+      <div className="absolute inset-0 opacity-[0.03]" style={{
       backgroundImage: `url("data:image/svg+xml,%3Csvg width='80' height='80' viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M40 0L40 80M0 40L80 40M0 0L80 80M80 0L0 80' stroke='%238B5CF6' stroke-width='0.5' fill='none'/%3E%3Ccircle cx='40' cy='40' r='20' stroke='%238B5CF6' stroke-width='0.3' fill='none'/%3E%3C/svg%3E")`
     }} />
 
       {/* Animated Background Elements */}
       <div className="absolute inset-0">
-        {/* Strong Purple & Gold Gradient Orbs */}
-        <div className="absolute top-1/4 right-1/4 w-[800px] h-[800px] bg-primary/20 rounded-full blur-[180px] animate-pulse" />
-        <div className="absolute bottom-1/4 left-1/4 w-[700px] h-[700px] bg-accent/25 rounded-full blur-[150px] animate-pulse" style={{
+        {/* Soft Purple & Gold Gradient Orbs */}
+        <div className="absolute top-1/4 right-1/4 w-[600px] h-[600px] bg-primary/10 rounded-full blur-[150px] animate-pulse" />
+        <div className="absolute bottom-1/4 left-1/4 w-[500px] h-[500px] bg-accent/15 rounded-full blur-[120px] animate-pulse" style={{
         animationDelay: '1s'
       }} />
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[900px] h-[900px] bg-primary/15 rounded-full blur-[220px]" />
         
-        {/* Golden Accents - Enhanced */}
-        <div className="absolute top-10 left-10 w-[400px] h-[400px] bg-accent/20 rounded-full blur-[120px] animate-pulse" style={{
-        animationDelay: '0.5s'
-      }} />
-        <div className="absolute bottom-10 right-10 w-[350px] h-[350px] bg-accent/25 rounded-full blur-[100px] animate-pulse" style={{
-        animationDelay: '1.5s'
-      }} />
-        <div className="absolute top-1/3 right-10 w-[300px] h-[300px] bg-primary/20 rounded-full blur-[90px]" />
-        
-        {/* Floating Particles - More Dense Purple & Gold */}
-        {[...Array(50)].map((_, i) => <div key={i} className="absolute rounded-full animate-float-particle" style={{
-        width: `${3 + Math.random() * 8}px`,
-        height: `${3 + Math.random() * 8}px`,
-        background: i % 4 === 0 ? 'hsl(270 70% 50% / 0.6)' : i % 4 === 1 ? 'hsl(42 95% 55% / 0.7)' : i % 4 === 2 ? 'hsl(270 70% 65% / 0.5)' : 'hsl(42 95% 60% / 0.5)',
+        {/* Floating Particles - Subtle */}
+        {[...Array(20)].map((_, i) => <div key={i} className="absolute rounded-full animate-float-particle" style={{
+        width: `${2 + Math.random() * 4}px`,
+        height: `${2 + Math.random() * 4}px`,
+        background: i % 2 === 0 ? 'hsl(270 70% 50% / 0.3)' : 'hsl(42 95% 55% / 0.4)',
         top: `${Math.random() * 100}%`,
         left: `${Math.random() * 100}%`,
         animationDelay: `${Math.random() * 5}s`,
-        animationDuration: `${3 + Math.random() * 4}s`,
-        boxShadow: i % 3 === 0 ? '0 0 10px hsl(270 70% 50% / 0.4)' : '0 0 8px hsl(42 95% 55% / 0.4)'
+        animationDuration: `${4 + Math.random() * 4}s`
       }} />)}
         
-        {/* Islamic Decorative Symbols - Enhanced */}
-        <div className="absolute top-24 left-12 text-7xl text-primary/15 animate-float-symbol" style={{
+        {/* Subtle Islamic Symbols */}
+        <div className="absolute top-24 left-12 text-5xl text-primary/10 animate-float-symbol" style={{
         animationDelay: '0s'
       }}>۞</div>
-        <div className="absolute top-40 right-20 text-6xl text-accent/30 animate-float-symbol" style={{
+        <div className="absolute top-40 right-20 text-4xl text-accent/15 animate-float-symbol" style={{
         animationDelay: '0.8s'
       }}>﴾</div>
-        <div className="absolute bottom-32 left-24 text-6xl text-accent/30 animate-float-symbol" style={{
+        <div className="absolute bottom-32 left-24 text-4xl text-accent/15 animate-float-symbol" style={{
         animationDelay: '1.6s'
       }}>﴿</div>
-        <div className="absolute bottom-48 right-12 text-7xl text-primary/15 animate-float-symbol" style={{
+        <div className="absolute bottom-48 right-12 text-5xl text-primary/10 animate-float-symbol" style={{
         animationDelay: '1.2s'
       }}>۝</div>
-        <div className="absolute top-1/4 left-8 text-5xl text-primary/20 animate-float-symbol" style={{
-        animationDelay: '0.4s'
-      }}>﷽</div>
-        <div className="absolute bottom-1/4 right-8 text-5xl text-accent/25 animate-float-symbol" style={{
-        animationDelay: '2s'
-      }}>۩</div>
-        <div className="absolute top-1/2 left-4 text-4xl text-primary/15 animate-float-symbol" style={{
-        animationDelay: '2.5s'
-      }}>٭</div>
-        <div className="absolute top-16 left-1/3 text-4xl text-accent/20 animate-float-symbol" style={{
-        animationDelay: '1.8s'
-      }}>❁</div>
       </div>
-
-      {/* Subtle Grid Pattern */}
-      <div className="absolute inset-0 opacity-[0.03]" style={{
-      backgroundImage: `radial-gradient(circle at 1px 1px, hsl(var(--primary)) 1px, transparent 1px)`,
-      backgroundSize: '40px 40px'
-    }} />
 
       <div className="container mx-auto px-4 relative z-10">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center min-h-[85vh]">
           
-          {/* Right Side - Logo Section - BIGGER */}
+          {/* Right Side - Logo Section - Clean & Simple */}
           <div className="order-1 lg:order-2 flex justify-center">
-            <div className="relative w-[450px] h-[450px] md:w-[580px] md:h-[580px] animate-logo-container">
+            <div className="relative animate-logo-container">
               
-              {/* Outer Decorative Rings - Enhanced */}
-              <div className="absolute inset-0 rounded-full border-2 border-primary/30 animate-spin-slow" style={{
-              animationDuration: '60s'
-            }} />
-              <div className="absolute inset-4 rounded-full border-2 border-accent/20 animate-spin-slow" style={{
-              animationDuration: '45s',
-              animationDirection: 'reverse'
-            }} />
-              <div className="absolute inset-8 rounded-full border border-primary/15 animate-spin-slow" style={{
-              animationDuration: '50s'
-            }} />
-              <div className="absolute inset-12 rounded-full border border-accent/15 animate-spin-slow" style={{
-              animationDuration: '55s',
-              animationDirection: 'reverse'
-            }} />
+              {/* Soft Glow Background */}
+              <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-accent/10 to-primary/5 blur-[80px] rounded-full scale-125" />
               
-              {/* Glow Background - Enhanced */}
-              <div className="absolute inset-16 rounded-full bg-gradient-to-br from-primary/25 via-accent/15 to-primary/20 blur-3xl animate-pulse" style={{
-              animationDuration: '3s'
-            }} />
-              
-              {/* Main Glass Circle - Enhanced Glassmorphism */}
-              <div className="absolute inset-20 md:inset-24 rounded-full bg-white/70 backdrop-blur-3xl border-2 border-primary/40 shadow-2xl shadow-primary/30 animate-glass-appear">
-                <div className="absolute inset-0 rounded-full bg-gradient-to-br from-primary/15 via-accent/10 to-transparent" />
-                <div className="absolute inset-2 rounded-full border border-accent/30" />
-                <div className="absolute inset-4 rounded-full border border-primary/15" />
+              {/* Logo - Large & Clean */}
+              <div className="relative animate-logo-appear">
+                <img 
+                  src={heroLogo} 
+                  alt="منصة النجاة" 
+                  className="w-72 h-72 md:w-96 md:h-96 lg:w-[450px] lg:h-[450px] object-contain relative z-10 drop-shadow-xl animate-logo-float" 
+                  style={{
+                    filter: 'drop-shadow(0 0 40px hsl(var(--primary) / 0.15)) drop-shadow(0 0 80px hsl(var(--accent) / 0.1))'
+                  }} 
+                />
               </div>
-              
-              {/* Inner Purple Ring with Gold Accent */}
-              <div className="absolute inset-[5rem] md:inset-[6.5rem] rounded-full border-2 border-primary/40 animate-pulse-glow" />
-              <div className="absolute inset-[5.5rem] md:inset-[7rem] rounded-full border border-accent/30" />
-              
-              {/* Logo - BIGGER with Enhanced Animation */}
-              <div className="absolute inset-0 flex items-center justify-center z-20">
-                <div className="relative animate-logo-appear flex flex-col items-center">
-                  <div className="absolute inset-0 bg-accent/20 blur-[60px] rounded-full scale-[2] animate-pulse" style={{
-                  animationDuration: '2s'
-                }} />
-                  <div className="absolute inset-0 bg-primary/15 blur-[40px] rounded-full scale-[1.5] animate-pulse" style={{
-                  animationDuration: '2.5s',
-                  animationDelay: '0.5s'
-                }} />
-                  
-                  <img src={heroLogo} alt="منصة العربية" className="w-44 h-44 md:w-60 md:h-60 object-contain relative z-10 drop-shadow-2xl animate-logo-float" style={{
-                  filter: 'drop-shadow(0 0 30px hsl(var(--primary) / 0.3)) drop-shadow(0 0 60px hsl(var(--accent) / 0.2))'
-                }} />
-                </div>
-              </div>
-              
-              {/* Floating Arabic Letters */}
-              <FloatingArabicLetters />
             </div>
           </div>
 
