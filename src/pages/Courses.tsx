@@ -10,6 +10,7 @@ import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
 import PageTransition from '@/components/layout/PageTransition';
 import { supabase } from '@/integrations/supabase/client';
+import { useLanguage } from '@/i18n/LanguageContext';
 
 interface Course {
   id: string;
@@ -21,12 +22,6 @@ interface Course {
   price: number | null;
   is_published: boolean | null;
 }
-
-const levelLabels = {
-  beginner: { label: 'مبتدئ', color: 'bg-emerald-500/20 text-emerald-600 border-emerald-500/30' },
-  intermediate: { label: 'متوسط', color: 'bg-amber-500/20 text-amber-600 border-amber-500/30' },
-  advanced: { label: 'متقدم', color: 'bg-rose-500/20 text-rose-600 border-rose-500/30' },
-};
 
 const easeOut: Easing = [0.25, 0.46, 0.45, 0.94];
 
@@ -53,11 +48,18 @@ const cardVariants = {
 };
 
 const Courses = () => {
+  const { t } = useLanguage();
   const [courses, setCourses] = useState<Course[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [levelFilter, setLevelFilter] = useState('all');
   const [priceFilter, setPriceFilter] = useState('all');
   const [loading, setLoading] = useState(true);
+
+  const levelLabels = {
+    beginner: { label: t('courses.beginner'), color: 'bg-emerald-500/20 text-emerald-600 border-emerald-500/30' },
+    intermediate: { label: t('courses.intermediate'), color: 'bg-amber-500/20 text-amber-600 border-amber-500/30' },
+    advanced: { label: t('courses.advanced'), color: 'bg-rose-500/20 text-rose-600 border-rose-500/30' },
+  };
 
   useEffect(() => {
     fetchCourses();
@@ -124,20 +126,20 @@ const Courses = () => {
                 {/* Badge */}
                 <div className="inline-flex items-center gap-3 bg-primary/10 backdrop-blur-md text-primary px-6 py-3 rounded-full border border-primary/20">
                   <GraduationCap className="h-5 w-5" />
-                  <span className="font-bold">كورسات تعليمية متميزة</span>
+                  <span className="font-bold">{t('courses.badge')}</span>
                   <span className="text-accent">✦</span>
                 </div>
 
                 {/* Title */}
                 <h1 className="text-4xl md:text-5xl lg:text-6xl font-black text-foreground">
-                  اكتشف{' '}
+                  {t('courses.discover')}{' '}
                   <span className="text-primary" style={{ textShadow: '0 0 40px hsl(var(--primary) / 0.3)' }}>
-                    كورساتنا
+                    {t('courses.ourCourses')}
                   </span>
                 </h1>
 
                 <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto">
-                  مجموعة متنوعة من الكورسات لتعلم اللغة العربية بجميع مستوياتها مع أفضل المعلمين
+                  {t('courses.description')}
                 </p>
 
                 {/* Search & Filters */}
@@ -150,7 +152,7 @@ const Courses = () => {
                   <div className="relative flex-1">
                     <Search className="absolute right-4 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
                     <Input
-                      placeholder="ابحث عن كورس..."
+                      placeholder={t('courses.searchPlaceholder')}
                       className="pr-12 h-14 rounded-2xl bg-white/70 backdrop-blur-sm border-primary/20 focus:border-primary/40 text-lg"
                       value={searchQuery}
                       onChange={(e) => setSearchQuery(e.target.value)}
@@ -158,23 +160,23 @@ const Courses = () => {
                   </div>
                   <Select value={levelFilter} onValueChange={setLevelFilter}>
                     <SelectTrigger className="w-full sm:w-44 h-14 rounded-2xl bg-white/70 backdrop-blur-sm border-primary/20">
-                      <SelectValue placeholder="المستوى" />
+                      <SelectValue placeholder={t('courses.allLevels')} />
                     </SelectTrigger>
                     <SelectContent className="rounded-xl">
-                      <SelectItem value="all">جميع المستويات</SelectItem>
-                      <SelectItem value="beginner">مبتدئ</SelectItem>
-                      <SelectItem value="intermediate">متوسط</SelectItem>
-                      <SelectItem value="advanced">متقدم</SelectItem>
+                      <SelectItem value="all">{t('courses.allLevels')}</SelectItem>
+                      <SelectItem value="beginner">{t('courses.beginner')}</SelectItem>
+                      <SelectItem value="intermediate">{t('courses.intermediate')}</SelectItem>
+                      <SelectItem value="advanced">{t('courses.advanced')}</SelectItem>
                     </SelectContent>
                   </Select>
                   <Select value={priceFilter} onValueChange={setPriceFilter}>
                     <SelectTrigger className="w-full sm:w-36 h-14 rounded-2xl bg-white/70 backdrop-blur-sm border-primary/20">
-                      <SelectValue placeholder="السعر" />
+                      <SelectValue placeholder={t('courses.all')} />
                     </SelectTrigger>
                     <SelectContent className="rounded-xl">
-                      <SelectItem value="all">الكل</SelectItem>
-                      <SelectItem value="free">مجاني</SelectItem>
-                      <SelectItem value="paid">مدفوع</SelectItem>
+                      <SelectItem value="all">{t('courses.all')}</SelectItem>
+                      <SelectItem value="free">{t('courses.free')}</SelectItem>
+                      <SelectItem value="paid">{t('courses.paid')}</SelectItem>
                     </SelectContent>
                   </Select>
                 </motion.div>
@@ -205,11 +207,11 @@ const Courses = () => {
                   <div className="w-24 h-24 mx-auto mb-6 rounded-full bg-primary/10 flex items-center justify-center">
                     <BookOpen className="h-12 w-12 text-primary" />
                   </div>
-                  <h3 className="text-2xl font-bold text-foreground mb-2">لا توجد كورسات متاحة</h3>
+                  <h3 className="text-2xl font-bold text-foreground mb-2">{t('courses.noCourses')}</h3>
                   <p className="text-muted-foreground text-lg">
                     {courses.length === 0 
-                      ? 'لم يتم إضافة كورسات بعد. ترقب المزيد قريباً!'
-                      : 'لا توجد كورسات تطابق معايير البحث'}
+                      ? t('courses.noCoursesYet')
+                      : t('courses.noMatchingCourses')}
                   </p>
                 </motion.div>
               ) : (
@@ -249,11 +251,11 @@ const Courses = () => {
                           <div className="absolute top-4 left-4">
                             {course.is_free ? (
                               <Badge className="bg-accent text-accent-foreground font-bold px-4 py-1.5 text-sm shadow-lg">
-                                مجاني
+                                {t('courses.free')}
                               </Badge>
                             ) : (
                               <Badge className="bg-white/90 text-foreground font-bold px-4 py-1.5 text-sm shadow-lg">
-                                {course.price} ر.س
+                                {course.price} {t('courses.price')}
                               </Badge>
                             )}
                           </div>
@@ -265,7 +267,7 @@ const Courses = () => {
                                 levelLabels[course.level as keyof typeof levelLabels]?.color || 'bg-primary/20 text-primary'
                               }`}
                             >
-                              {levelLabels[course.level as keyof typeof levelLabels]?.label || course.level || 'مبتدئ'}
+                              {levelLabels[course.level as keyof typeof levelLabels]?.label || course.level || t('courses.beginner')}
                             </Badge>
                           </div>
                         </div>
@@ -277,7 +279,7 @@ const Courses = () => {
                           </h3>
                           
                           <p className="text-muted-foreground line-clamp-2 leading-relaxed">
-                            {course.description || 'اكتشف محتوى هذا الكورس الرائع وابدأ رحلة التعلم'}
+                            {course.description || t('courses.discoverContent')}
                           </p>
 
                           <Button 
@@ -286,7 +288,7 @@ const Courses = () => {
                           >
                             <Link to={`/courses/${course.id}`}>
                               <Sparkles className="h-5 w-5 ml-2 group-hover/btn:rotate-12 transition-transform" />
-                              عرض الكورس
+                              {t('courses.viewCourse')}
                             </Link>
                           </Button>
                         </div>
@@ -315,10 +317,10 @@ const Courses = () => {
                 transition={{ duration: 0.6 }}
               >
                 <h2 className="text-3xl md:text-4xl font-black text-foreground mb-4">
-                  لم تجد ما تبحث عنه؟
+                  {t('courses.notFoundWhat')}
                 </h2>
                 <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">
-                  نحن نعمل على إضافة المزيد من الكورسات باستمرار. تابعنا للحصول على آخر التحديثات
+                  {t('courses.moreCoursesComingSoon')}
                 </p>
                 <Button 
                   size="lg"
@@ -327,7 +329,7 @@ const Courses = () => {
                 >
                   <Link to="/auth?tab=signup">
                     <GraduationCap className="h-6 w-6 ml-3" />
-                    سجل الآن للحصول على التحديثات
+                    {t('courses.registerForUpdates')}
                   </Link>
                 </Button>
               </motion.div>

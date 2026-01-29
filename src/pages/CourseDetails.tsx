@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
+import { useLanguage } from '@/i18n/LanguageContext';
 import VideoPlayer from '@/components/dashboard/VideoPlayer';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
@@ -52,6 +53,7 @@ const CourseDetails = () => {
   const { courseId } = useParams<{ courseId: string }>();
   const navigate = useNavigate();
   const { user } = useAuth();
+  const { t } = useLanguage();
   
   const [course, setCourse] = useState<Course | null>(null);
   const [lessons, setLessons] = useState<Lesson[]>([]);
@@ -81,7 +83,7 @@ const CourseDetails = () => {
 
       if (courseError) throw courseError;
       if (!courseData) {
-        toast.error('الكورس غير موجود');
+        toast.error(t('courseDetails.courseNotFound'));
         navigate('/courses');
         return;
       }
@@ -126,7 +128,7 @@ const CourseDetails = () => {
       }
     } catch (error) {
       console.error('Error fetching course:', error);
-      toast.error('حدث خطأ في تحميل الكورس');
+      toast.error(t('courseDetails.errorLoading'));
     } finally {
       setLoading(false);
     }
@@ -134,7 +136,7 @@ const CourseDetails = () => {
 
   const handleEnroll = async () => {
     if (!user) {
-      toast.error('يجب تسجيل الدخول أولاً');
+      toast.error(t('auth.loginToContinue'));
       navigate('/auth');
       return;
     }
@@ -159,10 +161,10 @@ const CourseDetails = () => {
       if (error) throw error;
 
       setIsEnrolled(true);
-      toast.success('تم التسجيل في الكورس بنجاح!');
+      toast.success(t('courseDetails.enrollSuccess'));
     } catch (error) {
       console.error('Error enrolling:', error);
-      toast.error('حدث خطأ في التسجيل');
+      toast.error(t('courseDetails.errorEnrolling'));
     } finally {
       setEnrolling(false);
     }
@@ -171,7 +173,7 @@ const CourseDetails = () => {
   const handlePaymentSuccess = () => {
     // تحديث البيانات بعد إرسال طلب الدفع
     fetchCourseData();
-    toast.success('تم إرسال طلب الدفع! سيتم تفعيل اشتراكك بعد المراجعة');
+    toast.success(t('payment.paymentSuccess'));
   };
 
   const markLessonComplete = async (lessonId: string) => {
@@ -205,7 +207,7 @@ const CourseDetails = () => {
         return [...prev, { lesson_id: lessonId, completed: true }];
       });
 
-      toast.success('تم تحديد الدرس كمكتمل');
+      toast.success(t('courseDetails.lessonMarkedComplete'));
     } catch (error) {
       console.error('Error marking complete:', error);
     }
@@ -229,9 +231,9 @@ const CourseDetails = () => {
 
   const getLevelText = (level: string | null) => {
     switch (level) {
-      case 'beginner': return 'مبتدئ';
-      case 'intermediate': return 'متوسط';
-      case 'advanced': return 'متقدم';
+      case 'beginner': return t('courses.beginner');
+      case 'intermediate': return t('courses.intermediate');
+      case 'advanced': return t('courses.advanced');
       default: return level;
     }
   };
@@ -262,9 +264,9 @@ const CourseDetails = () => {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
         <div className="text-center">
-          <h1 className="text-2xl font-bold mb-4">الكورس غير موجود</h1>
+          <h1 className="text-2xl font-bold mb-4">{t('courseDetails.courseNotFound')}</h1>
           <Button onClick={() => navigate('/courses')}>
-            العودة للكورسات
+            {t('courseDetails.backToCourses')}
           </Button>
         </div>
       </div>
@@ -285,7 +287,7 @@ const CourseDetails = () => {
               className="gap-2"
             >
               <ChevronLeft className="w-4 h-4" />
-              العودة للكورسات
+              {t('courseDetails.backToCourses')}
             </Button>
           </div>
 
@@ -306,7 +308,7 @@ const CourseDetails = () => {
                       <div className="aspect-video bg-muted flex items-center justify-center">
                         <div className="text-center text-muted-foreground">
                           <PlayCircle className="w-16 h-16 mx-auto mb-4 opacity-50" />
-                          <p>لا يوجد فيديو لهذا الدرس</p>
+                          <p>{t('courseDetails.noVideo')}</p>
                         </div>
                       </div>
                     )
@@ -316,12 +318,12 @@ const CourseDetails = () => {
                         <div className="w-20 h-20 mx-auto mb-6 rounded-full bg-accent/10 flex items-center justify-center">
                           <Lock className="w-10 h-10 text-accent" />
                         </div>
-                        <h3 className="text-xl font-bold mb-2">المحتوى مقفل</h3>
+                        <h3 className="text-xl font-bold mb-2">{t('courseDetails.contentLocked')}</h3>
                         <p className="text-muted-foreground mb-6 max-w-sm">
-                          اشترك في الكورس للوصول إلى جميع الدروس والفيديوهات
+                          {t('courseDetails.subscribeToAccess')}
                         </p>
                         <Button onClick={handleEnroll} disabled={enrolling} className="gap-2">
-                          {enrolling ? 'جاري التسجيل...' : 'اشترك الآن'}
+                          {enrolling ? t('courseDetails.enrolling') : t('courseDetails.subscribeNow')}
                         </Button>
                       </div>
                     </div>
@@ -344,7 +346,7 @@ const CourseDetails = () => {
                           className="gap-2"
                         >
                           <CheckCircle className="w-4 h-4" />
-                          {isLessonCompleted(selectedLesson.id) ? 'مكتمل' : 'تحديد كمكتمل'}
+                          {isLessonCompleted(selectedLesson.id) ? t('courseDetails.completed') : t('courseDetails.markComplete')}
                         </Button>
                       )}
                     </div>
@@ -356,7 +358,7 @@ const CourseDetails = () => {
                     {selectedLesson.duration_minutes && (
                       <div className="flex items-center gap-2 mt-4 text-sm text-muted-foreground">
                         <Clock className="w-4 h-4" />
-                        <span>{selectedLesson.duration_minutes} دقيقة</span>
+                        <span>{selectedLesson.duration_minutes} {t('courseDetails.minute')}</span>
                       </div>
                     )}
                   </CardContent>
@@ -366,7 +368,7 @@ const CourseDetails = () => {
               {/* معلومات الكورس */}
               <Card className="bg-card/50 backdrop-blur-sm border-border/50">
                 <CardHeader>
-                  <CardTitle>عن الكورس</CardTitle>
+                  <CardTitle>{t('courseDetails.aboutCourse')}</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <p className="text-muted-foreground mb-4">{course.description}</p>
@@ -377,15 +379,15 @@ const CourseDetails = () => {
                     </Badge>
                     <Badge variant="outline" className="bg-accent/20 text-accent border-accent/30">
                       <BookOpen className="w-3 h-3 mr-1" />
-                      {lessons.length} درس
+                      {lessons.length} {t('courseDetails.lessons')}
                     </Badge>
                     {course.is_free ? (
                       <Badge variant="outline" className="bg-primary/20 text-primary border-primary/30">
-                        مجاني
+                        {t('courses.free')}
                       </Badge>
                     ) : (
                       <Badge variant="outline" className="bg-accent/20 text-accent border-accent/30">
-                        {course.price} ر.س
+                        {course.price} {t('payment.sar')}
                       </Badge>
                     )}
                   </div>
@@ -410,25 +412,25 @@ const CourseDetails = () => {
                         variant={course.is_free ? 'default' : 'gold'}
                       >
                         {!course.is_free && <CreditCard className="h-4 w-4" />}
-                        {enrolling ? 'جاري التسجيل...' : (course.is_free ? 'التسجيل في الكورس' : `اشتري الآن - ${course.price} ر.س`)}
+                        {enrolling ? t('courseDetails.enrolling') : (course.is_free ? t('courseDetails.enrollInCourse') : `${t('courseDetails.buyNow')} - ${course.price} ${t('payment.sar')}`)}
                       </Button>
                       {!course.is_free && (
                         <p className="text-xs text-center text-muted-foreground">
-                          الدفع عبر الكلك
+                          {t('courseDetails.paymentViaClick')}
                         </p>
                       )}
                     </div>
                   ) : (
                     <div className="space-y-3">
                       <div className="flex items-center justify-between text-sm">
-                        <span>التقدم</span>
+                        <span>{t('dashboard.progress')}</span>
                         <span className="text-accent font-medium">
                           {completedCount} / {lessons.length}
                         </span>
                       </div>
                       <Progress value={progressPercentage} className="h-2" />
                       <p className="text-xs text-muted-foreground text-center">
-                        {progressPercentage.toFixed(0)}% مكتمل
+                        {progressPercentage.toFixed(0)}% {t('courseDetails.completed2')}
                       </p>
                     </div>
                   )}
@@ -440,7 +442,7 @@ const CourseDetails = () => {
                 <CardHeader>
                   <CardTitle className="text-lg flex items-center gap-2">
                     <BookOpen className="w-5 h-5" />
-                    الدروس
+                    {t('courseDetails.lesson')}
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="p-0">
@@ -485,7 +487,7 @@ const CourseDetails = () => {
                               </h4>
                               {lesson.duration_minutes && (
                                 <p className="text-xs text-muted-foreground mt-1">
-                                  {lesson.duration_minutes} دقيقة
+                                  {lesson.duration_minutes} {t('courseDetails.minute')}
                                 </p>
                               )}
                             </div>
@@ -501,7 +503,7 @@ const CourseDetails = () => {
                   {lessons.length === 0 && (
                     <div className="p-8 text-center text-muted-foreground">
                       <BookOpen className="w-12 h-12 mx-auto mb-3 opacity-50" />
-                      <p>لا توجد دروس بعد</p>
+                      <p>{t('courses.noCourses')}</p>
                     </div>
                   )}
                 </CardContent>

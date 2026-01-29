@@ -6,6 +6,7 @@ import { Label } from '@/components/ui/label';
 import { Card, CardContent } from '@/components/ui/card';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
+import { useLanguage } from '@/i18n/LanguageContext';
 import { toast } from 'sonner';
 import { Upload, Copy, CheckCircle, CreditCard, Loader2, Image } from 'lucide-react';
 
@@ -34,6 +35,7 @@ const ClickPaymentModal = ({
   onSuccess,
 }: ClickPaymentModalProps) => {
   const { user } = useAuth();
+  const { t } = useLanguage();
   const [paymentSettings, setPaymentSettings] = useState<PaymentSettings | null>(null);
   const [loading, setLoading] = useState(true);
   const [uploading, setUploading] = useState(false);
@@ -63,7 +65,7 @@ const ClickPaymentModal = ({
       setPaymentSettings(data);
     } catch (error) {
       console.error('Error fetching payment settings:', error);
-      toast.error('لم يتم إعداد طريقة الدفع بعد');
+      toast.error(t('payment.paymentNotSetup'));
     } finally {
       setLoading(false);
     }
@@ -92,11 +94,11 @@ const ClickPaymentModal = ({
     const file = e.target.files?.[0];
     if (file) {
       if (!file.type.startsWith('image/')) {
-        toast.error('الرجاء اختيار صورة فقط');
+        toast.error(t('payment.selectImageOnly'));
         return;
       }
       if (file.size > 5 * 1024 * 1024) {
-        toast.error('حجم الصورة يجب أن يكون أقل من 5 ميجابايت');
+        toast.error(t('payment.imageTooLarge'));
         return;
       }
       setReceiptFile(file);
@@ -107,7 +109,7 @@ const ClickPaymentModal = ({
   const copyToClipboard = async (text: string) => {
     await navigator.clipboard.writeText(text);
     setCopied(true);
-    toast.success('تم نسخ رقم الحساب');
+    toast.success(t('payment.copied'));
     setTimeout(() => setCopied(false), 2000);
   };
 
@@ -144,12 +146,12 @@ const ClickPaymentModal = ({
 
       if (paymentError) throw paymentError;
 
-      toast.success('تم إرسال طلب الدفع بنجاح! سيتم مراجعته قريباً');
+      toast.success(t('payment.paymentSuccess'));
       onOpenChange(false);
       onSuccess();
     } catch (error) {
       console.error('Error submitting payment:', error);
-      toast.error('حدث خطأ في إرسال طلب الدفع');
+      toast.error(t('payment.paymentError'));
     } finally {
       setSubmitting(false);
     }
@@ -172,18 +174,18 @@ const ClickPaymentModal = ({
       <Dialog open={open} onOpenChange={onOpenChange}>
         <DialogContent className="max-w-md bg-card border-border">
           <DialogHeader>
-            <DialogTitle className="text-xl font-bold text-center">طلب الدفع قيد المراجعة</DialogTitle>
+            <DialogTitle className="text-xl font-bold text-center">{t('payment.paymentPending')}</DialogTitle>
           </DialogHeader>
           <div className="py-8 text-center">
             <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-accent/20 flex items-center justify-center">
               <Loader2 className="h-8 w-8 text-accent animate-spin" />
             </div>
             <p className="text-muted-foreground">
-              لديك طلب دفع معلق لهذا الكورس. سيتم إعلامك عند الموافقة عليه.
+              {t('payment.pendingNote')}
             </p>
           </div>
           <Button onClick={() => onOpenChange(false)} className="w-full">
-            حسناً
+            {t('payment.okay')}
           </Button>
         </DialogContent>
       </Dialog>
@@ -196,16 +198,16 @@ const ClickPaymentModal = ({
         <DialogContent className="max-w-md bg-card border-border">
           <DialogHeader>
             <DialogTitle className="text-xl font-bold text-center text-destructive">
-              طريقة الدفع غير متاحة
+              {t('payment.paymentUnavailable')}
             </DialogTitle>
           </DialogHeader>
           <div className="py-8 text-center">
             <p className="text-muted-foreground">
-              لم يتم إعداد معلومات الدفع بعد. يرجى التواصل مع الإدارة.
+              {t('payment.paymentNotSetup')}
             </p>
           </div>
           <Button onClick={() => onOpenChange(false)} className="w-full">
-            إغلاق
+            {t('payment.close')}
           </Button>
         </DialogContent>
       </Dialog>
@@ -218,10 +220,10 @@ const ClickPaymentModal = ({
         <DialogHeader>
           <DialogTitle className="text-xl font-bold flex items-center gap-2">
             <CreditCard className="h-5 w-5 text-accent" />
-            الدفع عبر الكلك
+            {t('payment.clickPayment')}
           </DialogTitle>
           <DialogDescription>
-            أكمل الدفع للاشتراك في: {courseTitle}
+            {t('payment.completePayment')} {courseTitle}
           </DialogDescription>
         </DialogHeader>
 
@@ -230,23 +232,23 @@ const ClickPaymentModal = ({
           <Card className="bg-accent/10 border-accent/30">
             <CardContent className="p-4">
               <div className="flex items-center justify-between">
-                <span className="font-medium">المبلغ المطلوب:</span>
-                <span className="text-2xl font-black text-accent">{coursePrice} ر.س</span>
+                <span className="font-medium">{t('payment.requiredAmount')}</span>
+                <span className="text-2xl font-black text-accent">{coursePrice} {t('payment.sar')}</span>
               </div>
             </CardContent>
           </Card>
 
           {/* معلومات حساب الكلك */}
           <div className="space-y-4">
-            <h3 className="font-bold text-lg">معلومات الحساب</h3>
+            <h3 className="font-bold text-lg">{t('payment.accountInfo')}</h3>
             <Card className="bg-muted/50">
               <CardContent className="p-4 space-y-3">
                 <div>
-                  <Label className="text-xs text-muted-foreground">اسم الحساب</Label>
+                  <Label className="text-xs text-muted-foreground">{t('payment.accountName')}</Label>
                   <p className="font-bold text-lg">{paymentSettings.account_name}</p>
                 </div>
                 <div>
-                  <Label className="text-xs text-muted-foreground">رقم الحساب</Label>
+                  <Label className="text-xs text-muted-foreground">{t('payment.accountNumber')}</Label>
                   <div className="flex items-center gap-2">
                     <p className="font-bold text-lg flex-1 font-mono">{paymentSettings.account_number}</p>
                     <Button
@@ -261,7 +263,7 @@ const ClickPaymentModal = ({
                 </div>
                 {paymentSettings.instructions && (
                   <div>
-                    <Label className="text-xs text-muted-foreground">تعليمات إضافية</Label>
+                    <Label className="text-xs text-muted-foreground">{t('payment.additionalInstructions')}</Label>
                     <p className="text-sm text-muted-foreground">{paymentSettings.instructions}</p>
                   </div>
                 )}
@@ -271,7 +273,7 @@ const ClickPaymentModal = ({
 
           {/* رفع الوصل */}
           <div className="space-y-4">
-            <h3 className="font-bold text-lg">رفع صورة الوصل</h3>
+            <h3 className="font-bold text-lg">{t('payment.uploadReceipt')}</h3>
             <input
               type="file"
               ref={fileInputRef}
@@ -296,7 +298,7 @@ const ClickPaymentModal = ({
                     setPreviewUrl(null);
                   }}
                 >
-                  حذف
+                  {t('payment.delete')}
                 </Button>
               </div>
             ) : (
@@ -305,7 +307,7 @@ const ClickPaymentModal = ({
                 className="w-full h-32 border-2 border-dashed border-border rounded-lg flex flex-col items-center justify-center gap-2 hover:border-accent hover:bg-accent/5 transition-colors"
               >
                 <Upload className="h-8 w-8 text-muted-foreground" />
-                <span className="text-sm text-muted-foreground">اضغط لرفع صورة الوصل</span>
+                <span className="text-sm text-muted-foreground">{t('payment.clickToUpload')}</span>
               </button>
             )}
           </div>
@@ -320,18 +322,18 @@ const ClickPaymentModal = ({
             {submitting ? (
               <>
                 <Loader2 className="h-4 w-4 animate-spin" />
-                جاري الإرسال...
+                {t('payment.submitting')}
               </>
             ) : (
               <>
                 <CheckCircle className="h-4 w-4" />
-                إرسال طلب الدفع
+                {t('payment.submitPayment')}
               </>
             )}
           </Button>
 
           <p className="text-xs text-center text-muted-foreground">
-            سيتم مراجعة طلبك وتفعيل اشتراكك خلال 24 ساعة
+            {t('payment.reviewNote')}
           </p>
         </div>
       </DialogContent>

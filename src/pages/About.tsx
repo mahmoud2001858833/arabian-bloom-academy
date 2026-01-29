@@ -3,41 +3,44 @@ import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
 import PageTransition from '@/components/layout/PageTransition';
 import { BookOpen, Users, Target, Award, Heart, Sparkles } from 'lucide-react';
+import { useLanguage } from '@/i18n/LanguageContext';
 
 const easeOut: Easing = [0.25, 0.46, 0.45, 0.94];
 
 const About = () => {
+  const { t } = useLanguage();
+
   const values = [
     {
       icon: BookOpen,
-      title: 'التعليم المتميز',
-      description: 'نقدم محتوى تعليمي عالي الجودة يجمع بين الأصالة والمعاصرة',
+      title: t('about.excellentEducation'),
+      description: t('about.excellentEducationDesc'),
       symbol: '۞',
     },
     {
       icon: Users,
-      title: 'المجتمع التعليمي',
-      description: 'نبني مجتمعاً من المتعلمين المتحمسين للغة العربية حول العالم',
+      title: t('about.educationalCommunity'),
+      description: t('about.educationalCommunityDesc'),
       symbol: '﴾',
     },
     {
       icon: Target,
-      title: 'الأهداف الواضحة',
-      description: 'نساعدك على تحقيق أهدافك التعليمية بخطوات واضحة ومدروسة',
+      title: t('about.clearGoals'),
+      description: t('about.clearGoalsDesc'),
       symbol: '﴿',
     },
     {
       icon: Award,
-      title: 'الشهادات المعتمدة',
-      description: 'احصل على شهادات معترف بها تثبت إتقانك للغة العربية',
+      title: t('about.accreditedCertificates'),
+      description: t('about.accreditedCertificatesDesc'),
       symbol: '۝',
     },
   ];
 
   const features = [
-    { number: '﴾', title: 'منهج متكامل', desc: 'تغطية شاملة لجميع جوانب اللغة' },
-    { number: '﴿', title: 'تفاعلي', desc: 'تمارين وأنشطة تفاعلية ممتعة' },
-    { number: '۞', title: 'مرن', desc: 'تعلم في أي وقت ومن أي مكان' },
+    { number: '﴾', title: t('about.integratedCurriculum'), desc: t('about.integratedCurriculumDesc') },
+    { number: '﴿', title: t('about.interactive'), desc: t('about.interactiveDesc') },
+    { number: '۞', title: t('about.flexible'), desc: t('about.flexibleDesc') },
   ];
 
   const containerVariants = {
@@ -87,21 +90,21 @@ const About = () => {
                 {/* Badge */}
                 <div className="inline-flex items-center gap-3 bg-primary/10 backdrop-blur-md text-primary px-6 py-3 rounded-full border border-primary/20">
                   <Heart className="h-5 w-5" />
-                  <span className="font-bold">نحن نحب اللغة العربية</span>
+                  <span className="font-bold">{t('about.weLoveArabic')}</span>
                   <span className="text-accent">✦</span>
                 </div>
 
                 {/* Main Title */}
                 <h1 className="text-5xl md:text-6xl lg:text-7xl font-black text-foreground">
-                  من{' '}
+                  {t('about.whoWeAre')}{' '}
                   <span className="text-primary" style={{ textShadow: '0 0 40px hsl(var(--primary) / 0.3)' }}>
-                    نحن
+                    {t('about.we')}
                   </span>
                 </h1>
 
                 {/* Description */}
                 <p className="text-xl md:text-2xl text-muted-foreground leading-relaxed">
-                  منصة تعليمية رائدة تهدف إلى نشر اللغة العربية حول العالم بأساليب حديثة ومبتكرة
+                  {t('about.aboutDescription')}
                 </p>
               </motion.div>
             </div>
@@ -122,23 +125,21 @@ const About = () => {
                 >
                   <div className="inline-flex items-center gap-2 text-accent text-2xl">
                     <Sparkles className="h-6 w-6" />
-                    <span className="font-bold">رسالتنا</span>
+                    <span className="font-bold">{t('about.ourMission')}</span>
                   </div>
                   
                   <h2 className="text-4xl md:text-5xl font-black text-foreground">
-                    نشر{' '}
-                    <span className="text-primary">جمال</span>
-                    {' '}اللغة العربية
+                    {t('about.spreading')}{' '}
+                    <span className="text-primary">{t('about.beautyOf')}</span>
+                    {' '}{t('about.arabicLanguage')}
                   </h2>
                   
                   <p className="text-lg text-muted-foreground leading-relaxed">
-                    نؤمن بأن اللغة العربية هي أجمل اللغات وأغناها، ونسعى لتقديمها للعالم بأسلوب عصري يجمع بين الأصالة والحداثة. 
-                    هدفنا أن نجعل تعلم العربية تجربة ممتعة وسهلة للجميع.
+                    {t('about.missionParagraph1')}
                   </p>
                   
                   <p className="text-lg text-muted-foreground leading-relaxed">
-                    نستخدم أحدث التقنيات التعليمية ونعمل مع نخبة من المعلمين المتخصصين لضمان 
-                    تقديم أفضل تجربة تعليمية لطلابنا حول العالم.
+                    {t('about.missionParagraph2')}
                   </p>
                 </motion.div>
 
@@ -162,7 +163,7 @@ const About = () => {
                         <span className="text-7xl text-primary font-black block" style={{ textShadow: '0 0 30px hsl(var(--primary) / 0.3)' }}>
                           ض
                         </span>
-                        <span className="text-accent text-lg font-bold">حرف الضاد</span>
+                        <span className="text-accent text-lg font-bold">{t('about.dadLetter')}</span>
                       </div>
                     </div>
 
@@ -212,11 +213,11 @@ const About = () => {
                 transition={{ duration: 0.6 }}
               >
                 <h2 className="text-4xl md:text-5xl font-black text-foreground mb-4">
-                  قيمنا{' '}
-                  <span className="text-primary">الأساسية</span>
+                  {t('about.ourCoreValues')}{' '}
+                  <span className="text-primary">{t('about.core')}</span>
                 </h2>
                 <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-                  نلتزم بمجموعة من القيم التي توجه عملنا وتحدد هويتنا
+                  {t('about.valuesDescription')}
                 </p>
               </motion.div>
 
@@ -265,8 +266,8 @@ const About = () => {
               >
                 <div className="text-center mb-12">
                   <h2 className="text-3xl md:text-4xl font-black text-foreground mb-4">
-                    لماذا تختار{' '}
-                    <span className="text-primary">منصتنا</span>؟
+                    {t('about.whyChoosePlatform')}{' '}
+                    <span className="text-primary">{t('about.ourPlatform')}</span>؟
                   </h2>
                 </div>
 
@@ -301,12 +302,12 @@ const About = () => {
                 transition={{ duration: 0.6 }}
               >
                 <h2 className="text-4xl md:text-5xl font-black text-foreground">
-                  ابدأ رحلتك مع{' '}
-                  <span className="text-primary">العربية</span>
-                  {' '}اليوم
+                  {t('about.startYourJourneyWith')}{' '}
+                  <span className="text-primary">{t('about.arabicLanguage')}</span>
+                  {' '}{t('about.today')}
                 </h2>
                 <p className="text-xl text-muted-foreground">
-                  انضم إلى آلاف المتعلمين حول العالم واكتشف جمال اللغة العربية
+                  {t('about.joinThousandsLearners')}
                 </p>
                 <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
                   <motion.a
@@ -316,7 +317,7 @@ const About = () => {
                     whileTap={{ scale: 0.98 }}
                   >
                     <BookOpen className="h-6 w-6" />
-                    تصفح الكورسات
+                    {t('home.browseCourses')}
                   </motion.a>
                   <motion.a
                     href="/auth?tab=signup"
@@ -325,7 +326,7 @@ const About = () => {
                     whileTap={{ scale: 0.98 }}
                   >
                     <Users className="h-6 w-6" />
-                    انضم إلينا
+                    {t('about.joinUs')}
                   </motion.a>
                 </div>
               </motion.div>
