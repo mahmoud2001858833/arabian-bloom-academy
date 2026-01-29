@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
-import { Play, BookOpen } from 'lucide-react';
+import { BookOpen } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { useLanguage } from '@/i18n/LanguageContext';
 import heroLogo from '@/assets/hero-logo.png';
 
 // Floating Arabic Letters around the logo - ض is the leader
@@ -70,7 +71,10 @@ const FloatingArabicLetters = () => {
     })}
     </>;
 };
+
 const HeroSection = () => {
+  const { t } = useLanguage();
+
   return <section className="relative min-h-screen flex items-center overflow-hidden bg-gradient-to-br from-purple-50 via-white to-purple-100/50">
       {/* Purple & Gold Decorative Section at Top */}
       <div className="absolute top-0 left-0 right-0 h-2 bg-gradient-to-r from-primary via-accent to-primary" />
@@ -193,9 +197,6 @@ const HeroSection = () => {
                   animationDelay: '0.5s'
                 }} />
                   
-                  {/* النص الذهبي فوق اللوقو */}
-                  
-                  
                   <img src={heroLogo} alt="منصة العربية" className="w-44 h-44 md:w-60 md:h-60 object-contain relative z-10 drop-shadow-2xl animate-logo-float" style={{
                   filter: 'drop-shadow(0 0 30px hsl(var(--primary) / 0.3)) drop-shadow(0 0 60px hsl(var(--accent) / 0.2))'
                 }} />
@@ -216,8 +217,8 @@ const HeroSection = () => {
           }}>
               <span className="text-2xl font-black text-accent" style={{
               textShadow: '0 0 20px hsl(var(--accent) / 0.5)'
-            }}>النجاة</span>
-              <span className="font-bold">المنصة الأولى لتعلم اللغة العربية</span>
+            }}>{t('home.platformName')}</span>
+              <span className="font-bold">{t('home.platformBadge')}</span>
               <span className="text-accent">✦</span>
             </div>
 
@@ -226,17 +227,17 @@ const HeroSection = () => {
             animationDelay: '0.2s'
           }}>
               <h1 className="text-5xl md:text-7xl lg:text-8xl font-black leading-tight text-foreground">
-                أتقن{' '}
+                {t('home.masterArabic')}{' '}
                 <span className="relative inline-block">
                   <span className="text-primary text-6xl md:text-8xl lg:text-9xl" style={{
                   textShadow: '0 0 60px hsl(var(--primary) / 0.4)'
                 }}>
-                    العربية
+                    {t('home.arabic')}
                   </span>
                 </span>
               </h1>
               <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-muted-foreground">
-                بطريقة <span className="text-primary/80">احترافية</span> ومبتكرة
+                {t('home.professionalWay')} <span className="text-primary/80">{t('home.professional')}</span> {t('home.andInnovative')}
               </h2>
             </div>
 
@@ -244,8 +245,7 @@ const HeroSection = () => {
             <p className="text-lg md:text-xl text-muted-foreground max-w-xl leading-relaxed animate-fade-in" style={{
             animationDelay: '0.3s'
           }}>
-              انطلق في رحلة تعلم اللغة العربية مع أفضل المعلمين والمناهج التفاعلية.
-              كورسات متنوعة تناسب جميع المستويات.
+              {t('home.heroDescription')}
             </p>
 
             {/* CTA Button */}
@@ -255,7 +255,7 @@ const HeroSection = () => {
               <Button size="lg" className="bg-primary hover:bg-primary/90 text-primary-foreground text-lg px-10 py-7 rounded-2xl font-bold shadow-lg shadow-primary/25 transition-all hover:scale-105 hover:shadow-xl hover:shadow-primary/30 group" asChild>
                 <Link to="/courses">
                   <BookOpen className="ml-3 h-6 w-6 group-hover:rotate-6 transition-transform" />
-                  تصفح الكورسات
+                  {t('home.browseCourses')}
                 </Link>
               </Button>
             </div>
@@ -264,16 +264,11 @@ const HeroSection = () => {
             <div className="flex flex-wrap items-center lg:justify-end justify-center gap-3 pt-2 animate-fade-in" style={{
             animationDelay: '0.5s'
           }}>
-              {[{
-              icon: '🏆',
-              text: 'شهادات معتمدة'
-            }, {
-              icon: '⭐',
-              text: 'محتوى حصري'
-            }, {
-              icon: '💎',
-              text: 'جودة عالية'
-            }].map((item, index) => <span key={index} className="inline-flex items-center gap-2 bg-white/80 backdrop-blur-sm px-4 py-2 rounded-full text-sm text-foreground/80 border border-primary/10 hover:border-primary/30 hover:bg-primary/5 transition-all cursor-default shadow-sm">
+              {[
+                { icon: '🏆', text: t('home.certifiedCertificates') },
+                { icon: '⭐', text: t('home.exclusiveContent') },
+                { icon: '💎', text: t('home.highQuality') }
+              ].map((item, index) => <span key={index} className="inline-flex items-center gap-2 bg-white/80 backdrop-blur-sm px-4 py-2 rounded-full text-sm text-foreground/80 border border-primary/10 hover:border-primary/30 hover:bg-primary/5 transition-all cursor-default shadow-sm">
                   <span>{item.icon}</span>
                   {item.text}
                 </span>)}
@@ -289,4 +284,5 @@ const HeroSection = () => {
       </div>
     </section>;
 };
+
 export default HeroSection;

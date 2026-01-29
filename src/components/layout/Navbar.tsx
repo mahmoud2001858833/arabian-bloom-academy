@@ -3,6 +3,8 @@ import { Link, useNavigate } from 'react-router-dom';
 import { Menu, X, User, LogOut, LayoutDashboard, ChevronDown } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useAuth } from '@/contexts/AuthContext';
+import { useLanguage } from '@/i18n/LanguageContext';
+import LanguageSwitcher from './LanguageSwitcher';
 import logo from '@/assets/navbar-logo.png';
 import {
   DropdownMenu,
@@ -16,6 +18,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const { user, isAdmin, signOut } = useAuth();
+  const { t } = useLanguage();
   const navigate = useNavigate();
 
   const handleSignOut = async () => {
@@ -24,9 +27,9 @@ const Navbar = () => {
   };
 
   const navLinks = [
-    { href: '/', label: 'الرئيسية' },
-    { href: '/courses', label: 'الكورسات' },
-    { href: '/about', label: 'من نحن' },
+    { href: '/', label: t('nav.home') },
+    { href: '/courses', label: t('nav.courses') },
+    { href: '/about', label: t('nav.about') },
   ];
 
   return (
@@ -54,6 +57,8 @@ const Navbar = () => {
 
           {/* Auth Buttons / User Menu */}
           <div className="hidden md:flex items-center gap-4">
+            <LanguageSwitcher />
+            
             {user ? (
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
@@ -64,42 +69,42 @@ const Navbar = () => {
                         {user.email?.charAt(0).toUpperCase()}
                       </AvatarFallback>
                     </Avatar>
-                    <span className="font-semibold">{user.user_metadata?.full_name || 'مستخدم'}</span>
+                    <span className="font-semibold">{user.user_metadata?.full_name || t('nav.user')}</span>
                     <ChevronDown className="h-4 w-4 text-muted-foreground" />
                   </Button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent className="w-56 bg-white border shadow-xl rounded-xl p-2" align="end">
+                <DropdownMenuContent className="w-56 bg-white border shadow-xl rounded-xl p-2 z-50" align="end">
                   <div className="px-3 py-2 mb-2">
-                    <p className="font-semibold">{user.user_metadata?.full_name || 'مستخدم'}</p>
+                    <p className="font-semibold">{user.user_metadata?.full_name || t('nav.user')}</p>
                     <p className="text-xs text-muted-foreground">{user.email}</p>
                   </div>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem asChild>
                     <Link to={isAdmin ? '/admin' : '/dashboard'} className="cursor-pointer rounded-lg">
                       <LayoutDashboard className="ml-2 h-4 w-4" />
-                      {isAdmin ? 'لوحة التحكم' : 'لوحة الطالب'}
+                      {isAdmin ? t('nav.adminDashboard') : t('nav.dashboard')}
                     </Link>
                   </DropdownMenuItem>
                   <DropdownMenuItem asChild>
                     <Link to="/profile" className="cursor-pointer rounded-lg">
                       <User className="ml-2 h-4 w-4" />
-                      الملف الشخصي
+                      {t('nav.profile')}
                     </Link>
                   </DropdownMenuItem>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem onClick={handleSignOut} className="cursor-pointer text-destructive rounded-lg">
                     <LogOut className="ml-2 h-4 w-4" />
-                    تسجيل الخروج
+                    {t('nav.logout')}
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
             ) : (
               <>
                 <Button variant="ghost" className="font-semibold text-lg hover:text-accent" asChild>
-                  <Link to="/auth">تسجيل الدخول</Link>
+                  <Link to="/auth">{t('nav.login')}</Link>
                 </Button>
                 <Button className="rounded-xl px-6 font-bold" asChild>
-                  <Link to="/auth?tab=signup">إنشاء حساب</Link>
+                  <Link to="/auth?tab=signup">{t('nav.signup')}</Link>
                 </Button>
               </>
             )}
@@ -119,6 +124,11 @@ const Navbar = () => {
         {isOpen && (
           <div className="md:hidden py-6 border-t border-primary/10 animate-fade-in">
             <div className="flex flex-col gap-4">
+              {/* Language Switcher for Mobile */}
+              <div className="px-4 pb-4 border-b border-primary/10">
+                <LanguageSwitcher />
+              </div>
+              
               {navLinks.map((link) => (
                 <Link
                   key={link.href}
@@ -136,7 +146,7 @@ const Navbar = () => {
                     className="text-foreground/80 hover:text-primary transition-colors font-semibold py-3 px-4 rounded-xl hover:bg-primary/5"
                     onClick={() => setIsOpen(false)}
                   >
-                    {isAdmin ? 'لوحة التحكم' : 'لوحة الطالب'}
+                    {isAdmin ? t('nav.adminDashboard') : t('nav.dashboard')}
                   </Link>
                   <button
                     onClick={() => {
@@ -145,19 +155,19 @@ const Navbar = () => {
                     }}
                     className="text-destructive hover:text-destructive/80 transition-colors font-semibold py-3 px-4 rounded-xl hover:bg-destructive/5 text-right"
                   >
-                    تسجيل الخروج
+                    {t('nav.logout')}
                   </button>
                 </>
               ) : (
                 <div className="flex flex-col gap-3 pt-4 border-t border-accent/20">
                   <Button variant="outline" className="rounded-xl" asChild>
                     <Link to="/auth" onClick={() => setIsOpen(false)}>
-                      تسجيل الدخول
+                      {t('nav.login')}
                     </Link>
                   </Button>
                   <Button className="rounded-xl" asChild>
                     <Link to="/auth?tab=signup" onClick={() => setIsOpen(false)}>
-                      إنشاء حساب
+                      {t('nav.signup')}
                     </Link>
                   </Button>
                 </div>
