@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { useAuth } from '@/contexts/AuthContext';
 import { useLanguage } from '@/i18n/LanguageContext';
 import LanguageSwitcher from './LanguageSwitcher';
-import logo from '@/assets/navbar-logo.png';
+import logo from '@/assets/new-logo.png';
 import {
   DropdownMenu,
   DropdownMenuContent,
