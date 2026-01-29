@@ -57,17 +57,44 @@ const HeroSection = () => {
           <div className="order-1 lg:order-2 flex justify-center">
             <div className="relative animate-logo-container">
               
-              {/* Soft Glow Background */}
-              <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-accent/10 to-primary/5 blur-[80px] rounded-full scale-125" />
+              {/* Glowing Purple Ring Background */}
+              <div className="absolute inset-0 flex items-center justify-center">
+                {/* Outer glow */}
+                <div className="absolute w-56 h-56 md:w-72 md:h-72 lg:w-80 lg:h-80 rounded-full bg-primary/20 blur-[60px] animate-pulse" />
+                
+                {/* Glowing border ring */}
+                <div 
+                  className="absolute w-52 h-52 md:w-64 md:h-64 lg:w-72 lg:h-72 rounded-full animate-pulse"
+                  style={{
+                    background: 'linear-gradient(135deg, hsl(var(--primary) / 0.3), hsl(var(--accent) / 0.2), hsl(var(--primary) / 0.3))',
+                    boxShadow: `
+                      0 0 30px hsl(var(--primary) / 0.4),
+                      0 0 60px hsl(var(--primary) / 0.3),
+                      0 0 90px hsl(var(--primary) / 0.2),
+                      inset 0 0 30px hsl(var(--primary) / 0.1)
+                    `,
+                    animationDuration: '3s'
+                  }}
+                />
+                
+                {/* Inner circle background */}
+                <div 
+                  className="absolute w-48 h-48 md:w-60 md:h-60 lg:w-[268px] lg:h-[268px] rounded-full bg-gradient-to-br from-white via-purple-50 to-white"
+                  style={{
+                    boxShadow: 'inset 0 0 20px hsl(var(--primary) / 0.1)'
+                  }}
+                />
+              </div>
               
-              {/* Logo - Large & Clean */}
-              <div className="relative animate-logo-appear">
+              {/* Logo - Smaller & Sharp */}
+              <div className="relative animate-logo-appear z-10">
                 <img 
                   src={heroLogo} 
                   alt="منصة النجاة" 
-                  className="w-72 h-72 md:w-96 md:h-96 lg:w-[450px] lg:h-[450px] object-contain relative z-10 drop-shadow-xl animate-logo-float" 
+                  className="w-44 h-44 md:w-56 md:h-56 lg:w-64 lg:h-64 object-contain relative z-10 drop-shadow-2xl animate-logo-float" 
                   style={{
-                    filter: 'drop-shadow(0 0 40px hsl(var(--primary) / 0.15)) drop-shadow(0 0 80px hsl(var(--accent) / 0.1))'
+                    filter: 'drop-shadow(0 0 20px hsl(var(--primary) / 0.25)) drop-shadow(0 0 40px hsl(var(--accent) / 0.15))',
+                    imageRendering: 'crisp-edges'
                   }} 
                 />
               </div>
