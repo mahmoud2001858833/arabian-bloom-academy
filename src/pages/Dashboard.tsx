@@ -8,6 +8,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
+import { useLanguage } from '@/i18n/LanguageContext';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
 
@@ -22,13 +23,8 @@ interface EnrolledCourse {
   progress: number;
 }
 
-const levelLabels: Record<string, { label: string; color: string }> = {
-  beginner: { label: 'مبتدئ', color: 'bg-emerald-500/20 text-emerald-600 border-emerald-500/30' },
-  intermediate: { label: 'متوسط', color: 'bg-amber-500/20 text-amber-600 border-amber-500/30' },
-  advanced: { label: 'متقدم', color: 'bg-rose-500/20 text-rose-600 border-rose-500/30' },
-};
-
 const Dashboard = () => {
+  const { t } = useLanguage();
   const { user, loading, isAdmin } = useAuth();
   const navigate = useNavigate();
   const [enrolledCourses, setEnrolledCourses] = useState<EnrolledCourse[]>([]);
@@ -39,6 +35,12 @@ const Dashboard = () => {
     completedQuizzes: 0,
     progressRate: 0,
   });
+
+  const levelLabels: Record<string, { label: string; color: string }> = {
+    beginner: { label: t('courses.beginner'), color: 'bg-emerald-500/20 text-emerald-600 border-emerald-500/30' },
+    intermediate: { label: t('courses.intermediate'), color: 'bg-amber-500/20 text-amber-600 border-amber-500/30' },
+    advanced: { label: t('courses.advanced'), color: 'bg-rose-500/20 text-rose-600 border-rose-500/30' },
+  };
 
   useEffect(() => {
     if (!loading && !user) {
@@ -190,10 +192,10 @@ const Dashboard = () => {
   }
 
   const statItems = [
-    { icon: BookOpen, label: 'كورسات مسجلة', value: stats.totalCourses.toString(), color: 'primary' },
-    { icon: Clock, label: 'ساعات دراسة', value: stats.totalHours.toString(), color: 'accent' },
-    { icon: Award, label: 'اختبارات ناجحة', value: stats.completedQuizzes.toString(), color: 'emerald' },
-    { icon: TrendingUp, label: 'معدل التقدم', value: `${stats.progressRate}%`, color: 'primary' },
+    { icon: BookOpen, label: t('dashboard.enrolledCourses'), value: stats.totalCourses.toString(), color: 'primary' },
+    { icon: Clock, label: t('dashboard.studyHours'), value: stats.totalHours.toString(), color: 'accent' },
+    { icon: Award, label: t('dashboard.passedQuizzes'), value: stats.completedQuizzes.toString(), color: 'emerald' },
+    { icon: TrendingUp, label: t('dashboard.progressRate'), value: `${stats.progressRate}%`, color: 'primary' },
   ];
 
   return (
@@ -214,9 +216,9 @@ const Dashboard = () => {
               </div>
               <div>
                 <h1 className="text-3xl md:text-4xl font-black text-foreground">
-                  مرحباً، <span className="text-primary" style={{ textShadow: '0 0 30px hsl(var(--primary) / 0.3)' }}>{user?.user_metadata?.full_name || 'طالب'}</span>
+                  {t('dashboard.welcome')} <span className="text-primary" style={{ textShadow: '0 0 30px hsl(var(--primary) / 0.3)' }}>{user?.user_metadata?.full_name || t('dashboard.student')}</span>
                 </h1>
-                <p className="text-muted-foreground mt-1">تابع تقدمك في رحلة تعلم اللغة العربية</p>
+                <p className="text-muted-foreground mt-1">{t('dashboard.trackProgress')}</p>
               </div>
             </div>
           </motion.div>
@@ -263,14 +265,14 @@ const Dashboard = () => {
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3">
                 <Sparkles className="h-6 w-6 text-accent" />
-                <h2 className="text-2xl font-black text-foreground">كورساتي</h2>
+                <h2 className="text-2xl font-black text-foreground">{t('dashboard.myCourses')}</h2>
               </div>
               <Button 
                 variant="outline" 
                 onClick={() => navigate('/courses')}
                 className="rounded-xl border-primary/30 hover:bg-primary/10"
               >
-                تصفح الكورسات
+                {t('dashboard.browseCourses')}
               </Button>
             </div>
 
@@ -283,14 +285,14 @@ const Dashboard = () => {
                 <div className="w-20 h-20 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-6">
                   <BookOpen className="h-10 w-10 text-primary" />
                 </div>
-                <h3 className="text-xl font-bold text-foreground mb-2">لم تسجل في أي كورس بعد</h3>
-                <p className="text-muted-foreground mb-6">ابدأ رحلة التعلم بالتسجيل في أحد كورساتنا المميزة</p>
+                <h3 className="text-xl font-bold text-foreground mb-2">{t('dashboard.notEnrolledYet')}</h3>
+                <p className="text-muted-foreground mb-6">{t('dashboard.startLearning')}</p>
                 <Button 
                   onClick={() => navigate('/courses')}
                   className="rounded-xl px-8"
                 >
                   <GraduationCap className="h-5 w-5 ml-2" />
-                  تصفح الكورسات
+                  {t('dashboard.browseCourses')}
                 </Button>
               </motion.div>
             ) : (
@@ -317,7 +319,7 @@ const Dashboard = () => {
                         {/* Progress Overlay */}
                         <div className="absolute bottom-3 left-3 right-3">
                           <div className="flex justify-between text-white text-sm mb-1">
-                            <span>التقدم</span>
+                            <span>{t('dashboard.progress')}</span>
                             <span className="font-bold">{course.progress}%</span>
                           </div>
                           <div className="h-2 bg-white/30 rounded-full overflow-hidden">
@@ -331,7 +333,7 @@ const Dashboard = () => {
                         {/* Level Badge */}
                         <div className="absolute top-3 right-3">
                           <Badge className={`font-bold px-3 py-1 border ${levelLabels[course.level || 'beginner']?.color || 'bg-primary/20 text-primary'}`}>
-                            {levelLabels[course.level || 'beginner']?.label || 'مبتدئ'}
+                            {levelLabels[course.level || 'beginner']?.label || t('courses.beginner')}
                           </Badge>
                         </div>
                       </div>
@@ -343,7 +345,7 @@ const Dashboard = () => {
                         </h3>
                         
                         <p className="text-sm text-muted-foreground">
-                          {course.completedLessons} من {course.totalLessons} درس مكتمل
+                          {course.completedLessons} {t('dashboard.of')} {course.totalLessons} {t('dashboard.lessonCompleted')}
                         </p>
 
                         <Button 
@@ -352,7 +354,7 @@ const Dashboard = () => {
                         >
                           <Link to={`/courses/${course.id}`}>
                             <Play className="h-4 w-4 ml-2" />
-                            متابعة التعلم
+                            {t('dashboard.continueLearning')}
                           </Link>
                         </Button>
                       </div>
@@ -372,10 +374,10 @@ const Dashboard = () => {
           >
             <div className="bg-gradient-to-br from-primary/10 via-primary/5 to-accent/10 backdrop-blur-xl border border-primary/20 rounded-3xl p-8 text-center">
               <h3 className="text-2xl font-black text-foreground mb-3">
-                هل تريد استكشاف المزيد؟
+                {t('dashboard.wantToExploreMore')}
               </h3>
               <p className="text-muted-foreground mb-6">
-                اكتشف كورسات جديدة وطوّر مهاراتك في اللغة العربية
+                {t('dashboard.discoverNewCourses')}
               </p>
               <Button 
                 size="lg"
@@ -383,7 +385,7 @@ const Dashboard = () => {
                 className="rounded-xl px-8 font-bold shadow-lg shadow-primary/25"
               >
                 <Sparkles className="h-5 w-5 ml-2" />
-                استكشف الكورسات
+                {t('dashboard.exploreCourses')}
               </Button>
             </div>
           </motion.div>

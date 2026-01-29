@@ -9,25 +9,11 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/hooks/use-toast';
+import { useLanguage } from '@/i18n/LanguageContext';
 import logo from '@/assets/logo.png';
 
-// Validation schemas
-const loginSchema = z.object({
-  email: z.string().email('البريد الإلكتروني غير صالح'),
-  password: z.string().min(6, 'كلمة المرور يجب أن تكون 6 أحرف على الأقل'),
-});
-
-const signupSchema = z.object({
-  fullName: z.string().min(2, 'الاسم يجب أن يكون حرفين على الأقل'),
-  email: z.string().email('البريد الإلكتروني غير صالح'),
-  password: z.string().min(6, 'كلمة المرور يجب أن تكون 6 أحرف على الأقل'),
-  confirmPassword: z.string(),
-}).refine((data) => data.password === data.confirmPassword, {
-  message: 'كلمات المرور غير متطابقة',
-  path: ['confirmPassword'],
-});
-
 const Auth = () => {
+  const { t } = useLanguage();
   const [searchParams] = useSearchParams();
   const [activeTab, setActiveTab] = useState(searchParams.get('tab') === 'signup' ? 'signup' : 'login');
   const [showPassword, setShowPassword] = useState(false);
@@ -37,6 +23,22 @@ const Auth = () => {
   const { signIn, signUp, user } = useAuth();
   const navigate = useNavigate();
   const { toast } = useToast();
+
+  // Validation schemas
+  const loginSchema = z.object({
+    email: z.string().email(t('auth.invalidEmail')),
+    password: z.string().min(6, t('auth.passwordMinLength')),
+  });
+
+  const signupSchema = z.object({
+    fullName: z.string().min(2, t('auth.nameMinLength')),
+    email: z.string().email(t('auth.invalidEmail')),
+    password: z.string().min(6, t('auth.passwordMinLength')),
+    confirmPassword: z.string(),
+  }).refine((data) => data.password === data.confirmPassword, {
+    message: t('auth.passwordsMismatch'),
+    path: ['confirmPassword'],
+  });
 
   // Redirect if already logged in
   useEffect(() => {
@@ -84,9 +86,9 @@ const Auth = () => {
 
     if (error) {
       toast({
-        title: 'خطأ في تسجيل الدخول',
+        title: t('auth.loginError'),
         description: error.message === 'Invalid login credentials' 
-          ? 'البريد الإلكتروني أو كلمة المرور غير صحيحة' 
+          ? t('auth.invalidCredentials')
           : error.message,
         variant: 'destructive',
       });
@@ -94,8 +96,8 @@ const Auth = () => {
     }
 
     toast({
-      title: 'تم تسجيل الدخول بنجاح',
-      description: 'مرحباً بك في منصة العربية',
+      title: t('auth.loginSuccess'),
+      description: t('auth.welcomePlatform'),
     });
     navigate('/dashboard');
   };
@@ -125,11 +127,11 @@ const Auth = () => {
 
     if (error) {
       const errorMessage = error.message === 'User already registered' 
-        ? 'هذا البريد الإلكتروني مسجل مسبقاً'
+        ? t('auth.userExists')
         : error.message;
       
       toast({
-        title: 'خطأ في إنشاء الحساب',
+        title: t('auth.signupError'),
         description: errorMessage,
         variant: 'destructive',
       });
@@ -137,8 +139,8 @@ const Auth = () => {
     }
 
     toast({
-      title: 'تم إنشاء الحساب بنجاح',
-      description: 'مرحباً بك في منصة العربية',
+      title: t('auth.signupSuccess'),
+      description: t('auth.welcomePlatform'),
     });
     navigate('/dashboard');
   };
@@ -154,32 +156,32 @@ const Auth = () => {
       <Card className="w-full max-w-md relative z-10 shadow-elegant border-border/50">
         <CardHeader className="text-center space-y-4">
           <Link to="/" className="inline-block mx-auto">
-            <img src={logo} alt="منصة العربية" className="h-16 w-auto mx-auto" />
+            <img src={logo} alt={t('footer.platformName')} className="h-16 w-auto mx-auto" />
           </Link>
-          <CardTitle className="text-2xl">مرحباً بك</CardTitle>
+          <CardTitle className="text-2xl">{t('auth.welcome')}</CardTitle>
           <CardDescription>
-            {activeTab === 'login' ? 'سجل دخولك للمتابعة' : 'أنشئ حسابك الجديد'}
+            {activeTab === 'login' ? t('auth.loginToContinue') : t('auth.createAccount')}
           </CardDescription>
         </CardHeader>
 
         <CardContent>
           <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
             <TabsList className="grid w-full grid-cols-2 mb-6">
-              <TabsTrigger value="login">تسجيل الدخول</TabsTrigger>
-              <TabsTrigger value="signup">إنشاء حساب</TabsTrigger>
+              <TabsTrigger value="login">{t('auth.login')}</TabsTrigger>
+              <TabsTrigger value="signup">{t('auth.signup')}</TabsTrigger>
             </TabsList>
 
             {/* Login Tab */}
             <TabsContent value="login">
               <form onSubmit={handleLogin} className="space-y-4">
                 <div className="space-y-2">
-                  <Label htmlFor="login-email">البريد الإلكتروني</Label>
+                  <Label htmlFor="login-email">{t('auth.email')}</Label>
                   <div className="relative">
                     <Mail className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                     <Input
                       id="login-email"
                       type="email"
-                      placeholder="أدخل بريدك الإلكتروني"
+                      placeholder={t('auth.enterEmail')}
                       className="pr-10"
                       value={loginData.email}
                       onChange={(e) => setLoginData({ ...loginData, email: e.target.value })}
@@ -189,13 +191,13 @@ const Auth = () => {
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="login-password">كلمة المرور</Label>
+                  <Label htmlFor="login-password">{t('auth.password')}</Label>
                   <div className="relative">
                     <Lock className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                     <Input
                       id="login-password"
                       type={showPassword ? 'text' : 'password'}
-                      placeholder="أدخل كلمة المرور"
+                      placeholder={t('auth.enterPassword')}
                       className="pr-10 pl-10"
                       value={loginData.password}
                       onChange={(e) => setLoginData({ ...loginData, password: e.target.value })}
@@ -212,7 +214,7 @@ const Auth = () => {
                 </div>
 
                 <Button type="submit" className="w-full bg-gradient-primary hover:opacity-90" disabled={loading}>
-                  {loading ? 'جاري تسجيل الدخول...' : 'تسجيل الدخول'}
+                  {loading ? t('auth.loggingIn') : t('auth.login')}
                 </Button>
               </form>
             </TabsContent>
@@ -221,13 +223,13 @@ const Auth = () => {
             <TabsContent value="signup">
               <form onSubmit={handleSignup} className="space-y-4">
                 <div className="space-y-2">
-                  <Label htmlFor="signup-name">الاسم الكامل</Label>
+                  <Label htmlFor="signup-name">{t('auth.fullName')}</Label>
                   <div className="relative">
                     <User className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                     <Input
                       id="signup-name"
                       type="text"
-                      placeholder="أدخل اسمك الكامل"
+                      placeholder={t('auth.enterFullName')}
                       className="pr-10"
                       value={signupData.fullName}
                       onChange={(e) => setSignupData({ ...signupData, fullName: e.target.value })}
@@ -237,13 +239,13 @@ const Auth = () => {
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="signup-email">البريد الإلكتروني</Label>
+                  <Label htmlFor="signup-email">{t('auth.email')}</Label>
                   <div className="relative">
                     <Mail className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                     <Input
                       id="signup-email"
                       type="email"
-                      placeholder="أدخل بريدك الإلكتروني"
+                      placeholder={t('auth.enterEmail')}
                       className="pr-10"
                       value={signupData.email}
                       onChange={(e) => setSignupData({ ...signupData, email: e.target.value })}
@@ -253,13 +255,13 @@ const Auth = () => {
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="signup-password">كلمة المرور</Label>
+                  <Label htmlFor="signup-password">{t('auth.password')}</Label>
                   <div className="relative">
                     <Lock className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                     <Input
                       id="signup-password"
                       type={showPassword ? 'text' : 'password'}
-                      placeholder="أدخل كلمة المرور"
+                      placeholder={t('auth.enterPassword')}
                       className="pr-10 pl-10"
                       value={signupData.password}
                       onChange={(e) => setSignupData({ ...signupData, password: e.target.value })}
@@ -276,13 +278,13 @@ const Auth = () => {
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="signup-confirm-password">تأكيد كلمة المرور</Label>
+                  <Label htmlFor="signup-confirm-password">{t('auth.confirmPassword')}</Label>
                   <div className="relative">
                     <Lock className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                     <Input
                       id="signup-confirm-password"
                       type={showPassword ? 'text' : 'password'}
-                      placeholder="أعد إدخال كلمة المرور"
+                      placeholder={t('auth.reenterPassword')}
                       className="pr-10"
                       value={signupData.confirmPassword}
                       onChange={(e) => setSignupData({ ...signupData, confirmPassword: e.target.value })}
@@ -292,7 +294,7 @@ const Auth = () => {
                 </div>
 
                 <Button type="submit" className="w-full bg-gradient-primary hover:opacity-90" disabled={loading}>
-                  {loading ? 'جاري إنشاء الحساب...' : 'إنشاء حساب'}
+                  {loading ? t('auth.creatingAccount') : t('auth.signup')}
                 </Button>
               </form>
             </TabsContent>
@@ -301,13 +303,13 @@ const Auth = () => {
 
         <CardFooter className="text-center text-sm text-muted-foreground">
           <p className="w-full">
-            بالتسجيل، أنت توافق على{' '}
+            {t('auth.termsAgreement')}{' '}
             <Link to="/terms" className="text-primary hover:underline">
-              شروط الاستخدام
+              {t('auth.termsOfUse')}
             </Link>{' '}
-            و{' '}
+            {t('auth.and')}{' '}
             <Link to="/privacy" className="text-primary hover:underline">
-              سياسة الخصوصية
+              {t('auth.privacyPolicy')}
             </Link>
           </p>
         </CardFooter>
