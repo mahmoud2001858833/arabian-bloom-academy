@@ -132,7 +132,7 @@ const HeroSection = () => {
           }}>
               {[
                 { icon: '🏆', text: t('home.certifiedCertificates') },
-                { icon: '⭐', text: t('home.exclusiveContent') },
+                { icon: '⭐', text: t('home.interactiveContent') },
                 { icon: '💎', text: t('home.highQuality') }
               ].map((item, index) => <span key={index} className="inline-flex items-center gap-2 bg-white/80 backdrop-blur-sm px-4 py-2 rounded-full text-sm text-foreground/80 border border-primary/10 hover:border-primary/30 hover:bg-primary/5 transition-all cursor-default shadow-sm">
                   <span>{item.icon}</span>
