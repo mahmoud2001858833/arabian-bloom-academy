@@ -18,12 +18,6 @@ const Footer = () => {
     { href: '/about', label: t('nav.about') },
   ];
 
-  const levelLinks = [
-    { href: '/courses?level=beginner', label: t('footer.beginnerLevel') },
-    { href: '/courses?level=intermediate', label: t('footer.intermediateLevel') },
-    { href: '/courses?level=advanced', label: t('footer.advancedLevel') },
-  ];
-
   return (
     <footer className="relative bg-gradient-hero text-white overflow-hidden">
       {/* Decorative Elements */}
@@ -41,7 +35,7 @@ const Footer = () => {
       </div>
 
       <div className="container mx-auto px-4 py-16 relative z-10">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
           {/* Logo & Description */}
           <div className="space-y-6">
             <img src={logo} alt={t('footer.platformName')} className="h-14 w-auto" />
@@ -71,34 +65,6 @@ const Footer = () => {
                 </li>
               ))}
             </ul>
-          </div>
-
-          {/* Categories */}
-          <div>
-            <h3 className="text-lg font-bold mb-6 text-gold">{t('footer.learningLevels')}</h3>
-            <ul className="space-y-3">
-              {levelLinks.map((link) => (
-                <li key={link.href}>
-                  <Link
-                    to={link.href}
-                    className="text-white/70 hover:text-gold transition-colors inline-block"
-                  >
-                    {link.label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          {/* Islamic Pattern / Decorative */}
-          <div className="text-center md:text-right">
-            <h3 className="text-lg font-bold mb-6 text-gold">{t('footer.ourMission')}</h3>
-            <p className="text-white/70 leading-relaxed mb-6">
-              {t('footer.missionText')}
-            </p>
-            <div className="flex justify-center md:justify-start gap-3 text-4xl text-gold/40">
-              <span>﷽</span>
-            </div>
           </div>
         </div>
 

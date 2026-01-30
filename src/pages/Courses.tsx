@@ -52,7 +52,6 @@ const Courses = () => {
   const [courses, setCourses] = useState<Course[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [levelFilter, setLevelFilter] = useState('all');
-  const [priceFilter, setPriceFilter] = useState('all');
   const [loading, setLoading] = useState(true);
 
   const levelLabels = {
@@ -91,11 +90,8 @@ const Courses = () => {
     const matchesSearch = course.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
                          course.description?.toLowerCase().includes(searchQuery.toLowerCase());
     const matchesLevel = levelFilter === 'all' || course.level === levelFilter;
-    const matchesPrice = priceFilter === 'all' || 
-                        (priceFilter === 'free' && course.is_free) ||
-                        (priceFilter === 'paid' && !course.is_free);
     
-    return matchesSearch && matchesLevel && matchesPrice;
+    return matchesSearch && matchesLevel;
   });
 
   return (
@@ -167,16 +163,6 @@ const Courses = () => {
                       <SelectItem value="beginner">{t('courses.beginner')}</SelectItem>
                       <SelectItem value="intermediate">{t('courses.intermediate')}</SelectItem>
                       <SelectItem value="advanced">{t('courses.advanced')}</SelectItem>
-                    </SelectContent>
-                  </Select>
-                  <Select value={priceFilter} onValueChange={setPriceFilter}>
-                    <SelectTrigger className="w-full sm:w-36 h-14 rounded-2xl bg-white/70 backdrop-blur-sm border-primary/20">
-                      <SelectValue placeholder={t('courses.all')} />
-                    </SelectTrigger>
-                    <SelectContent className="rounded-xl">
-                      <SelectItem value="all">{t('courses.all')}</SelectItem>
-                      <SelectItem value="free">{t('courses.free')}</SelectItem>
-                      <SelectItem value="paid">{t('courses.paid')}</SelectItem>
                     </SelectContent>
                   </Select>
                 </motion.div>
