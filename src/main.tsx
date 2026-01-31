@@ -3,7 +3,7 @@ import { createRoot } from "react-dom/client";
 import App from "./App.tsx";
 import "./index.css";
 
-// Get the root element
+// Application entry point - clean render with proper provider hierarchy
 const container = document.getElementById("root");
 
 if (!container) {
