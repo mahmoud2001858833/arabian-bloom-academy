@@ -1,11 +1,14 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Menu, X, User, LogOut, LayoutDashboard, ChevronDown } from 'lucide-react';
+import { Menu, X, User, LogOut, LayoutDashboard, ChevronDown, MessageCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useAuth } from '@/contexts/AuthContext';
 import { useLanguage } from '@/i18n/LanguageContext';
 import LanguageSwitcher from './LanguageSwitcher';
 import logo from '@/assets/new-logo.png';
+
+const WHATSAPP_NUMBER = "962799431399";
+const WHATSAPP_URL = `https://wa.me/${WHATSAPP_NUMBER}`;
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -57,6 +60,17 @@ const Navbar = () => {
 
           {/* Auth Buttons / User Menu */}
           <div className="hidden md:flex items-center gap-4">
+            {/* WhatsApp Contact Button */}
+            <a
+              href={WHATSAPP_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-2 text-foreground/80 hover:text-[#25D366] transition-colors font-semibold"
+            >
+              <MessageCircle className="h-5 w-5" />
+              {t('nav.contactUs')}
+            </a>
+            
             <LanguageSwitcher />
             
             {user ? (
@@ -128,6 +142,18 @@ const Navbar = () => {
               <div className="px-4 pb-4 border-b border-primary/10">
                 <LanguageSwitcher />
               </div>
+              
+              {/* WhatsApp Contact for Mobile */}
+              <a
+                href={WHATSAPP_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-2 text-[#25D366] font-semibold py-3 px-4 rounded-xl hover:bg-[#25D366]/10"
+                onClick={() => setIsOpen(false)}
+              >
+                <MessageCircle className="h-5 w-5" />
+                {t('nav.contactUs')}
+              </a>
               
               {navLinks.map((link) => (
                 <Link
