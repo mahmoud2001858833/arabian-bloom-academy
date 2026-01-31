@@ -16,10 +16,19 @@ import Dashboard from "./pages/Dashboard";
 import Admin from "./pages/Admin";
 import NotFound from "./pages/NotFound";
 
-const queryClient = new QueryClient();
+// Create query client instance
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 5 * 60 * 1000,
+      retry: 1,
+    },
+  },
+});
 
-// Main App with all providers properly nested
-const App = () => {
+// Application component with correct provider hierarchy
+// Order: QueryClientProvider -> LanguageProvider -> AuthProvider -> TooltipProvider
+function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <LanguageProvider>
@@ -46,6 +55,6 @@ const App = () => {
       </LanguageProvider>
     </QueryClientProvider>
   );
-};
+}
 
 export default App;
