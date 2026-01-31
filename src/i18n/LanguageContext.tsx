@@ -10,18 +10,19 @@ interface LanguageContextType {
   languages: Language[];
 }
 
+// Create context with undefined as default
 const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
 
 const STORAGE_KEY = 'preferred-language';
 
 // Helper function to get nested translation value
-const getNestedValue = (obj: any, path: string): string => {
+const getNestedValue = (obj: Record<string, unknown>, path: string): string => {
   const keys = path.split('.');
-  let value = obj;
+  let value: unknown = obj;
   
   for (const key of keys) {
-    if (value && typeof value === 'object' && key in value) {
-      value = value[key];
+    if (value && typeof value === 'object' && key in (value as Record<string, unknown>)) {
+      value = (value as Record<string, unknown>)[key];
     } else {
       return path; // Return the key if translation not found
     }
@@ -30,7 +31,8 @@ const getNestedValue = (obj: any, path: string): string => {
   return typeof value === 'string' ? value : path;
 };
 
-export const LanguageProvider = ({ children }: { children: ReactNode }) => {
+// Language Provider component that wraps the app
+export function LanguageProvider({ children }: { children: ReactNode }) {
   const [language, setLanguageState] = useState<LocaleKey>(() => {
     if (typeof window !== 'undefined') {
       const stored = localStorage.getItem(STORAGE_KEY);
@@ -51,7 +53,7 @@ export const LanguageProvider = ({ children }: { children: ReactNode }) => {
 
   const t = (key: string): string => {
     const translations = locales[language];
-    return getNestedValue(translations, key);
+    return getNestedValue(translations as Record<string, unknown>, key);
   };
 
   // Update document direction and lang attribute
@@ -64,24 +66,32 @@ export const LanguageProvider = ({ children }: { children: ReactNode }) => {
     document.body.classList.add(dir);
   }, [language, dir]);
 
+  const contextValue: LanguageContextType = {
+    language,
+    setLanguage,
+    t,
+    dir,
+    currentLanguage,
+    languages,
+  };
+
   return (
-    <LanguageContext.Provider value={{
-      language,
-      setLanguage,
-      t,
-      dir,
-      currentLanguage,
-      languages,
-    }}>
+    <LanguageContext.Provider value={contextValue}>
       {children}
     </LanguageContext.Provider>
   );
-};
+}
 
-export const useLanguage = (): LanguageContextType => {
+// Custom hook to use language context
+export function useLanguage(): LanguageContextType {
   const context = useContext(LanguageContext);
+  
   if (context === undefined) {
     throw new Error('useLanguage must be used within a LanguageProvider');
   }
+  
   return context;
-};
+}
+
+// Re-export for backwards compatibility
+export { LanguageContext };
