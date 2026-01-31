@@ -80,7 +80,7 @@ const Blog = () => {
 
   return (
     <PageTransition>
-      <div className="min-h-screen flex flex-col bg-gradient-hero">
+      <div className="min-h-screen flex flex-col bg-background">
         <Navbar />
         <main className="flex-1 pt-28 pb-16">
           <div className="container mx-auto px-4">
@@ -91,17 +91,17 @@ const Blog = () => {
               transition={{ duration: 0.5 }}
               className="text-center mb-12"
             >
-              <Badge className="bg-accent/20 text-accent border-accent/30 backdrop-blur-sm mb-4">
+              <Badge className="bg-primary/10 text-primary border-primary/30 mb-4">
                 <BookOpen className="w-4 h-4 ml-2" />
                 {t('blog.badge')}
               </Badge>
-              <h1 className="text-4xl md:text-5xl font-black text-white mb-4">
+              <h1 className="text-4xl md:text-5xl font-black text-foreground mb-4">
                 {t('blog.discover')}{' '}
-                <span className="text-accent" style={{ textShadow: '0 0 30px hsl(var(--accent) / 0.5)' }}>
+                <span className="text-primary">
                   {t('blog.ourBlog')}
                 </span>
               </h1>
-              <p className="text-white/70 text-lg max-w-2xl mx-auto">
+              <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
                 {t('blog.description')}
               </p>
             </motion.div>
@@ -114,13 +114,13 @@ const Blog = () => {
               className="max-w-md mx-auto mb-12"
             >
               <div className="relative">
-                <Search className="absolute right-4 top-1/2 transform -translate-y-1/2 text-white/50 h-5 w-5" />
+                <Search className="absolute right-4 top-1/2 transform -translate-y-1/2 text-muted-foreground h-5 w-5" />
                 <Input
                   type="text"
                   placeholder={t('blog.searchPlaceholder')}
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="pr-12 bg-white/10 border-white/20 text-white placeholder:text-white/50 rounded-xl h-12"
+                  className="pr-12 bg-white border-primary/20 text-foreground placeholder:text-muted-foreground rounded-xl h-12 shadow-sm"
                 />
               </div>
             </motion.div>
@@ -128,17 +128,17 @@ const Blog = () => {
             {/* Posts Grid */}
             {isLoading ? (
               <div className="flex justify-center items-center py-20">
-                <div className="animate-spin rounded-full h-12 w-12 border-4 border-accent border-t-transparent" />
+                <div className="animate-spin rounded-full h-12 w-12 border-4 border-primary border-t-transparent" />
               </div>
             ) : filteredPosts.length === 0 ? (
               <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
-                className="text-center py-20 glass-purple rounded-3xl"
+                className="text-center py-20 bg-white rounded-3xl shadow-lg border border-primary/10"
               >
-                <BookOpen className="h-16 w-16 text-white/30 mx-auto mb-4" />
-                <h3 className="text-xl font-bold text-white mb-2">{t('blog.noPosts')}</h3>
-                <p className="text-white/60">{t('blog.noPostsYet')}</p>
+                <BookOpen className="h-16 w-16 text-primary/30 mx-auto mb-4" />
+                <h3 className="text-xl font-bold text-foreground mb-2">{t('blog.noPosts')}</h3>
+                <p className="text-muted-foreground">{t('blog.noPostsYet')}</p>
               </motion.div>
             ) : (
               <motion.div
@@ -156,9 +156,9 @@ const Blog = () => {
                     className="group"
                   >
                     <Link to={`/blog/${post.id}`}>
-                      <div className="glass-purple rounded-2xl overflow-hidden hover:shadow-gold transition-all duration-300 hover:-translate-y-1">
+                      <div className="bg-white rounded-2xl overflow-hidden shadow-lg border border-primary/10 hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
                         {/* Image */}
-                        <div className="aspect-video overflow-hidden bg-white/5">
+                        <div className="aspect-video overflow-hidden bg-muted">
                           {post.image_url ? (
                             <img
                               src={post.image_url}
@@ -167,24 +167,24 @@ const Blog = () => {
                             />
                           ) : (
                             <div className="w-full h-full flex items-center justify-center">
-                              <BookOpen className="h-12 w-12 text-white/20" />
+                              <BookOpen className="h-12 w-12 text-primary/20" />
                             </div>
                           )}
                         </div>
 
                         {/* Content */}
                         <div className="p-6">
-                          <div className="flex items-center gap-2 text-white/50 text-sm mb-3">
+                          <div className="flex items-center gap-2 text-muted-foreground text-sm mb-3">
                             <Calendar className="h-4 w-4" />
                             <span>{formatDate(post.created_at)}</span>
                           </div>
-                          <h3 className="text-xl font-bold text-white mb-2 line-clamp-2 group-hover:text-accent transition-colors">
+                          <h3 className="text-xl font-bold text-foreground mb-2 line-clamp-2 group-hover:text-primary transition-colors">
                             {getLocalizedField(post, 'title')}
                           </h3>
-                          <p className="text-white/60 line-clamp-3 mb-4">
+                          <p className="text-muted-foreground line-clamp-3 mb-4">
                             {getLocalizedField(post, 'description')}
                           </p>
-                          <div className="flex items-center gap-2 text-accent font-semibold">
+                          <div className="flex items-center gap-2 text-primary font-semibold">
                             <span>{t('blog.readMore')}</span>
                             <ArrowLeft className={`h-4 w-4 group-hover:-translate-x-1 transition-transform ${language !== 'ar' ? 'rotate-180' : ''}`} />
                           </div>

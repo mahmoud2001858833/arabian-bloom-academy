@@ -138,7 +138,7 @@ const BlogDetails = () => {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5 }}
-                className="aspect-video rounded-3xl overflow-hidden mb-8"
+                className="aspect-video rounded-3xl overflow-hidden mb-8 shadow-xl"
               >
                 <img
                   src={post.image_url}
@@ -153,17 +153,17 @@ const BlogDetails = () => {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.1 }}
-              className="mb-8"
+              className="bg-white rounded-3xl p-8 mb-8 shadow-lg"
             >
-              <div className="flex items-center gap-2 text-white/50 text-sm mb-4">
+              <div className="flex items-center gap-2 text-muted-foreground text-sm mb-4">
                 <Calendar className="h-4 w-4" />
                 <span>{formatDate(post.created_at)}</span>
               </div>
-              <h1 className="text-3xl md:text-4xl lg:text-5xl font-black text-white mb-4">
+              <h1 className="text-3xl md:text-4xl lg:text-5xl font-black text-foreground mb-4">
                 {getLocalizedField('title')}
               </h1>
               {getLocalizedField('description') && (
-                <p className="text-xl text-white/70">
+                <p className="text-xl text-muted-foreground">
                   {getLocalizedField('description')}
                 </p>
               )}
@@ -174,17 +174,17 @@ const BlogDetails = () => {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.2 }}
-              className="glass-purple rounded-3xl p-8 md:p-12"
+              className="bg-white rounded-3xl p-8 md:p-12 shadow-lg"
             >
               <div 
-                className="prose prose-lg prose-invert max-w-none
-                  prose-headings:text-white prose-headings:font-bold
-                  prose-p:text-white/80 prose-p:leading-relaxed
-                  prose-a:text-accent prose-a:no-underline hover:prose-a:underline
-                  prose-strong:text-white
-                  prose-ul:text-white/80 prose-ol:text-white/80
-                  prose-li:marker:text-accent
-                  prose-blockquote:border-accent prose-blockquote:text-white/70"
+                className="prose prose-lg max-w-none
+                  prose-headings:text-foreground prose-headings:font-bold
+                  prose-p:text-foreground/80 prose-p:leading-relaxed
+                  prose-a:text-primary prose-a:no-underline hover:prose-a:underline
+                  prose-strong:text-foreground
+                  prose-ul:text-foreground/80 prose-ol:text-foreground/80
+                  prose-li:marker:text-primary
+                  prose-blockquote:border-primary prose-blockquote:text-foreground/70"
                 style={{ whiteSpace: 'pre-wrap' }}
               >
                 {getLocalizedField('content')}
