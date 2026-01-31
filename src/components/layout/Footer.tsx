@@ -38,7 +38,7 @@ const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
           {/* Logo & Description */}
           <div className="space-y-6">
-            <img src={logo} alt={t('footer.platformName')} className="h-14 w-auto" />
+            <img src={logo} alt={t('footer.platformName')} className="h-24 w-auto" />
             <p className="text-white/70 leading-relaxed">
               {t('footer.description')}
             </p>

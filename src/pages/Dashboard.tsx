@@ -247,8 +247,8 @@ const Dashboard = () => {
                     }`} />
                   </div>
                   <div>
-                    <p className="text-2xl font-black text-foreground">{stat.value}</p>
-                    <p className="text-sm text-muted-foreground">{stat.label}</p>
+                    <p className="text-3xl font-black text-foreground">{stat.value}</p>
+                    <p className="text-base font-semibold text-muted-foreground">{stat.label}</p>
                   </div>
                 </div>
               </motion.div>
@@ -268,9 +268,8 @@ const Dashboard = () => {
                 <h2 className="text-2xl font-black text-foreground">{t('dashboard.myCourses')}</h2>
               </div>
               <Button 
-                variant="outline" 
                 onClick={() => navigate('/courses')}
-                className="rounded-xl border-primary/30 hover:bg-primary/10"
+                className="bg-primary hover:bg-primary/90 text-primary-foreground rounded-xl"
               >
                 {t('dashboard.browseCourses')}
               </Button>

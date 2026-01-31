@@ -38,8 +38,8 @@ const About = () => {
   ];
 
   const features = [
-    { number: '﴾', title: t('about.integratedCurriculum'), desc: t('about.integratedCurriculumDesc') },
-    { number: '﴿', title: t('about.interactive'), desc: t('about.interactiveDesc') },
+    { number: '۞', title: t('about.integratedCurriculum'), desc: t('about.integratedCurriculumDesc') },
+    { number: '۞', title: t('about.interactive'), desc: t('about.interactiveDesc') },
     { number: '۞', title: t('about.flexible'), desc: t('about.flexibleDesc') },
   ];
 
@@ -88,10 +88,10 @@ const About = () => {
                 transition={{ duration: 0.6 }}
               >
                 {/* Badge */}
-                <div className="inline-flex items-center gap-3 bg-primary/10 backdrop-blur-md text-primary px-6 py-3 rounded-full border border-primary/20">
-                  <Heart className="h-5 w-5" />
-                  <span className="font-bold">{t('about.weLoveArabic')}</span>
-                  <span className="text-accent">✦</span>
+                <div className="inline-flex items-center gap-3 bg-primary/10 backdrop-blur-md text-primary px-8 py-4 rounded-full border border-primary/20">
+                  <Heart className="h-6 w-6" />
+                  <span className="font-bold text-xl">{t('about.weLoveArabic')}</span>
+                  <span className="text-accent text-xl">✦</span>
                 </div>
 
                 {/* Main Title */}
