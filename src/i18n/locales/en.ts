@@ -133,7 +133,7 @@ export const en = {
     arabicLanguage: 'of Arabic',
     missionParagraph1: 'We believe Arabic is the most beautiful and richest language, and we strive to present it to the world in a modern way combining authenticity and modernity. Our goal is to make learning Arabic an enjoyable and easy experience for everyone.',
     missionParagraph2: 'We use the latest educational technologies and work with elite specialized teachers to ensure the best learning experience for our students worldwide.',
-    dadLetter: 'The Letter Daad',
+    dadLetter: 'The Daad Language',
     ourCoreValues: 'Our',
     core: 'Core Values',
     valuesDescription: 'We are committed to a set of values that guide our work and define our identity',

@@ -121,8 +121,7 @@ const FeaturedCourses = () => {
               </Button>
               <Button 
                 size="lg" 
-                variant="outline"
-                className="rounded-2xl px-12 py-7 text-lg"
+                className="bg-primary hover:bg-primary/90 text-primary-foreground rounded-2xl px-12 py-7 text-lg"
                 asChild
               >
                 <Link to="/auth?tab=signup">
