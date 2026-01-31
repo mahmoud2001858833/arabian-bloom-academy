@@ -13,6 +13,8 @@ import Courses from "./pages/Courses";
 import CourseDetails from "./pages/CourseDetails";
 import Dashboard from "./pages/Dashboard";
 import Admin from "./pages/Admin";
+import Blog from "./pages/Blog";
+import BlogDetails from "./pages/BlogDetails";
 import NotFound from "./pages/NotFound";
 
 // Create query client instance
@@ -42,6 +44,8 @@ function App() {
                 <Route path="/about" element={<About />} />
                 <Route path="/courses" element={<Courses />} />
                 <Route path="/courses/:courseId" element={<CourseDetails />} />
+                <Route path="/blog" element={<Blog />} />
+                <Route path="/blog/:postId" element={<BlogDetails />} />
                 <Route path="/dashboard" element={<Dashboard />} />
                 <Route path="/admin" element={<Admin />} />
                 <Route path="*" element={<NotFound />} />

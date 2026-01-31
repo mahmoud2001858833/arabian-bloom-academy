@@ -3,6 +3,7 @@ export const id = {
   nav: {
     home: 'Beranda',
     courses: 'Kursus',
+    blog: 'Blog',
     about: 'Tentang Kami',
     login: 'Masuk',
     signup: 'Daftar',
@@ -288,5 +289,20 @@ export const id = {
     view: 'Lihat',
     download: 'Unduh',
     upload: 'Unggah',
+  },
+
+  // Blog
+  blog: {
+    badge: 'Artikel & Blog',
+    discover: 'Temukan',
+    ourBlog: 'Blog Kami',
+    description: 'Artikel edukatif dan tips berharga untuk belajar Bahasa Arab',
+    searchPlaceholder: 'Cari di blog...',
+    noPosts: 'Tidak ada artikel',
+    noPostsYet: 'Belum ada artikel dipublikasikan. Nantikan!',
+    readMore: 'Baca Selengkapnya',
+    backToBlog: 'Kembali ke Blog',
+    postNotFound: 'Artikel tidak ditemukan',
+    viewAllPosts: 'Lihat Semua Artikel',
   },
 };

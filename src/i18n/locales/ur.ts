@@ -3,6 +3,7 @@ export const ur = {
   nav: {
     home: 'ہوم',
     courses: 'کورسز',
+    blog: 'بلاگ',
     about: 'ہمارے بارے میں',
     login: 'لاگ ان',
     signup: 'سائن اپ',
@@ -288,5 +289,20 @@ export const ur = {
     view: 'دیکھیں',
     download: 'ڈاؤن لوڈ کریں',
     upload: 'اپ لوڈ کریں',
+  },
+
+  // Blog
+  blog: {
+    badge: 'مضامین اور بلاگز',
+    discover: 'دریافت کریں',
+    ourBlog: 'ہمارا بلاگ',
+    description: 'عربی سیکھنے کے لیے تعلیمی مضامین اور قیمتی تجاویز',
+    searchPlaceholder: 'بلاگ میں تلاش کریں...',
+    noPosts: 'کوئی مضمون نہیں',
+    noPostsYet: 'ابھی تک کوئی مضمون شائع نہیں ہوا۔ منتظر رہیں!',
+    readMore: 'مزید پڑھیں',
+    backToBlog: 'بلاگ پر واپس',
+    postNotFound: 'مضمون نہیں ملا',
+    viewAllPosts: 'تمام مضامین دیکھیں',
   },
 };
