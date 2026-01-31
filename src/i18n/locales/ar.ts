@@ -4,6 +4,7 @@ export const ar = {
     home: 'الرئيسية',
     courses: 'الدروس',
     about: 'من نحن',
+    contactUs: 'تواصل معنا',
     login: 'تسجيل الدخول',
     signup: 'إنشاء حساب',
     dashboard: 'لوحة الطالب',

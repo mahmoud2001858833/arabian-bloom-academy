@@ -4,6 +4,7 @@ export const en = {
     home: 'Home',
     courses: 'Lessons',
     about: 'About Us',
+    contactUs: 'Contact Us',
     login: 'Login',
     signup: 'Sign Up',
     dashboard: 'Student Dashboard',

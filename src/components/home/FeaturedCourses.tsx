@@ -45,7 +45,7 @@ const FeaturedCourses = () => {
       <div className="container mx-auto px-4 relative z-10">
         {/* Section Header */}
         <div className="text-center max-w-3xl mx-auto mb-20">
-          <div className="inline-flex items-center gap-2 bg-accent/10 backdrop-blur-sm px-6 py-3 rounded-full text-sm font-bold mb-8 border border-accent/30 text-accent">
+          <div className="inline-flex items-center gap-2 bg-primary/10 backdrop-blur-sm px-6 py-3 rounded-full text-sm font-bold mb-8 border border-primary/30 text-primary">
             <Sparkles className="h-5 w-5" />
             {t('home.learningStartsHere')}
           </div>
