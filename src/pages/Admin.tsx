@@ -566,16 +566,16 @@ const Admin = () => {
 
           {/* Main Tabs */}
           <Tabs value={activeMainTab} onValueChange={setActiveMainTab} className="mb-6">
-            <TabsList className="bg-white/10 p-1 flex-wrap h-auto">
-              <TabsTrigger value="courses" className="gap-2 data-[state=active]:bg-accent data-[state=active]:text-accent-foreground">
+            <TabsList className="bg-white p-2 flex-wrap h-auto rounded-xl shadow-lg border border-primary/10">
+              <TabsTrigger value="courses" className="gap-2 text-foreground/70 data-[state=active]:bg-primary data-[state=active]:text-white rounded-lg px-4 py-2">
                 <BookOpen className="h-4 w-4" />
                 إدارة الكورسات
               </TabsTrigger>
-              <TabsTrigger value="blog" className="gap-2 data-[state=active]:bg-accent data-[state=active]:text-accent-foreground">
+              <TabsTrigger value="blog" className="gap-2 text-foreground/70 data-[state=active]:bg-primary data-[state=active]:text-white rounded-lg px-4 py-2">
                 <FileText className="h-4 w-4" />
                 إدارة المدونة
               </TabsTrigger>
-              <TabsTrigger value="payments" className="gap-2 data-[state=active]:bg-accent data-[state=active]:text-accent-foreground">
+              <TabsTrigger value="payments" className="gap-2 text-foreground/70 data-[state=active]:bg-primary data-[state=active]:text-white rounded-lg px-4 py-2">
                 <CreditCard className="h-4 w-4" />
                 إدارة المدفوعات
               </TabsTrigger>
