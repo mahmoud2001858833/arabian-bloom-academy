@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { 
   Users, BookOpen, DollarSign, TrendingUp, Plus, Video, 
   Edit, Trash2, Eye, EyeOff, Save, Layers, Crown, Sparkles,
-  Calendar, CheckCircle, BarChart3, CreditCard
+  Calendar, CheckCircle, BarChart3, CreditCard, FileText
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
@@ -24,6 +24,7 @@ import Navbar from '@/components/layout/Navbar';
 import DualVideoUploader from '@/components/dashboard/DualVideoUploader';
 import VideoPlayer from '@/components/dashboard/VideoPlayer';
 import PaymentManagement from '@/components/admin/PaymentManagement';
+import BlogManagement from '@/components/admin/BlogManagement';
 
 interface Course {
   id: string;
@@ -565,10 +566,14 @@ const Admin = () => {
 
           {/* Main Tabs */}
           <Tabs value={activeMainTab} onValueChange={setActiveMainTab} className="mb-6">
-            <TabsList className="bg-white/10 p-1">
+            <TabsList className="bg-white/10 p-1 flex-wrap h-auto">
               <TabsTrigger value="courses" className="gap-2 data-[state=active]:bg-accent data-[state=active]:text-accent-foreground">
                 <BookOpen className="h-4 w-4" />
                 إدارة الكورسات
+              </TabsTrigger>
+              <TabsTrigger value="blog" className="gap-2 data-[state=active]:bg-accent data-[state=active]:text-accent-foreground">
+                <FileText className="h-4 w-4" />
+                إدارة المدونة
               </TabsTrigger>
               <TabsTrigger value="payments" className="gap-2 data-[state=active]:bg-accent data-[state=active]:text-accent-foreground">
                 <CreditCard className="h-4 w-4" />
@@ -792,6 +797,11 @@ const Admin = () => {
               </div>
             </div>
           </motion.div>
+            </TabsContent>
+
+            {/* Blog Tab */}
+            <TabsContent value="blog">
+              <BlogManagement />
             </TabsContent>
 
             {/* Payments Tab */}

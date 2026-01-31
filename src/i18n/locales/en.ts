@@ -3,6 +3,7 @@ export const en = {
   nav: {
     home: 'Home',
     courses: 'Lessons',
+    blog: 'Blog',
     about: 'About Us',
     contactUs: 'Contact Us',
     login: 'Login',
@@ -283,5 +284,20 @@ export const en = {
     view: 'View',
     download: 'Download',
     upload: 'Upload',
+  },
+
+  // Blog
+  blog: {
+    badge: 'Articles & Blogs',
+    discover: 'Discover',
+    ourBlog: 'Our Blog',
+    description: 'Educational articles and valuable tips for learning Arabic',
+    searchPlaceholder: 'Search blog...',
+    noPosts: 'No blog posts',
+    noPostsYet: 'No blog posts published yet. Stay tuned!',
+    readMore: 'Read More',
+    backToBlog: 'Back to Blog',
+    postNotFound: 'Blog post not found',
+    viewAllPosts: 'View All Posts',
   },
 };

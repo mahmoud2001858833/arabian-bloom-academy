@@ -3,6 +3,7 @@ export const fr = {
   nav: {
     home: 'Accueil',
     courses: 'Cours',
+    blog: 'Blog',
     about: 'À Propos',
     login: 'Connexion',
     signup: 'Inscription',
@@ -288,5 +289,20 @@ export const fr = {
     view: 'Voir',
     download: 'Télécharger',
     upload: 'Téléverser',
+  },
+
+  // Blog
+  blog: {
+    badge: 'Articles & Blogs',
+    discover: 'Découvrez',
+    ourBlog: 'Notre Blog',
+    description: "Articles éducatifs et conseils précieux pour apprendre l'arabe",
+    searchPlaceholder: 'Rechercher dans le blog...',
+    noPosts: 'Aucun article',
+    noPostsYet: "Aucun article publié pour l'instant. Restez à l'écoute!",
+    readMore: 'Lire la Suite',
+    backToBlog: 'Retour au Blog',
+    postNotFound: 'Article non trouvé',
+    viewAllPosts: 'Voir Tous les Articles',
   },
 };

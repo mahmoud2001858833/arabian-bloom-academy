@@ -5,3 +5,6 @@ verify_jwt = false
 
 [functions.ai-guide]
 verify_jwt = false
+
+[functions.translate-blog]
+verify_jwt = false

@@ -14,6 +14,84 @@ export type Database = {
   }
   public: {
     Tables: {
+      blog_posts: {
+        Row: {
+          content_ar: string
+          content_en: string | null
+          content_fr: string | null
+          content_id: string | null
+          content_ms: string | null
+          content_ur: string | null
+          created_at: string
+          description_ar: string | null
+          description_en: string | null
+          description_fr: string | null
+          description_id: string | null
+          description_ms: string | null
+          description_ur: string | null
+          id: string
+          image_url: string | null
+          is_published: boolean
+          title_ar: string
+          title_en: string | null
+          title_fr: string | null
+          title_id: string | null
+          title_ms: string | null
+          title_ur: string | null
+          updated_at: string
+        }
+        Insert: {
+          content_ar: string
+          content_en?: string | null
+          content_fr?: string | null
+          content_id?: string | null
+          content_ms?: string | null
+          content_ur?: string | null
+          created_at?: string
+          description_ar?: string | null
+          description_en?: string | null
+          description_fr?: string | null
+          description_id?: string | null
+          description_ms?: string | null
+          description_ur?: string | null
+          id?: string
+          image_url?: string | null
+          is_published?: boolean
+          title_ar: string
+          title_en?: string | null
+          title_fr?: string | null
+          title_id?: string | null
+          title_ms?: string | null
+          title_ur?: string | null
+          updated_at?: string
+        }
+        Update: {
+          content_ar?: string
+          content_en?: string | null
+          content_fr?: string | null
+          content_id?: string | null
+          content_ms?: string | null
+          content_ur?: string | null
+          created_at?: string
+          description_ar?: string | null
+          description_en?: string | null
+          description_fr?: string | null
+          description_id?: string | null
+          description_ms?: string | null
+          description_ur?: string | null
+          id?: string
+          image_url?: string | null
+          is_published?: boolean
+          title_ar?: string
+          title_en?: string | null
+          title_fr?: string | null
+          title_id?: string | null
+          title_ms?: string | null
+          title_ur?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
       courses: {
         Row: {
           created_at: string

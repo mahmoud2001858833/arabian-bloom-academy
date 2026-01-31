@@ -3,6 +3,7 @@ export const ms = {
   nav: {
     home: 'Utama',
     courses: 'Kursus',
+    blog: 'Blog',
     about: 'Tentang Kami',
     login: 'Log Masuk',
     signup: 'Daftar',
@@ -288,5 +289,20 @@ export const ms = {
     view: 'Lihat',
     download: 'Muat Turun',
     upload: 'Muat Naik',
+  },
+
+  // Blog
+  blog: {
+    badge: 'Artikel & Blog',
+    discover: 'Temui',
+    ourBlog: 'Blog Kami',
+    description: 'Artikel pendidikan dan petua berharga untuk belajar Bahasa Arab',
+    searchPlaceholder: 'Cari dalam blog...',
+    noPosts: 'Tiada artikel',
+    noPostsYet: 'Tiada artikel diterbitkan lagi. Nantikan!',
+    readMore: 'Baca Lagi',
+    backToBlog: 'Kembali ke Blog',
+    postNotFound: 'Artikel tidak ditemui',
+    viewAllPosts: 'Lihat Semua Artikel',
   },
 };

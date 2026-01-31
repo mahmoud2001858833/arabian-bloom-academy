@@ -3,6 +3,7 @@ export const ar = {
   nav: {
     home: 'الرئيسية',
     courses: 'الدروس',
+    blog: 'المدونة',
     about: 'من نحن',
     contactUs: 'تواصل معنا',
     login: 'تسجيل الدخول',
@@ -283,5 +284,20 @@ export const ar = {
     view: 'عرض',
     download: 'تحميل',
     upload: 'رفع',
+  },
+
+  // Blog
+  blog: {
+    badge: 'مقالات ومدونات',
+    discover: 'اكتشف',
+    ourBlog: 'مدونتنا',
+    description: 'مقالات تعليمية ونصائح قيمة لتعلم اللغة العربية',
+    searchPlaceholder: 'ابحث في المدونة...',
+    noPosts: 'لا توجد مدونات',
+    noPostsYet: 'لم يتم نشر أي مدونات بعد. ترقب المزيد!',
+    readMore: 'اقرأ المزيد',
+    backToBlog: 'العودة للمدونة',
+    postNotFound: 'المدونة غير موجودة',
+    viewAllPosts: 'عرض جميع المدونات',
   },
 };
