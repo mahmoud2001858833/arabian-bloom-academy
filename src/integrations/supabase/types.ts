@@ -206,6 +206,7 @@ export type Database = {
           duration_minutes: number | null
           id: string
           order_index: number
+          pdf_url: string | null
           title: string
           updated_at: string
           video_url: string | null
@@ -217,6 +218,7 @@ export type Database = {
           duration_minutes?: number | null
           id?: string
           order_index?: number
+          pdf_url?: string | null
           title: string
           updated_at?: string
           video_url?: string | null
@@ -228,6 +230,7 @@ export type Database = {
           duration_minutes?: number | null
           id?: string
           order_index?: number
+          pdf_url?: string | null
           title?: string
           updated_at?: string
           video_url?: string | null
