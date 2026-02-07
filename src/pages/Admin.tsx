@@ -1,9 +1,10 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { 
   Users, BookOpen, DollarSign, TrendingUp, Plus, Video, 
   Edit, Trash2, Eye, EyeOff, Save, Layers, Crown, Sparkles,
-  Calendar, CheckCircle, BarChart3, CreditCard, FileText
+  Calendar, CheckCircle, BarChart3, CreditCard, FileText,
+  ChevronUp, ChevronDown, FileUp, HelpCircle, X, Upload
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
@@ -44,8 +45,26 @@ interface Lesson {
   title: string;
   description: string;
   video_url: string;
+  pdf_url: string | null;
   duration_minutes: number;
   order_index: number;
+}
+
+interface QuizQuestion {
+  id: string;
+  quiz_id: string;
+  question: string;
+  options: string[];
+  correct_answer: number;
+  order_index: number;
+}
+
+interface Quiz {
+  id: string;
+  lesson_id: string;
+  title: string;
+  passing_score: number;
+  questions?: QuizQuestion[];
 }
 
 const Admin = () => {
@@ -66,6 +85,16 @@ const Admin = () => {
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
   const [deleteTarget, setDeleteTarget] = useState<{ type: 'course' | 'lesson'; id: string } | null>(null);
   
+  // Quiz states
+  const [showQuizDialog, setShowQuizDialog] = useState(false);
+  const [currentLessonForQuiz, setCurrentLessonForQuiz] = useState<Lesson | null>(null);
+  const [quizQuestions, setQuizQuestions] = useState<QuizQuestion[]>([]);
+  const [currentQuiz, setCurrentQuiz] = useState<Quiz | null>(null);
+  const [isUploadingPdf, setIsUploadingPdf] = useState(false);
+  
+  // Scroll ref for courses list
+  const coursesListRef = useRef<HTMLDivElement>(null);
+  
   // Form states
   const [courseForm, setCourseForm] = useState({
     id: '',
@@ -84,6 +113,7 @@ const Admin = () => {
     title: '',
     description: '',
     video_url: '',
+    pdf_url: '',
     duration_minutes: 0,
     order_index: 0,
   });
@@ -278,6 +308,7 @@ const Admin = () => {
           title: lessonForm.title,
           description: lessonForm.description,
           video_url: lessonForm.video_url,
+          pdf_url: lessonForm.pdf_url || null,
           duration_minutes: lessonForm.duration_minutes,
           order_index: lessonForm.order_index,
         })
@@ -298,6 +329,7 @@ const Admin = () => {
           title: lessonForm.title,
           description: lessonForm.description,
           video_url: lessonForm.video_url,
+          pdf_url: lessonForm.pdf_url || null,
           duration_minutes: lessonForm.duration_minutes,
           order_index: lessons.length,
         });
@@ -394,6 +426,7 @@ const Admin = () => {
       title: lesson.title,
       description: lesson.description || '',
       video_url: lesson.video_url || '',
+      pdf_url: lesson.pdf_url || '',
       duration_minutes: lesson.duration_minutes,
       order_index: lesson.order_index,
     });
@@ -408,10 +441,173 @@ const Admin = () => {
       title: '',
       description: '',
       video_url: '',
+      pdf_url: '',
       duration_minutes: 0,
       order_index: lessons.length,
     });
     setShowLessonDialog(true);
+  };
+
+  // Scroll functions for courses list
+  const scrollCoursesUp = () => {
+    if (coursesListRef.current) {
+      coursesListRef.current.scrollBy({ top: -150, behavior: 'smooth' });
+    }
+  };
+
+  const scrollCoursesDown = () => {
+    if (coursesListRef.current) {
+      coursesListRef.current.scrollBy({ top: 150, behavior: 'smooth' });
+    }
+  };
+
+  // PDF upload handler
+  const handlePdfUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+    
+    if (file.type !== 'application/pdf') {
+      toast({ title: 'خطأ', description: 'يرجى اختيار ملف PDF فقط', variant: 'destructive' });
+      return;
+    }
+
+    setIsUploadingPdf(true);
+    const fileName = `${Date.now()}-${file.name}`;
+    
+    const { data, error } = await supabase.storage
+      .from('lesson-pdfs')
+      .upload(fileName, file);
+
+    if (error) {
+      toast({ title: 'خطأ', description: 'فشل في رفع الملف', variant: 'destructive' });
+    } else {
+      const { data: { publicUrl } } = supabase.storage
+        .from('lesson-pdfs')
+        .getPublicUrl(fileName);
+      
+      setLessonForm({ ...lessonForm, pdf_url: publicUrl });
+      toast({ title: 'تم بنجاح', description: 'تم رفع ملف PDF' });
+    }
+    setIsUploadingPdf(false);
+  };
+
+  // Quiz management functions
+  const openQuizDialog = async (lesson: Lesson) => {
+    setCurrentLessonForQuiz(lesson);
+    
+    // Fetch existing quiz for this lesson
+    const { data: quizData } = await supabase
+      .from('quizzes')
+      .select('*')
+      .eq('lesson_id', lesson.id)
+      .single();
+
+    if (quizData) {
+      setCurrentQuiz(quizData as Quiz);
+      
+      // Fetch questions
+      const { data: questionsData } = await supabase
+        .from('quiz_questions')
+        .select('*')
+        .eq('quiz_id', quizData.id)
+        .order('order_index');
+      
+      if (questionsData) {
+        setQuizQuestions(questionsData.map(q => ({
+          ...q,
+          options: Array.isArray(q.options) ? q.options : []
+        })) as QuizQuestion[]);
+      }
+    } else {
+      setCurrentQuiz(null);
+      setQuizQuestions([]);
+    }
+    
+    setShowQuizDialog(true);
+  };
+
+  const addNewQuestion = () => {
+    const newQuestion: QuizQuestion = {
+      id: `temp-${Date.now()}`,
+      quiz_id: currentQuiz?.id || '',
+      question: '',
+      options: ['', '', '', ''],
+      correct_answer: 0,
+      order_index: quizQuestions.length,
+    };
+    setQuizQuestions([...quizQuestions, newQuestion]);
+  };
+
+  const updateQuestion = (index: number, field: keyof QuizQuestion, value: any) => {
+    const updated = [...quizQuestions];
+    (updated[index] as any)[field] = value;
+    setQuizQuestions(updated);
+  };
+
+  const updateQuestionOption = (qIndex: number, optIndex: number, value: string) => {
+    const updated = [...quizQuestions];
+    updated[qIndex].options[optIndex] = value;
+    setQuizQuestions(updated);
+  };
+
+  const removeQuestion = (index: number) => {
+    setQuizQuestions(quizQuestions.filter((_, i) => i !== index));
+  };
+
+  const saveQuiz = async () => {
+    if (!currentLessonForQuiz) return;
+    setIsLoading(true);
+
+    try {
+      let quizId = currentQuiz?.id;
+
+      // Create or update quiz
+      if (!quizId) {
+        const { data: newQuiz, error } = await supabase
+          .from('quizzes')
+          .insert({
+            lesson_id: currentLessonForQuiz.id,
+            title: `اختبار ${currentLessonForQuiz.title}`,
+            passing_score: 70,
+          })
+          .select()
+          .single();
+
+        if (error) throw error;
+        quizId = newQuiz.id;
+      }
+
+      // Delete existing questions
+      await supabase
+        .from('quiz_questions')
+        .delete()
+        .eq('quiz_id', quizId);
+
+      // Insert new questions
+      if (quizQuestions.length > 0) {
+        const questionsToInsert = quizQuestions.map((q, i) => ({
+          quiz_id: quizId,
+          question: q.question,
+          options: q.options,
+          correct_answer: q.correct_answer,
+          order_index: i,
+        }));
+
+        const { error: insertError } = await supabase
+          .from('quiz_questions')
+          .insert(questionsToInsert);
+
+        if (insertError) throw insertError;
+      }
+
+      toast({ title: 'تم بنجاح', description: 'تم حفظ الاختبار والأسئلة' });
+      setShowQuizDialog(false);
+    } catch (error) {
+      console.error('Error saving quiz:', error);
+      toast({ title: 'خطأ', description: 'فشل في حفظ الاختبار', variant: 'destructive' });
+    }
+
+    setIsLoading(false);
   };
 
   const selectCourse = (course: Course) => {
@@ -593,17 +789,39 @@ const Admin = () => {
             {/* Courses List */}
             <div className="lg:col-span-1 glass-purple rounded-2xl overflow-hidden">
               <div className="p-6 border-b border-white/10">
-                <div className="flex items-center gap-3">
-                  <div className="p-2 rounded-xl bg-accent/20">
-                    <BookOpen className="h-5 w-5 text-accent" />
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <div className="p-2 rounded-xl bg-accent/20">
+                      <BookOpen className="h-5 w-5 text-accent" />
+                    </div>
+                    <div>
+                      <h3 className="text-xl font-bold text-white">الكورسات</h3>
+                      <p className="text-sm text-white/50">{courses.length} كورس</p>
+                    </div>
                   </div>
-                  <div>
-                    <h3 className="text-xl font-bold text-white">الكورسات</h3>
-                    <p className="text-sm text-white/50">{courses.length} كورس</p>
-                  </div>
+                  {courses.length > 3 && (
+                    <div className="flex flex-col gap-1">
+                      <Button
+                        size="icon"
+                        variant="ghost"
+                        className="h-7 w-7 text-white/60 hover:text-accent hover:bg-accent/10"
+                        onClick={scrollCoursesUp}
+                      >
+                        <ChevronUp className="h-4 w-4" />
+                      </Button>
+                      <Button
+                        size="icon"
+                        variant="ghost"
+                        className="h-7 w-7 text-white/60 hover:text-accent hover:bg-accent/10"
+                        onClick={scrollCoursesDown}
+                      >
+                        <ChevronDown className="h-4 w-4" />
+                      </Button>
+                    </div>
+                  )}
                 </div>
               </div>
-              <div className="max-h-[600px] overflow-y-auto">
+              <div ref={coursesListRef} className="max-h-[600px] overflow-y-auto scroll-smooth">
                 {courses.length === 0 ? (
                   <div className="p-8 text-center">
                     <div className="w-16 h-16 rounded-full bg-white/5 flex items-center justify-center mx-auto mb-4">
@@ -765,9 +983,24 @@ const Admin = () => {
                                     فيديو
                                   </Badge>
                                 )}
+                                {lesson.pdf_url && (
+                                  <Badge className="bg-blue-500/20 text-blue-400 border-0 text-xs">
+                                    <FileUp className="h-3 w-3 ml-1" />
+                                    PDF
+                                  </Badge>
+                                )}
                               </div>
                             </div>
                             <div className="flex items-center gap-1">
+                              <Button
+                                size="icon"
+                                variant="ghost"
+                                className="h-9 w-9 text-white/60 hover:text-blue-400 hover:bg-blue-500/10"
+                                onClick={() => openQuizDialog(lesson)}
+                                title="إدارة الأسئلة"
+                              >
+                                <HelpCircle className="h-4 w-4" />
+                              </Button>
                               <Button
                                 size="icon"
                                 variant="ghost"
@@ -980,6 +1213,58 @@ const Admin = () => {
                 className="rounded-xl border-border"
               />
             </div>
+            
+            {/* PDF Upload Section */}
+            <div className="grid gap-2">
+              <Label className="font-bold">ملف PDF (اختياري)</Label>
+              <div className="flex items-center gap-3">
+                <label className="flex-1">
+                  <div className="flex items-center justify-center gap-2 p-4 border-2 border-dashed border-border rounded-xl cursor-pointer hover:border-primary/50 transition-colors">
+                    {isUploadingPdf ? (
+                      <div className="animate-spin rounded-full h-5 w-5 border-2 border-primary border-t-transparent" />
+                    ) : (
+                      <>
+                        <Upload className="h-5 w-5 text-muted-foreground" />
+                        <span className="text-muted-foreground">اختر ملف PDF</span>
+                      </>
+                    )}
+                  </div>
+                  <input
+                    type="file"
+                    accept=".pdf"
+                    className="hidden"
+                    onChange={handlePdfUpload}
+                    disabled={isUploadingPdf}
+                  />
+                </label>
+              </div>
+              {lessonForm.pdf_url && (
+                <div className="flex items-center justify-between p-3 bg-blue-500/10 rounded-xl border border-blue-500/20">
+                  <div className="flex items-center gap-2">
+                    <FileUp className="h-5 w-5 text-blue-400" />
+                    <span className="text-sm text-blue-400">تم رفع ملف PDF</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <a 
+                      href={lessonForm.pdf_url} 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      className="text-xs text-blue-400 hover:underline"
+                    >
+                      معاينة
+                    </a>
+                    <Button
+                      size="icon"
+                      variant="ghost"
+                      className="h-6 w-6 text-destructive"
+                      onClick={() => setLessonForm({ ...lessonForm, pdf_url: '' })}
+                    >
+                      <X className="h-4 w-4" />
+                    </Button>
+                  </div>
+                </div>
+              )}
+            </div>
           </div>
           
           <DialogFooter>
@@ -1010,6 +1295,108 @@ const Admin = () => {
             <Button variant="destructive" onClick={handleDelete} disabled={isLoading} className="rounded-xl">
               <Trash2 className="ml-2 h-4 w-4" />
               {isLoading ? 'جاري الحذف...' : 'حذف'}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Quiz Management Dialog */}
+      <Dialog open={showQuizDialog} onOpenChange={setShowQuizDialog}>
+        <DialogContent className="max-w-3xl bg-card border-border max-h-[90vh] overflow-hidden flex flex-col">
+          <DialogHeader>
+            <DialogTitle className="text-2xl font-black flex items-center gap-2">
+              <HelpCircle className="h-6 w-6 text-primary" />
+              إدارة الأسئلة - {currentLessonForQuiz?.title}
+            </DialogTitle>
+            <DialogDescription>
+              أضف أسئلة اختيارية للطلاب مع هذا الدرس
+            </DialogDescription>
+          </DialogHeader>
+          
+          <div className="flex-1 overflow-y-auto py-4 space-y-6">
+            {quizQuestions.length === 0 ? (
+              <div className="text-center py-12">
+                <div className="w-20 h-20 rounded-full bg-muted flex items-center justify-center mx-auto mb-4">
+                  <HelpCircle className="h-10 w-10 text-muted-foreground" />
+                </div>
+                <p className="text-muted-foreground mb-4">لا توجد أسئلة بعد</p>
+                <Button onClick={addNewQuestion} variant="outline" className="rounded-xl">
+                  <Plus className="ml-2 h-4 w-4" />
+                  أضف أول سؤال
+                </Button>
+              </div>
+            ) : (
+              quizQuestions.map((question, qIndex) => (
+                <Card key={question.id} className="border-border">
+                  <CardHeader className="pb-3">
+                    <div className="flex items-center justify-between">
+                      <CardTitle className="text-lg">السؤال {qIndex + 1}</CardTitle>
+                      <Button
+                        size="icon"
+                        variant="ghost"
+                        className="h-8 w-8 text-destructive"
+                        onClick={() => removeQuestion(qIndex)}
+                      >
+                        <X className="h-4 w-4" />
+                      </Button>
+                    </div>
+                  </CardHeader>
+                  <CardContent className="space-y-4">
+                    <div>
+                      <Label className="font-bold">نص السؤال</Label>
+                      <Textarea
+                        value={question.question}
+                        onChange={(e) => updateQuestion(qIndex, 'question', e.target.value)}
+                        placeholder="اكتب السؤال هنا..."
+                        className="mt-1 rounded-xl"
+                      />
+                    </div>
+                    
+                    <div className="space-y-3">
+                      <Label className="font-bold">الخيارات (اختر الإجابة الصحيحة)</Label>
+                      {question.options.map((option, optIndex) => (
+                        <div key={optIndex} className="flex items-center gap-3">
+                          <input
+                            type="radio"
+                            name={`correct-${question.id}`}
+                            checked={question.correct_answer === optIndex}
+                            onChange={() => updateQuestion(qIndex, 'correct_answer', optIndex)}
+                            className="w-4 h-4 text-primary"
+                          />
+                          <Input
+                            value={option}
+                            onChange={(e) => updateQuestionOption(qIndex, optIndex, e.target.value)}
+                            placeholder={`الخيار ${optIndex + 1}`}
+                            className="flex-1 rounded-xl"
+                          />
+                          {question.correct_answer === optIndex && (
+                            <Badge className="bg-emerald-500/20 text-emerald-600 border-emerald-500/30">
+                              صحيح
+                            </Badge>
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                  </CardContent>
+                </Card>
+              ))
+            )}
+            
+            {quizQuestions.length > 0 && (
+              <Button onClick={addNewQuestion} variant="outline" className="w-full rounded-xl">
+                <Plus className="ml-2 h-4 w-4" />
+                أضف سؤال جديد
+              </Button>
+            )}
+          </div>
+          
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setShowQuizDialog(false)} className="rounded-xl">
+              إلغاء
+            </Button>
+            <Button onClick={saveQuiz} disabled={isLoading} variant="gold" className="rounded-xl">
+              <Save className="ml-2 h-4 w-4" />
+              {isLoading ? 'جاري الحفظ...' : 'حفظ الأسئلة'}
             </Button>
           </DialogFooter>
         </DialogContent>
