@@ -305,4 +305,14 @@ export const ur = {
     postNotFound: 'مضمون نہیں ملا',
     viewAllPosts: 'تمام مضامین دیکھیں',
   },
+
+  // Support Chat
+  support: {
+    contactSupport: 'سپورٹ سے رابطہ کریں',
+    supportTeam: 'سپورٹ ٹیم',
+    hereToHelp: 'ہم آپ کی مدد کے لیے موجود ہیں',
+    loginRequired: 'سپورٹ سے رابطہ کرنے کے لیے لاگ ان کریں',
+    startConversation: 'ہماری سپورٹ ٹیم سے بات چیت شروع کریں',
+    typeMessage: 'اپنا پیغام لکھیں...',
+  },
 };
