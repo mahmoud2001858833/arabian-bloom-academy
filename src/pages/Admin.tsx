@@ -4,7 +4,7 @@ import {
   Users, BookOpen, DollarSign, TrendingUp, Plus, Video, 
   Edit, Trash2, Eye, EyeOff, Save, Layers, Crown, Sparkles,
   Calendar, CheckCircle, BarChart3, CreditCard, FileText,
-  ChevronUp, ChevronDown, FileUp, HelpCircle, X, Upload
+  ChevronUp, ChevronDown, FileUp, HelpCircle, X, Upload, MessageCircle
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
@@ -26,6 +26,8 @@ import DualVideoUploader from '@/components/dashboard/DualVideoUploader';
 import VideoPlayer from '@/components/dashboard/VideoPlayer';
 import PaymentManagement from '@/components/admin/PaymentManagement';
 import BlogManagement from '@/components/admin/BlogManagement';
+import ChatManagement from '@/components/admin/ChatManagement';
+import NotificationBell from '@/components/admin/NotificationBell';
 
 interface Course {
   id: string;
@@ -665,11 +667,12 @@ const Admin = () => {
                 <Crown className="h-8 w-8 text-accent" />
               </div>
               <div>
-                <h1 className="text-4xl font-black text-white">
-                  لوحة تحكم <span className="text-accent" style={{ textShadow: '0 0 20px hsl(var(--accent) / 0.5)' }}>المسؤول</span>
-                </h1>
-                <p className="text-white/60 mt-1">إدارة المنصة والكورسات والمستخدمين</p>
-              </div>
+                 <h1 className="text-4xl font-black text-white">
+                   لوحة تحكم <span className="text-accent" style={{ textShadow: '0 0 20px hsl(var(--accent) / 0.5)' }}>المسؤول</span>
+                 </h1>
+                 <p className="text-white/60 mt-1">إدارة المنصة والكورسات والمستخدمين</p>
+               </div>
+               <NotificationBell />
             </div>
             <Button 
               onClick={openNewCourse} 
@@ -774,6 +777,10 @@ const Admin = () => {
               <TabsTrigger value="payments" className="gap-2 text-foreground/70 data-[state=active]:bg-primary data-[state=active]:text-white rounded-lg px-4 py-2">
                 <CreditCard className="h-4 w-4" />
                 إدارة المدفوعات
+              </TabsTrigger>
+              <TabsTrigger value="chats" className="gap-2 text-foreground/70 data-[state=active]:bg-primary data-[state=active]:text-white rounded-lg px-4 py-2">
+                <MessageCircle className="h-4 w-4" />
+                المحادثات
               </TabsTrigger>
             </TabsList>
 
@@ -1040,6 +1047,11 @@ const Admin = () => {
             {/* Payments Tab */}
             <TabsContent value="payments">
               <PaymentManagement />
+            </TabsContent>
+
+            {/* Chats Tab */}
+            <TabsContent value="chats">
+              <ChatManagement />
             </TabsContent>
           </Tabs>
         </div>

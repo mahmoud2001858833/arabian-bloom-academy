@@ -305,4 +305,14 @@ export const ms = {
     postNotFound: 'Artikel tidak ditemui',
     viewAllPosts: 'Lihat Semua Artikel',
   },
+
+  // Support Chat
+  support: {
+    contactSupport: 'Hubungi Sokongan',
+    supportTeam: 'Pasukan Sokongan',
+    hereToHelp: 'Kami sedia membantu anda',
+    loginRequired: 'Sila log masuk untuk menghubungi sokongan',
+    startConversation: 'Mulakan perbualan dengan pasukan sokongan kami',
+    typeMessage: 'Taip mesej anda...',
+  },
 };

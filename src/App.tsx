@@ -6,6 +6,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { LanguageProvider } from "@/i18n/LanguageContext";
 import AIGuide from "@/components/guide/AIGuide";
+import SupportChat from "@/components/support/SupportChat";
 import Index from "./pages/Index";
 import Auth from "./pages/Auth";
 import About from "./pages/About";
@@ -51,6 +52,7 @@ function App() {
                 <Route path="*" element={<NotFound />} />
               </Routes>
               <AIGuide />
+              <SupportChat />
             </BrowserRouter>
           </TooltipProvider>
         </AuthProvider>

@@ -305,4 +305,14 @@ export const fr = {
     postNotFound: 'Article non trouvé',
     viewAllPosts: 'Voir Tous les Articles',
   },
+
+  // Support Chat
+  support: {
+    contactSupport: 'Contacter le Support',
+    supportTeam: 'Équipe de Support',
+    hereToHelp: 'Nous sommes là pour vous aider',
+    loginRequired: 'Veuillez vous connecter pour contacter le support',
+    startConversation: 'Démarrer une conversation avec notre équipe de support',
+    typeMessage: 'Tapez votre message...',
+  },
 };

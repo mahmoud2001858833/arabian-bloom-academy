@@ -300,4 +300,14 @@ export const ar = {
     postNotFound: 'المدونة غير موجودة',
     viewAllPosts: 'عرض جميع المدونات',
   },
+
+  // Support Chat
+  support: {
+    contactSupport: 'تواصل مع فريق الدعم',
+    supportTeam: 'فريق الدعم',
+    hereToHelp: 'نحن هنا لمساعدتك',
+    loginRequired: 'يجب تسجيل الدخول للتواصل مع فريق الدعم',
+    startConversation: 'ابدأ محادثة مع فريق الدعم',
+    typeMessage: 'اكتب رسالتك...',
+  },
 };

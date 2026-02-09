@@ -300,4 +300,14 @@ export const en = {
     postNotFound: 'Blog post not found',
     viewAllPosts: 'View All Posts',
   },
+
+  // Support Chat
+  support: {
+    contactSupport: 'Contact Support',
+    supportTeam: 'Support Team',
+    hereToHelp: 'We are here to help you',
+    loginRequired: 'Please login to contact support',
+    startConversation: 'Start a conversation with our support team',
+    typeMessage: 'Type your message...',
+  },
 };
