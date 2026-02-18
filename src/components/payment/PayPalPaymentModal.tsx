@@ -117,7 +117,7 @@ const PayPalPaymentModal = ({
         <div className="space-y-6 py-4">
           <div className="text-center p-4 rounded-lg bg-accent/10 border border-accent/30">
             <span className="text-sm text-muted-foreground">{t('payment.requiredAmount')}</span>
-            <p className="text-3xl font-black text-accent mt-1">{coursePrice} {t('payment.sar')}</p>
+            <p className="text-3xl font-black text-accent mt-1">${coursePrice} USD</p>
           </div>
 
           {status === 'success' ? (
