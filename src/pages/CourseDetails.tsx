@@ -8,6 +8,8 @@ import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
 import PageTransition from '@/components/layout/PageTransition';
 import ClickPaymentModal from '@/components/payment/ClickPaymentModal';
+import PaymentMethodSelector from '@/components/payment/PaymentMethodSelector';
+import PayPalPaymentModal from '@/components/payment/PayPalPaymentModal';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -63,6 +65,8 @@ const CourseDetails = () => {
   const [loading, setLoading] = useState(true);
   const [enrolling, setEnrolling] = useState(false);
   const [showPaymentModal, setShowPaymentModal] = useState(false);
+  const [showPaymentSelector, setShowPaymentSelector] = useState(false);
+  const [showPayPalModal, setShowPayPalModal] = useState(false);
 
   useEffect(() => {
     if (courseId) {
@@ -143,7 +147,7 @@ const CourseDetails = () => {
 
     // إذا كان الكورس مدفوع، نعرض نافذة الدفع
     if (!course?.is_free && course?.price && course.price > 0) {
-      setShowPaymentModal(true);
+      setShowPaymentSelector(true);
       return;
     }
 
@@ -512,16 +516,34 @@ const CourseDetails = () => {
 
         <Footer />
 
-        {/* نافذة الدفع عبر الكلك */}
+        {/* نافذة اختيار طريقة الدفع */}
         {course && (
-          <ClickPaymentModal
-            open={showPaymentModal}
-            onOpenChange={setShowPaymentModal}
-            courseId={course.id}
-            courseTitle={course.title}
-            coursePrice={course.price || 0}
-            onSuccess={handlePaymentSuccess}
-          />
+          <>
+            <PaymentMethodSelector
+              open={showPaymentSelector}
+              onOpenChange={setShowPaymentSelector}
+              courseTitle={course.title}
+              coursePrice={course.price || 0}
+              onSelectPayPal={() => setShowPayPalModal(true)}
+              onSelectClick={() => setShowPaymentModal(true)}
+            />
+            <ClickPaymentModal
+              open={showPaymentModal}
+              onOpenChange={setShowPaymentModal}
+              courseId={course.id}
+              courseTitle={course.title}
+              coursePrice={course.price || 0}
+              onSuccess={handlePaymentSuccess}
+            />
+            <PayPalPaymentModal
+              open={showPayPalModal}
+              onOpenChange={setShowPayPalModal}
+              courseId={course.id}
+              courseTitle={course.title}
+              coursePrice={course.price || 0}
+              onSuccess={handlePaymentSuccess}
+            />
+          </>
         )}
       </div>
     </PageTransition>
