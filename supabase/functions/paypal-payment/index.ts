@@ -9,7 +9,11 @@ const PAYPAL_CLIENT_ID = 'AZ22NQuPiykcUh72CEuea33bJOGpnAudMn8Q_zISxxlvlbFN5jUpYj
 const PAYPAL_BASE_URL = 'https://api-m.paypal.com'; // Production
 
 async function getPayPalAccessToken(): Promise<string> {
-  const secret = Deno.env.get('PAYPAL_SECRET')!;
+  const secret = Deno.env.get('PAYPAL_SECRET');
+  if (!secret) {
+    throw new Error('PAYPAL_SECRET environment variable is not set');
+  }
+  
   const auth = btoa(`${PAYPAL_CLIENT_ID}:${secret}`);
 
   const res = await fetch(`${PAYPAL_BASE_URL}/v1/oauth2/token`, {
