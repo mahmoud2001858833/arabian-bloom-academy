@@ -874,7 +874,7 @@ const Admin = () => {
                                 {course.is_free ? (
                                   <Badge className="bg-accent/20 text-accent border-accent/30 text-xs">مجاني</Badge>
                                 ) : (
-                                  <Badge className="bg-white/10 text-white/70 border-white/20 text-xs">{course.price} ر.س</Badge>
+                                  <Badge className="bg-white/10 text-white/70 border-white/20 text-xs">${course.price}</Badge>
                                 )}
                               </div>
                             </div>
@@ -1120,7 +1120,7 @@ const Admin = () => {
               </div>
               
               <div className="grid gap-2">
-                <Label className="font-bold">السعر (ر.س)</Label>
+                <Label className="font-bold">السعر ($)</Label>
                 <Input
                   type="number"
                   value={courseForm.price}

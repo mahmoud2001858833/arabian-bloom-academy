@@ -344,7 +344,7 @@ const PaymentManagement = () => {
                               الطالب: {payment.profile?.full_name || 'غير معروف'}
                             </p>
                             <p className="text-lg font-bold text-accent mt-1">
-                              {payment.amount} ر.س
+                              ${payment.amount}
                             </p>
                           </div>
                           <div className="flex items-center gap-2">
@@ -472,7 +472,7 @@ const PaymentManagement = () => {
               <div className="p-4 rounded-xl bg-muted/50 space-y-2">
                 <p><strong>الكورس:</strong> {selectedPayment.course?.title}</p>
                 <p><strong>الطالب:</strong> {selectedPayment.profile?.full_name || 'غير معروف'}</p>
-                <p><strong>المبلغ:</strong> {selectedPayment.amount} ر.س</p>
+                <p><strong>المبلغ:</strong> ${selectedPayment.amount}</p>
                 <Button
                   variant="outline"
                   size="sm"

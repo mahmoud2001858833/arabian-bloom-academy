@@ -120,7 +120,7 @@ export const id = {
     notFoundWhat: 'Tidak menemukan yang Anda cari?',
     moreCoursesComingSoon: 'Kami terus menambahkan lebih banyak kursus. Ikuti kami untuk pembaruan terbaru',
     registerForUpdates: 'Daftar Sekarang untuk Pembaruan',
-    price: 'SAR',
+    price: '$',
   },
 
   // About Page
@@ -234,7 +234,7 @@ export const id = {
     imageTooLarge: 'Ukuran gambar harus kurang dari 5MB',
     paymentSuccess: 'Permintaan pembayaran berhasil dikirim! Akan segera ditinjau',
     paymentError: 'Error mengirim permintaan pembayaran',
-    sar: 'SAR',
+    sar: '$',
     selectPaymentMethod: 'Pilih Metode Pembayaran',
     payWithPayPal: 'Bayar dengan PayPal',
     payWithClick: 'Transfer Manual (Click)',

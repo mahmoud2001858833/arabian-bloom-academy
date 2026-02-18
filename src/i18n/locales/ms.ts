@@ -120,7 +120,7 @@ export const ms = {
     notFoundWhat: 'Tidak jumpa apa yang anda cari?',
     moreCoursesComingSoon: 'Kami sentiasa menambah lebih banyak kursus. Ikuti kami untuk kemas kini terkini',
     registerForUpdates: 'Daftar Sekarang untuk Kemas Kini',
-    price: 'SAR',
+    price: '$',
   },
 
   // About Page
@@ -234,7 +234,7 @@ export const ms = {
     imageTooLarge: 'Saiz imej mesti kurang daripada 5MB',
     paymentSuccess: 'Permintaan pembayaran berjaya dihantar! Ia akan disemak tidak lama lagi',
     paymentError: 'Ralat menghantar permintaan pembayaran',
-    sar: 'SAR',
+    sar: '$',
     selectPaymentMethod: 'Pilih Kaedah Pembayaran',
     payWithPayPal: 'Bayar dengan PayPal',
     payWithClick: 'Pindahan Manual (Click)',

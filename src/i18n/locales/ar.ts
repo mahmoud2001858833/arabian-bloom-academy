@@ -120,7 +120,7 @@ export const ar = {
     notFoundWhat: 'لم تجد ما تبحث عنه؟',
     moreCoursesComingSoon: 'نحن نعمل على إضافة المزيد من الدروس باستمرار. تابعنا للحصول على آخر التحديثات',
     registerForUpdates: 'سجل الآن للحصول على التحديثات',
-    price: 'ر.س',
+    price: '$',
   },
 
   // About Page
@@ -235,7 +235,7 @@ export const ar = {
     imageTooLarge: 'حجم الصورة يجب أن يكون أقل من 5 ميجابايت',
     paymentSuccess: 'تم إرسال طلب الدفع بنجاح! سيتم مراجعته قريباً',
     paymentError: 'حدث خطأ في إرسال طلب الدفع',
-    sar: 'ر.س',
+    sar: '$',
     selectPaymentMethod: 'اختر طريقة الدفع',
     payWithPayPal: 'الدفع عبر PayPal',
     payWithClick: 'التحويل اليدوي (الكلك)',

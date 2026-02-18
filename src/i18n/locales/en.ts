@@ -120,7 +120,7 @@ export const en = {
     notFoundWhat: "Didn't find what you're looking for?",
     moreCoursesComingSoon: 'We are constantly adding more lessons. Follow us for the latest updates',
     registerForUpdates: 'Register Now for Updates',
-    price: 'SAR',
+    price: '$',
   },
 
   // About Page
@@ -235,7 +235,7 @@ export const en = {
     imageTooLarge: 'Image size must be less than 5MB',
     paymentSuccess: 'Payment request sent successfully! It will be reviewed soon',
     paymentError: 'Error sending payment request',
-    sar: 'SAR',
+    sar: '$',
     selectPaymentMethod: 'Select Payment Method',
     payWithPayPal: 'Pay with PayPal',
     payWithClick: 'Manual Transfer (Click)',
