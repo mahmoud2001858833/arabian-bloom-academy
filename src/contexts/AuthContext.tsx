@@ -41,36 +41,69 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   useEffect(() => {
-    // Set up auth state listener FIRST
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      async (event, session) => {
-        setSession(session);
-        setUser(session?.user ?? null);
-        
-        if (session?.user) {
-          const admin = await checkAdminRole(session.user.id);
-          setIsAdmin(admin);
-        } else {
-          setIsAdmin(false);
-        }
-        
+    let isMounted = true;
+
+    // Safety timeout - never stay loading forever
+    const safetyTimeout = setTimeout(() => {
+      if (isMounted) {
+        console.warn('Auth loading safety timeout triggered');
         setLoading(false);
       }
-    );
+    }, 5000);
 
-    // THEN check for existing session
-    supabase.auth.getSession().then(({ data: { session } }) => {
+    // Check for existing session
+    supabase.auth.getSession().then(async ({ data: { session } }) => {
+      if (!isMounted) return;
       setSession(session);
       setUser(session?.user ?? null);
       
       if (session?.user) {
-        checkAdminRole(session.user.id).then(setIsAdmin);
+        try {
+          const admin = await checkAdminRole(session.user.id);
+          if (isMounted) setIsAdmin(admin);
+        } catch (e) {
+          console.error('Error checking admin on init:', e);
+        }
       }
       
-      setLoading(false);
+      if (isMounted) setLoading(false);
+    }).catch((err) => {
+      console.error('Error getting session:', err);
+      if (isMounted) setLoading(false);
     });
 
-    return () => subscription.unsubscribe();
+    // Set up auth state listener
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(
+      async (event, session) => {
+        if (!isMounted) return;
+        setSession(session);
+        setUser(session?.user ?? null);
+        
+        if (session?.user) {
+          // Use setTimeout to avoid blocking the auth state change callback
+          setTimeout(async () => {
+            if (!isMounted) return;
+            try {
+              const admin = await checkAdminRole(session.user.id);
+              if (isMounted) setIsAdmin(admin);
+            } catch (e) {
+              console.error('Error checking admin role:', e);
+              if (isMounted) setIsAdmin(false);
+            }
+          }, 0);
+        } else {
+          setIsAdmin(false);
+        }
+        
+        if (isMounted) setLoading(false);
+      }
+    );
+
+    return () => {
+      isMounted = false;
+      clearTimeout(safetyTimeout);
+      subscription.unsubscribe();
+    };
   }, []);
 
   const signUp = async (email: string, password: string, fullName: string) => {
