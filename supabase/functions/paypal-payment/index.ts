@@ -5,7 +5,7 @@ const corsHeaders = {
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version',
 };
 
-const PAYPAL_CLIENT_ID = 'AZ22NQuPiykcUh72CEuea33bJOGpnAudMn8Q_zISxxlvlbFN5jUpYjzE2Dv0LpMEYrJhrxamgAuKPl5t';
+const PAYPAL_CLIENT_ID = 'AUCQVJMlnhCbKztLg0RvdZnNvyxDfxlpMs7N5BETGwSPPjrgzek20HdTAvGMjLzXJrH_NjTrQVloohDv';
 const PAYPAL_BASE_URL = 'https://api-m.paypal.com'; // Production
 
 async function getPayPalAccessToken(): Promise<string> {
