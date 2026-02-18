@@ -49,6 +49,12 @@ const PayPalGuestModal = ({
       
       window.paypal.HostedButtons({
         hostedButtonId: 'VGCK26YEP9QCU',
+        paymentOverrides: {
+          amount: {
+            value: coursePrice.toString(),
+            currency_code: 'USD',
+          },
+        },
         onApprove: async (data: any) => {
           try {
             if (user) {
