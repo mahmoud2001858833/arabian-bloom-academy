@@ -48,7 +48,7 @@ const PayPalGuestModal = ({
       setLoading(false);
       
       window.paypal.HostedButtons({
-        hostedButtonId: 'DJXS6GFYAECLW',
+        hostedButtonId: 'VGCK26YEP9QCU',
         onApprove: async (data: any) => {
           try {
             if (user) {
