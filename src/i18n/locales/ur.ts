@@ -247,6 +247,7 @@ export const ur = {
     tryAgain: 'دوبارہ کوشش کریں',
     processing: 'پروسیسنگ...',
     completeInPayPal: 'PayPal ونڈو میں ادائیگی مکمل کریں پھر بند کریں',
+    payWithCard: 'کارڈ سے ادائیگی (PayPal اکاؤنٹ کی ضرورت نہیں)',
   },
 
   // AI Guide
