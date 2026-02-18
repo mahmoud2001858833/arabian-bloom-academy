@@ -236,6 +236,7 @@ export const ar = {
     paymentSuccess: 'تم إرسال طلب الدفع بنجاح! سيتم مراجعته قريباً',
     paymentError: 'حدث خطأ في إرسال طلب الدفع',
     sar: '$',
+    jod: 'د.أ',
     selectPaymentMethod: 'اختر طريقة الدفع',
     payWithPayPal: 'الدفع عبر PayPal',
     payWithClick: 'التحويل اليدوي (الكلك)',

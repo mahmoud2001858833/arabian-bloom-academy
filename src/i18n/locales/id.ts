@@ -235,6 +235,7 @@ export const id = {
     paymentSuccess: 'Permintaan pembayaran berhasil dikirim! Akan segera ditinjau',
     paymentError: 'Error mengirim permintaan pembayaran',
     sar: '$',
+    jod: 'JOD',
     selectPaymentMethod: 'Pilih Metode Pembayaran',
     payWithPayPal: 'Bayar dengan PayPal',
     payWithClick: 'Transfer Manual (Click)',
