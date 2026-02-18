@@ -26,6 +26,8 @@ interface ClickPaymentModalProps {
   onSuccess: () => void;
 }
 
+const USD_TO_JOD_RATE = 0.709;
+
 const ClickPaymentModal = ({
   open,
   onOpenChange,
@@ -34,6 +36,7 @@ const ClickPaymentModal = ({
   coursePrice,
   onSuccess,
 }: ClickPaymentModalProps) => {
+  const priceInJOD = (coursePrice * USD_TO_JOD_RATE).toFixed(2);
   const { user } = useAuth();
   const { t } = useLanguage();
   const [paymentSettings, setPaymentSettings] = useState<PaymentSettings | null>(null);
@@ -233,7 +236,10 @@ const ClickPaymentModal = ({
             <CardContent className="p-4">
               <div className="flex items-center justify-between">
                 <span className="font-medium">{t('payment.requiredAmount')}</span>
-                <span className="text-2xl font-black text-accent">{coursePrice} {t('payment.sar')}</span>
+                <div className="text-right">
+                  <span className="text-2xl font-black text-accent">{priceInJOD} {t('payment.jod')}</span>
+                  <p className="text-xs text-muted-foreground">{coursePrice} {t('payment.sar')} ≈ {priceInJOD} JOD</p>
+                </div>
               </div>
             </CardContent>
           </Card>

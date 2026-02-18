@@ -235,6 +235,7 @@ export const ms = {
     paymentSuccess: 'Permintaan pembayaran berjaya dihantar! Ia akan disemak tidak lama lagi',
     paymentError: 'Ralat menghantar permintaan pembayaran',
     sar: '$',
+    jod: 'JOD',
     selectPaymentMethod: 'Pilih Kaedah Pembayaran',
     payWithPayPal: 'Bayar dengan PayPal',
     payWithClick: 'Pindahan Manual (Click)',

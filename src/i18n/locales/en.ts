@@ -236,6 +236,7 @@ export const en = {
     paymentSuccess: 'Payment request sent successfully! It will be reviewed soon',
     paymentError: 'Error sending payment request',
     sar: '$',
+    jod: 'JOD',
     selectPaymentMethod: 'Select Payment Method',
     payWithPayPal: 'Pay with PayPal',
     payWithClick: 'Manual Transfer (Click)',

@@ -235,6 +235,7 @@ export const ur = {
     paymentSuccess: 'ادائیگی کی درخواست کامیابی سے بھیجی گئی! جلد جائزہ لیا جائے گا',
     paymentError: 'ادائیگی کی درخواست بھیجنے میں خرابی',
     sar: '$',
+    jod: 'JOD',
     selectPaymentMethod: 'ادائیگی کا طریقہ منتخب کریں',
     payWithPayPal: 'PayPal سے ادائیگی کریں',
     payWithClick: 'دستی منتقلی (کلک)',

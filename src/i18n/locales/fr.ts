@@ -235,6 +235,7 @@ export const fr = {
     paymentSuccess: 'Demande de paiement envoyée avec succès! Elle sera examinée bientôt',
     paymentError: "Erreur d'envoi de la demande de paiement",
     sar: '$',
+    jod: 'JOD',
     selectPaymentMethod: 'Sélectionner le Mode de Paiement',
     payWithPayPal: 'Payer avec PayPal',
     payWithClick: 'Transfert Manuel (Click)',
