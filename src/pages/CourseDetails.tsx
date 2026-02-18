@@ -10,6 +10,7 @@ import PageTransition from '@/components/layout/PageTransition';
 import ClickPaymentModal from '@/components/payment/ClickPaymentModal';
 import PaymentMethodSelector from '@/components/payment/PaymentMethodSelector';
 import PayPalPaymentModal from '@/components/payment/PayPalPaymentModal';
+import PayPalGuestModal from '@/components/payment/PayPalGuestModal';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -67,6 +68,7 @@ const CourseDetails = () => {
   const [showPaymentModal, setShowPaymentModal] = useState(false);
   const [showPaymentSelector, setShowPaymentSelector] = useState(false);
   const [showPayPalModal, setShowPayPalModal] = useState(false);
+  const [showPayPalGuestModal, setShowPayPalGuestModal] = useState(false);
 
   useEffect(() => {
     if (courseId) {
@@ -526,6 +528,7 @@ const CourseDetails = () => {
               coursePrice={course.price || 0}
               onSelectPayPal={() => setShowPayPalModal(true)}
               onSelectClick={() => setShowPaymentModal(true)}
+              onSelectPayPalGuest={() => setShowPayPalGuestModal(true)}
             />
             <ClickPaymentModal
               open={showPaymentModal}
@@ -538,6 +541,14 @@ const CourseDetails = () => {
             <PayPalPaymentModal
               open={showPayPalModal}
               onOpenChange={setShowPayPalModal}
+              courseId={course.id}
+              courseTitle={course.title}
+              coursePrice={course.price || 0}
+              onSuccess={handlePaymentSuccess}
+            />
+            <PayPalGuestModal
+              open={showPayPalGuestModal}
+              onOpenChange={setShowPayPalGuestModal}
               courseId={course.id}
               courseTitle={course.title}
               coursePrice={course.price || 0}

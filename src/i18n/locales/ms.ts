@@ -247,6 +247,7 @@ export const ms = {
     tryAgain: 'Cuba Lagi',
     processing: 'Memproses...',
     completeInPayPal: 'Selesaikan pembayaran di tetingkap PayPal kemudian tutup',
+    payWithCard: 'Bayar dengan Kad (Tanpa akaun PayPal)',
   },
 
   // AI Guide

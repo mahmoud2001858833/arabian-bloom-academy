@@ -247,6 +247,7 @@ export const id = {
     tryAgain: 'Coba Lagi',
     processing: 'Memproses...',
     completeInPayPal: 'Selesaikan pembayaran di jendela PayPal lalu tutup',
+    payWithCard: 'Bayar dengan Kartu (Tanpa akun PayPal)',
   },
 
   // AI Guide

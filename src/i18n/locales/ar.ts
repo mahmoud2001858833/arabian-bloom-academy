@@ -248,6 +248,7 @@ export const ar = {
     tryAgain: 'حاول مرة أخرى',
     processing: 'جاري المعالجة...',
     completeInPayPal: 'أكمل الدفع في نافذة PayPal ثم أغلقها',
+    payWithCard: 'الدفع ببطاقة (بدون حساب PayPal)',
   },
 
   // AI Guide

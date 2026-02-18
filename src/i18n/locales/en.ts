@@ -248,6 +248,7 @@ export const en = {
     tryAgain: 'Try Again',
     processing: 'Processing...',
     completeInPayPal: 'Complete payment in the PayPal window then close it',
+    payWithCard: 'Pay with Card (No PayPal account needed)',
   },
 
   // AI Guide

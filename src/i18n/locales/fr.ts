@@ -247,6 +247,7 @@ export const fr = {
     tryAgain: 'Réessayer',
     processing: 'Traitement...',
     completeInPayPal: 'Complétez le paiement dans la fenêtre PayPal puis fermez-la',
+    payWithCard: 'Payer par carte (sans compte PayPal)',
   },
 
   // AI Guide

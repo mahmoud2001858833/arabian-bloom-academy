@@ -10,6 +10,7 @@ interface PaymentMethodSelectorProps {
   coursePrice: number;
   onSelectPayPal: () => void;
   onSelectClick: () => void;
+  onSelectPayPalGuest: () => void;
 }
 
 const PaymentMethodSelector = ({
@@ -19,6 +20,7 @@ const PaymentMethodSelector = ({
   coursePrice,
   onSelectPayPal,
   onSelectClick,
+  onSelectPayPalGuest,
 }: PaymentMethodSelectorProps) => {
   const { t } = useLanguage();
 
@@ -49,6 +51,18 @@ const PaymentMethodSelector = ({
           >
             <Globe className="h-5 w-5" />
             {t('payment.payWithPayPal')}
+          </Button>
+
+          <Button
+            onClick={() => {
+              onOpenChange(false);
+              onSelectPayPalGuest();
+            }}
+            variant="outline"
+            className="w-full h-14 gap-3 text-base"
+          >
+            <CreditCard className="h-5 w-5" />
+            {t('payment.payWithCard')}
           </Button>
 
           <Button
