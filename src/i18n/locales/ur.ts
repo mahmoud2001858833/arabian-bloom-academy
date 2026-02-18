@@ -120,7 +120,7 @@ export const ur = {
     notFoundWhat: 'جو آپ ڈھونڈ رہے ہیں وہ نہیں ملا؟',
     moreCoursesComingSoon: 'ہم مسلسل مزید کورسز شامل کر رہے ہیں۔ تازہ ترین اپڈیٹس کے لیے ہمیں فالو کریں',
     registerForUpdates: 'اپڈیٹس کے لیے ابھی رجسٹر کریں',
-    price: 'ر.س',
+    price: '$',
   },
 
   // About Page
@@ -234,7 +234,7 @@ export const ur = {
     imageTooLarge: 'تصویر کا سائز 5MB سے کم ہونا چاہیے',
     paymentSuccess: 'ادائیگی کی درخواست کامیابی سے بھیجی گئی! جلد جائزہ لیا جائے گا',
     paymentError: 'ادائیگی کی درخواست بھیجنے میں خرابی',
-    sar: 'ر.س',
+    sar: '$',
     selectPaymentMethod: 'ادائیگی کا طریقہ منتخب کریں',
     payWithPayPal: 'PayPal سے ادائیگی کریں',
     payWithClick: 'دستی منتقلی (کلک)',

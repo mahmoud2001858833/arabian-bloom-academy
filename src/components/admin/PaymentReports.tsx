@@ -137,7 +137,7 @@ const PaymentReports = ({ payments }: PaymentReportsProps) => {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm text-muted-foreground">الإيرادات المحصلة</p>
-                <p className="text-2xl font-bold text-primary">{stats.totalRevenue} ر.س</p>
+                <p className="text-2xl font-bold text-primary">${stats.totalRevenue}</p>
               </div>
               <DollarSign className="h-8 w-8 text-primary/50" />
             </div>
@@ -149,7 +149,7 @@ const PaymentReports = ({ payments }: PaymentReportsProps) => {
               <div>
                 <p className="text-sm text-muted-foreground">قيد المراجعة</p>
                 <p className="text-2xl font-bold text-accent">{stats.pending}</p>
-                <p className="text-xs text-muted-foreground">{stats.pendingRevenue} ر.س</p>
+                <p className="text-xs text-muted-foreground">${stats.pendingRevenue}</p>
               </div>
               <Clock className="h-8 w-8 text-accent/50" />
             </div>
@@ -302,7 +302,7 @@ const PaymentReports = ({ payments }: PaymentReportsProps) => {
                       </TableCell>
                       <TableCell className="font-medium">{payment.course?.title}</TableCell>
                       <TableCell>{payment.profile?.full_name || 'غير معروف'}</TableCell>
-                      <TableCell className="font-bold">{payment.amount} ر.س</TableCell>
+                      <TableCell className="font-bold">${payment.amount}</TableCell>
                       <TableCell>{getStatusBadge(payment.status)}</TableCell>
                       <TableCell className="text-sm text-muted-foreground max-w-[200px] truncate">
                         {payment.admin_notes || '-'}

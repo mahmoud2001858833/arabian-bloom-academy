@@ -120,7 +120,7 @@ export const fr = {
     notFoundWhat: "Vous n'avez pas trouvé ce que vous cherchez?",
     moreCoursesComingSoon: 'Nous ajoutons constamment plus de cours. Suivez-nous pour les dernières mises à jour',
     registerForUpdates: 'Inscrivez-vous Maintenant pour les Mises à Jour',
-    price: 'SAR',
+    price: '$',
   },
 
   // About Page
@@ -234,7 +234,7 @@ export const fr = {
     imageTooLarge: "La taille de l'image doit être inférieure à 5 Mo",
     paymentSuccess: 'Demande de paiement envoyée avec succès! Elle sera examinée bientôt',
     paymentError: "Erreur d'envoi de la demande de paiement",
-    sar: 'SAR',
+    sar: '$',
     selectPaymentMethod: 'Sélectionner le Mode de Paiement',
     payWithPayPal: 'Payer avec PayPal',
     payWithClick: 'Transfert Manuel (Click)',
