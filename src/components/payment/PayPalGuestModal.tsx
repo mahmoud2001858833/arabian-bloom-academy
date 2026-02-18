@@ -39,72 +39,55 @@ const PayPalGuestModal = ({
     if (!open || rendered) return;
 
     const renderButton = () => {
-      if (!containerRef.current || !window.paypal?.Buttons) {
+      if (!containerRef.current || !window.paypal?.HostedButtons) {
+        // Retry if SDK not loaded yet
         setTimeout(renderButton, 500);
         return;
       }
 
       setLoading(false);
-
-      window.paypal.Buttons({
-        style: {
-          layout: 'vertical',
-          shape: 'rect',
-          label: 'pay',
-        },
-        createOrder: (_data: any, actions: any) => {
-          return actions.order.create({
-            purchase_units: [{
-              amount: {
-                currency_code: 'USD',
-                value: coursePrice.toFixed(2),
-              },
-              description: courseTitle,
-            }],
-          });
-        },
-        onApprove: async (_data: any, actions: any) => {
+      
+      window.paypal.HostedButtons({
+        hostedButtonId: 'VGCK26YEP9QCU',
+        onApprove: async (data: any) => {
           try {
-            const details = await actions.order.capture();
-            
-            if (details.status === 'COMPLETED' && user) {
-              const capturedAmount = details.purchase_units?.[0]?.payments?.captures?.[0]?.amount?.value || coursePrice;
-              
-              await supabase.from('purchases').insert({
+            if (user) {
+              // Record purchase in database
+              const { error: purchaseError } = await supabase.from('purchases').insert({
                 user_id: user.id,
                 course_id: courseId,
-                amount: parseFloat(String(capturedAmount)),
-                stripe_payment_id: details.id || 'paypal-guest',
+                amount: coursePrice,
+                stripe_payment_id: data.orderID || 'paypal-guest',
                 status: 'completed',
               });
 
-              await supabase.from('enrollments').insert({
-                user_id: user.id,
-                course_id: courseId,
-              });
+              if (!purchaseError) {
+                await supabase.from('enrollments').insert({
+                  user_id: user.id,
+                  course_id: courseId,
+                });
+              }
             }
 
             toast.success(t('payment.paypalSuccess'));
             onOpenChange(false);
             onSuccess();
           } catch (error) {
-            console.error('PayPal guest capture error:', error);
+            console.error('PayPal guest payment error:', error);
             toast.error(t('payment.paypalError'));
           }
         },
-        onError: (err: any) => {
-          console.error('PayPal button error:', err);
-          toast.error(t('payment.paypalError'));
-        },
       }).render(containerRef.current);
-
+      
       setRendered(true);
     };
 
+    // Small delay to ensure DOM is ready
     const timer = setTimeout(renderButton, 300);
     return () => clearTimeout(timer);
   }, [open, rendered]);
 
+  // Reset rendered state when modal closes
   useEffect(() => {
     if (!open) {
       setRendered(false);
