@@ -1,79 +1,33 @@
 
-
-# خطة نظام الدردشة مع فريق الدعم ونظام الإشعارات
+# خطة ربط المنصة ببوابة الدفع PayPal
 
 ## نظرة عامة
-سيتم إنشاء نظام دردشة مباشرة بين الطلاب والأدمن مع نظام إشعارات في لوحة التحكم.
+سيتم إضافة خيار الدفع عبر PayPal بجانب طريقة الدفع اليدوية (Click) الحالية. الطالب سيختار طريقة الدفع عند شراء كورس مدفوع.
 
 ---
 
 ## المكونات الرئيسية
 
-### 1. قاعدة البيانات - جداول جديدة
+### 1. تخزين المفاتيح
+- **PayPal Client ID**: سيُخزن في الكود كمتغير بيئة (مفتاح عام آمن للنشر)
+- **PayPal Secret**: سيُخزن بشكل آمن في Lovable Cloud كـ secret ويُستخدم فقط من backend functions
 
-**جدول `support_conversations`** - لتخزين المحادثات:
-| العمود | النوع | الوصف |
-|--------|------|-------|
-| id | uuid | المعرف |
-| user_id | uuid | معرف الطالب |
-| status | text | حالة المحادثة (open/closed) |
-| created_at | timestamp | تاريخ الإنشاء |
-| updated_at | timestamp | آخر تحديث |
+### 2. Edge Function جديدة: `paypal-payment`
+- إنشاء طلب دفع PayPal (Create Order)
+- تأكيد الدفع بعد موافقة العميل (Capture Order)
+- عند نجاح الدفع: تسجيل الشراء في جدول `purchases` وتسجيل الطالب في جدول `enrollments`
 
-**جدول `support_messages`** - لتخزين الرسائل:
-| العمود | النوع | الوصف |
-|--------|------|-------|
-| id | uuid | المعرف |
-| conversation_id | uuid | معرف المحادثة |
-| sender_id | uuid | معرف المرسل |
-| content | text | محتوى الرسالة |
-| is_read | boolean | هل تمت القراءة |
-| created_at | timestamp | وقت الإرسال |
+### 3. مكون جديد: `PaymentMethodSelector`
+- نافذة اختيار طريقة الدفع (PayPal أو التحويل اليدوي)
+- تظهر عند الضغط على زر الاشتراك في كورس مدفوع
 
-**جدول `admin_notifications`** - لتخزين الإشعارات:
-| العمود | النوع | الوصف |
-|--------|------|-------|
-| id | uuid | المعرف |
-| type | text | نوع الإشعار (new_chat, new_payment, etc) |
-| title | text | عنوان الإشعار |
-| message | text | نص الإشعار |
-| is_read | boolean | هل تمت القراءة |
-| reference_id | uuid | معرف مرجعي |
-| created_at | timestamp | وقت الإنشاء |
+### 4. مكون جديد: `PayPalPaymentModal`
+- يعرض زر "ادفع عبر PayPal"
+- يفتح نافذة PayPal للدفع
+- يتعامل مع نتيجة الدفع (نجاح/فشل)
 
-- تفعيل **Realtime** على جداول الرسائل والإشعارات للتحديث الفوري
-- سياسات RLS: الطلاب يرون محادثاتهم فقط، الأدمن يرى الكل
-
-### 2. أيقونات الزاوية السفلية
-
-ترتيب الأيقونات من الأسفل:
-1. **المساعد الذكي** (الأيقونة الحالية) - تبقى كما هي
-2. **تواصل مع فريق الدعم** (أيقونة جديدة فوقها) - تفتح نافذة دردشة مع الأدمن
-
-### 3. نافذة دردشة الدعم (للطالب)
-
-- مكون جديد `SupportChat.tsx` بتصميم مشابه لـ AIGuide
-- عند الضغط على الأيقونة تفتح نافذة دردشة
-- الطالب يكتب رسالة وترسل مباشرة
-- الرسائل تتحدث بالوقت الفعلي (Realtime)
-- إذا لم يكن مسجل دخول يظهر رسالة تطلب تسجيل الدخول
-
-### 4. لوحة الأدمن - تبويب المحادثات
-
-- إضافة تبويب جديد **"المحادثات"** في لوحة الأدمن بجانب التبويبات الحالية
-- عرض قائمة بجميع المحادثات مع اسم الطالب وآخر رسالة
-- عند الضغط على محادثة تفتح نافذة الرد
-- الأدمن يستطيع الرد مباشرة
-
-### 5. نظام الإشعارات في لوحة الأدمن
-
-- أيقونة جرس في header الأدمن مع عداد للإشعارات غير المقروءة
-- أنواع الإشعارات:
-  - محادثة دعم جديدة
-  - طلب دفع جديد
-  - تسجيل طالب جديد
-- عند الضغط على الجرس تظهر قائمة منسدلة بالإشعارات
-- Trigger في قاعدة البيانات لإنشاء إشعار تلقائي عند محادثة جديدة أو دفع جديد
+### 5. تعديل صفحة تفاصيل الكورس
+- بدلا من فتح نافذة Click مباشرة، تفتح نافذة اختيار طريقة الدفع أولا
 
 ---
 
@@ -83,45 +37,41 @@
 
 | الملف | الوصف |
 |-------|-------|
-| `src/components/support/SupportChat.tsx` | نافذة دردشة الدعم (للطلاب) |
-| `src/components/admin/ChatManagement.tsx` | إدارة المحادثات (للأدمن) |
-| `src/components/admin/NotificationBell.tsx` | أيقونة الإشعارات |
+| `supabase/functions/paypal-payment/index.ts` | Edge function للتعامل مع PayPal API |
+| `src/components/payment/PayPalPaymentModal.tsx` | نافذة الدفع عبر PayPal |
+| `src/components/payment/PaymentMethodSelector.tsx` | نافذة اختيار طريقة الدفع |
 
 ### الملفات المعدلة
 
 | الملف | التعديل |
 |-------|---------|
-| `src/App.tsx` | إضافة مكون SupportChat |
-| `src/pages/Admin.tsx` | إضافة تبويب المحادثات + الإشعارات |
-| `src/components/guide/AIGuide.tsx` | تعديل موقع الأيقونة |
-| `src/i18n/locales/*.ts` | إضافة ترجمات الدعم والإشعارات (6 ملفات) |
+| `src/pages/CourseDetails.tsx` | استبدال فتح ClickPaymentModal بـ PaymentMethodSelector |
+| `src/i18n/locales/*.ts` | إضافة ترجمات PayPal (6 ملفات) |
+| `supabase/config.toml` | إضافة إعدادات edge function الجديدة |
 
-### Realtime
-
-```text
-support_messages → تحديث فوري للرسائل الجديدة
-admin_notifications → تحديث فوري لعداد الإشعارات
-```
-
-### سياسات الأمان (RLS)
+### تدفق الدفع عبر PayPal
 
 ```text
-support_conversations:
-  ├── SELECT (طالب): user_id = auth.uid()
-  ├── INSERT (طالب): user_id = auth.uid()
-  ├── ALL (أدمن): has_role(auth.uid(), 'admin')
-
-support_messages:
-  ├── SELECT (طالب): عبر conversation التابعة له
-  ├── INSERT (طالب): عبر conversation التابعة له
-  ├── ALL (أدمن): has_role(auth.uid(), 'admin')
-
-admin_notifications:
-  ├── SELECT/UPDATE (أدمن فقط): has_role(auth.uid(), 'admin')
+1. الطالب يضغط "اشترك الآن"
+2. تظهر نافذة اختيار الطريقة (PayPal / تحويل يدوي)
+3. يختار PayPal
+4. يُرسل طلب إلى edge function لإنشاء Order
+5. يُعاد توجيهه لصفحة PayPal للدفع
+6. بعد الموافقة يُرسل طلب capture لتأكيد الدفع
+7. عند النجاح: يُسجل في purchases + enrollments تلقائيا
 ```
 
-### Database Triggers
+### Edge Function: paypal-payment
 
-- عند إنشاء محادثة جديدة → إنشاء إشعار للأدمن
-- عند إنشاء طلب دفع جديد → إنشاء إشعار للأدمن
+```text
+POST /paypal-payment
+  body: { action: "create", courseId, amount }
+  -> ينشئ PayPal Order ويعيد orderID
 
+POST /paypal-payment
+  body: { action: "capture", orderID, courseId }
+  -> يؤكد الدفع ويسجل في قاعدة البيانات
+```
+
+### Secret المطلوب
+- `PAYPAL_SECRET` - سيتم طلبه من المستخدم عبر أداة إضافة الأسرار
