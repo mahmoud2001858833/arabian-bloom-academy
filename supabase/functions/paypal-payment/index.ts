@@ -62,6 +62,16 @@ async function createOrder(amount: number, courseTitle: string): Promise<string>
   return data.id;
 }
 
+async function getOrderStatus(orderID: string): Promise<string> {
+  const accessToken = await getPayPalAccessToken();
+  const res = await fetch(`${PAYPAL_BASE_URL}/v2/checkout/orders/${orderID}`, {
+    method: 'GET',
+    headers: { 'Authorization': `Bearer ${accessToken}` },
+  });
+  const data = await res.json();
+  return data.status || 'UNKNOWN';
+}
+
 async function captureOrder(orderID: string): Promise<any> {
   const accessToken = await getPayPalAccessToken();
 
@@ -120,6 +130,12 @@ Deno.serve(async (req) => {
     } else if (action === 'capture') {
       if (!orderID || !courseId) {
         return new Response(JSON.stringify({ error: 'Missing required fields' }), { status: 400, headers: corsHeaders });
+      }
+
+      // Check if order was approved before trying to capture
+      const orderStatus = await getOrderStatus(orderID);
+      if (orderStatus !== 'APPROVED') {
+        return new Response(JSON.stringify({ error: 'Payment not approved', status: orderStatus }), { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
       }
 
       const captureData = await captureOrder(orderID);
