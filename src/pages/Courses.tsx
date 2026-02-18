@@ -65,14 +65,20 @@ const Courses = () => {
   }, []);
 
   const fetchCourses = async () => {
+    console.log('fetchCourses called');
+    console.log('SUPABASE URL:', import.meta.env.VITE_SUPABASE_URL);
+    console.log('SUPABASE KEY:', import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY ? 'SET' : 'NOT SET');
     try {
       const { data, error } = await supabase
         .from('courses')
         .select('*')
         .eq('is_published', true);
 
+      console.log('Courses response:', { data, error });
+
       if (error) {
         console.error('Error fetching courses:', error);
+        setLoading(false);
         return;
       }
 
