@@ -108,9 +108,8 @@ const Navbar = () => {
                   </DropdownMenuItem>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem
-                    onSelect={(e) => {
-                      e.preventDefault();
-                      handleSignOut();
+                    onSelect={() => {
+                      setTimeout(() => handleSignOut(), 0);
                     }}
                     className="cursor-pointer text-destructive rounded-lg"
                   >
