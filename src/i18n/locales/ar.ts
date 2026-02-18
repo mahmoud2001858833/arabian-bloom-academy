@@ -236,6 +236,17 @@ export const ar = {
     paymentSuccess: 'تم إرسال طلب الدفع بنجاح! سيتم مراجعته قريباً',
     paymentError: 'حدث خطأ في إرسال طلب الدفع',
     sar: 'ر.س',
+    selectPaymentMethod: 'اختر طريقة الدفع',
+    payWithPayPal: 'الدفع عبر PayPal',
+    payWithClick: 'التحويل اليدوي (الكلك)',
+    paypalPayment: 'الدفع عبر PayPal',
+    paypalWindowOpened: 'تم فتح نافذة PayPal، أكمل الدفع هناك',
+    paypalSuccess: 'تم الدفع بنجاح عبر PayPal!',
+    paypalCancelled: 'تم إلغاء عملية الدفع',
+    paypalError: 'حدث خطأ في الدفع عبر PayPal',
+    tryAgain: 'حاول مرة أخرى',
+    processing: 'جاري المعالجة...',
+    completeInPayPal: 'أكمل الدفع في نافذة PayPal ثم أغلقها',
   },
 
   // AI Guide

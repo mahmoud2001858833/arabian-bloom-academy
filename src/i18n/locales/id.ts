@@ -235,6 +235,17 @@ export const id = {
     paymentSuccess: 'Permintaan pembayaran berhasil dikirim! Akan segera ditinjau',
     paymentError: 'Error mengirim permintaan pembayaran',
     sar: 'SAR',
+    selectPaymentMethod: 'Pilih Metode Pembayaran',
+    payWithPayPal: 'Bayar dengan PayPal',
+    payWithClick: 'Transfer Manual (Click)',
+    paypalPayment: 'Pembayaran PayPal',
+    paypalWindowOpened: 'Jendela PayPal terbuka, selesaikan pembayaran di sana',
+    paypalSuccess: 'Pembayaran berhasil melalui PayPal!',
+    paypalCancelled: 'Pembayaran dibatalkan',
+    paypalError: 'Error memproses pembayaran PayPal',
+    tryAgain: 'Coba Lagi',
+    processing: 'Memproses...',
+    completeInPayPal: 'Selesaikan pembayaran di jendela PayPal lalu tutup',
   },
 
   // AI Guide

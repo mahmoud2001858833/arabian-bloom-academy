@@ -235,6 +235,17 @@ export const fr = {
     paymentSuccess: 'Demande de paiement envoyée avec succès! Elle sera examinée bientôt',
     paymentError: "Erreur d'envoi de la demande de paiement",
     sar: 'SAR',
+    selectPaymentMethod: 'Sélectionner le Mode de Paiement',
+    payWithPayPal: 'Payer avec PayPal',
+    payWithClick: 'Transfert Manuel (Click)',
+    paypalPayment: 'Paiement PayPal',
+    paypalWindowOpened: 'Fenêtre PayPal ouverte, complétez le paiement',
+    paypalSuccess: 'Paiement réussi via PayPal!',
+    paypalCancelled: 'Paiement annulé',
+    paypalError: 'Erreur de paiement PayPal',
+    tryAgain: 'Réessayer',
+    processing: 'Traitement...',
+    completeInPayPal: 'Complétez le paiement dans la fenêtre PayPal puis fermez-la',
   },
 
   // AI Guide

@@ -236,6 +236,17 @@ export const en = {
     paymentSuccess: 'Payment request sent successfully! It will be reviewed soon',
     paymentError: 'Error sending payment request',
     sar: 'SAR',
+    selectPaymentMethod: 'Select Payment Method',
+    payWithPayPal: 'Pay with PayPal',
+    payWithClick: 'Manual Transfer (Click)',
+    paypalPayment: 'PayPal Payment',
+    paypalWindowOpened: 'PayPal window opened, complete payment there',
+    paypalSuccess: 'Payment successful via PayPal!',
+    paypalCancelled: 'Payment was cancelled',
+    paypalError: 'Error processing PayPal payment',
+    tryAgain: 'Try Again',
+    processing: 'Processing...',
+    completeInPayPal: 'Complete payment in the PayPal window then close it',
   },
 
   // AI Guide

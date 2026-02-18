@@ -235,6 +235,17 @@ export const ms = {
     paymentSuccess: 'Permintaan pembayaran berjaya dihantar! Ia akan disemak tidak lama lagi',
     paymentError: 'Ralat menghantar permintaan pembayaran',
     sar: 'SAR',
+    selectPaymentMethod: 'Pilih Kaedah Pembayaran',
+    payWithPayPal: 'Bayar dengan PayPal',
+    payWithClick: 'Pindahan Manual (Click)',
+    paypalPayment: 'Pembayaran PayPal',
+    paypalWindowOpened: 'Tetingkap PayPal dibuka, selesaikan pembayaran di sana',
+    paypalSuccess: 'Pembayaran berjaya melalui PayPal!',
+    paypalCancelled: 'Pembayaran dibatalkan',
+    paypalError: 'Ralat memproses pembayaran PayPal',
+    tryAgain: 'Cuba Lagi',
+    processing: 'Memproses...',
+    completeInPayPal: 'Selesaikan pembayaran di tetingkap PayPal kemudian tutup',
   },
 
   // AI Guide

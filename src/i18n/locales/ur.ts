@@ -235,6 +235,17 @@ export const ur = {
     paymentSuccess: 'ادائیگی کی درخواست کامیابی سے بھیجی گئی! جلد جائزہ لیا جائے گا',
     paymentError: 'ادائیگی کی درخواست بھیجنے میں خرابی',
     sar: 'ر.س',
+    selectPaymentMethod: 'ادائیگی کا طریقہ منتخب کریں',
+    payWithPayPal: 'PayPal سے ادائیگی کریں',
+    payWithClick: 'دستی منتقلی (کلک)',
+    paypalPayment: 'PayPal ادائیگی',
+    paypalWindowOpened: 'PayPal ونڈو کھل گئی، وہاں ادائیگی مکمل کریں',
+    paypalSuccess: 'PayPal کے ذریعے ادائیگی کامیاب!',
+    paypalCancelled: 'ادائیگی منسوخ کردی گئی',
+    paypalError: 'PayPal ادائیگی میں خرابی',
+    tryAgain: 'دوبارہ کوشش کریں',
+    processing: 'پروسیسنگ...',
+    completeInPayPal: 'PayPal ونڈو میں ادائیگی مکمل کریں پھر بند کریں',
   },
 
   // AI Guide
