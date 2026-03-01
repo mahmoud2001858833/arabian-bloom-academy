@@ -17,6 +17,8 @@ import Admin from "./pages/Admin";
 import Blog from "./pages/Blog";
 import BlogDetails from "./pages/BlogDetails";
 import NotFound from "./pages/NotFound";
+import Exams from "./pages/Exams";
+import ExamTake from "./pages/ExamTake";
 
 // Create query client instance
 const queryClient = new QueryClient({
@@ -50,6 +52,8 @@ function App() {
                 <Route path="/blog/:postId" element={<BlogDetails />} />
                 <Route path="/dashboard" element={<Dashboard />} />
                 <Route path="/admin" element={<Admin />} />
+                <Route path="/exams" element={<Exams />} />
+                <Route path="/exams/:examId" element={<ExamTake />} />
                 <Route path="*" element={<NotFound />} />
               </Routes>
               <AIGuide />

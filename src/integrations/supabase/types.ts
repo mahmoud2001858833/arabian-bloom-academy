@@ -193,6 +193,115 @@ export type Database = {
           },
         ]
       }
+      exam_attempts: {
+        Row: {
+          answers: Json
+          completed_at: string | null
+          exam_id: string
+          id: string
+          passed: boolean
+          score: number
+          started_at: string | null
+          user_id: string
+        }
+        Insert: {
+          answers?: Json
+          completed_at?: string | null
+          exam_id: string
+          id?: string
+          passed: boolean
+          score: number
+          started_at?: string | null
+          user_id: string
+        }
+        Update: {
+          answers?: Json
+          completed_at?: string | null
+          exam_id?: string
+          id?: string
+          passed?: boolean
+          score?: number
+          started_at?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "exam_attempts_exam_id_fkey"
+            columns: ["exam_id"]
+            isOneToOne: false
+            referencedRelation: "exams"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      exam_questions: {
+        Row: {
+          correct_answer: number
+          created_at: string | null
+          exam_id: string
+          id: string
+          options: Json
+          order_index: number | null
+          question: string
+        }
+        Insert: {
+          correct_answer: number
+          created_at?: string | null
+          exam_id: string
+          id?: string
+          options?: Json
+          order_index?: number | null
+          question: string
+        }
+        Update: {
+          correct_answer?: number
+          created_at?: string | null
+          exam_id?: string
+          id?: string
+          options?: Json
+          order_index?: number | null
+          question?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "exam_questions_exam_id_fkey"
+            columns: ["exam_id"]
+            isOneToOne: false
+            referencedRelation: "exams"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      exams: {
+        Row: {
+          created_at: string | null
+          description: string | null
+          duration_minutes: number | null
+          id: string
+          is_published: boolean | null
+          passing_score: number | null
+          title: string
+        }
+        Insert: {
+          created_at?: string | null
+          description?: string | null
+          duration_minutes?: number | null
+          id?: string
+          is_published?: boolean | null
+          passing_score?: number | null
+          title: string
+        }
+        Update: {
+          created_at?: string | null
+          description?: string | null
+          duration_minutes?: number | null
+          id?: string
+          is_published?: boolean | null
+          passing_score?: number | null
+          title?: string
+        }
+        Relationships: []
+      }
       lesson_progress: {
         Row: {
           completed: boolean | null

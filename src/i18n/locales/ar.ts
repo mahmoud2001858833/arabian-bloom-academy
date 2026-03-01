@@ -3,6 +3,7 @@ export const ar = {
   nav: {
     home: 'الرئيسية',
     courses: 'الدروس',
+    exams: 'الامتحانات',
     blog: 'المدونة',
     about: 'من نحن',
     contactUs: 'تواصل معنا',
@@ -51,18 +52,19 @@ export const ar = {
 
   // Home Page
   home: {
-    platformBadge: 'المنصة الأولى لتعلم اللغة العربية',
+    platformBadge: 'المنصة الأولى لتعلم العربية وعلاج صعوبات القراءة',
     platformName: 'النجاة',
     masterArabic: 'أتقن',
     arabic: 'العربية',
     professionalWay: 'بطريقة',
     professional: 'احترافية',
     andInnovative: 'ومبتكرة',
-    heroDescription: 'انطلق في رحلة تعلم اللغة العربية مع أفضل المعلمين والمناهج التفاعلية. دروس متنوعة تناسب جميع المستويات.',
+    heroDescription: 'انطلق في رحلة تعلم اللغة العربية وعلاج صعوبات القراءة مع أفضل المعلمين والمناهج التفاعلية. دروس وامتحانات متنوعة تناسب جميع المستويات.',
     browseCourses: 'تصفح الدروس',
     certifiedCertificates: 'شهادات معتمدة',
     interactiveContent: 'محتوى تفاعلي',
     highQuality: 'جودة عالية',
+    readingDifficulties: 'علاج صعوبات القراءة',
     
     // Featured Courses Section
     learningStartsHere: 'رحلة التعلم تبدأ هنا',
@@ -322,5 +324,35 @@ export const ar = {
     loginRequired: 'يجب تسجيل الدخول للتواصل مع فريق الدعم',
     startConversation: 'ابدأ محادثة مع فريق الدعم',
     typeMessage: 'اكتب رسالتك...',
+  },
+
+  // Exams
+  exams: {
+    badge: 'امتحانات إلكترونية',
+    discover: 'اكتشف',
+    ourExams: 'امتحاناتنا',
+    description: 'اختبر معلوماتك في اللغة العربية من خلال امتحاناتنا الإلكترونية المتنوعة',
+    searchPlaceholder: 'ابحث عن امتحان...',
+    noExams: 'لا توجد امتحانات متاحة',
+    noExamsYet: 'لم يتم إضافة امتحانات بعد. ترقب المزيد!',
+    defaultDescription: 'امتحان إلكتروني لتقييم مستواك',
+    minutes: 'دقيقة',
+    passingScore: 'نسبة النجاح',
+    startExam: 'ابدأ الامتحان',
+    duration: 'المدة',
+    questionsCount: 'عدد الأسئلة',
+    examWarning: 'بمجرد بدء الامتحان سيبدأ العد التنازلي ولا يمكن إيقافه. تأكد من استعدادك قبل البدء.',
+    beginExam: 'ابدأ الامتحان الآن',
+    backToExams: 'العودة للامتحانات',
+    question: 'السؤال',
+    of: 'من',
+    submitExam: 'تسليم الامتحان',
+    congratulations: 'مبروك! لقد نجحت 🎉',
+    tryAgain: 'حاول مرة أخرى',
+    passed: 'ناجح',
+    failed: 'راسب',
+    retakeExam: 'إعادة الامتحان',
+    loginRequired: 'يجب تسجيل الدخول لتقديم الامتحان',
+    examNotFound: 'الامتحان غير موجود',
   },
 };
