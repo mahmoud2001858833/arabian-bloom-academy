@@ -3,6 +3,7 @@ export const en = {
   nav: {
     home: 'Home',
     courses: 'Lessons',
+    exams: 'Exams',
     blog: 'Blog',
     about: 'About Us',
     contactUs: 'Contact Us',
@@ -51,18 +52,19 @@ export const en = {
 
   // Home Page
   home: {
-    platformBadge: 'The Leading Platform for Learning Arabic',
+    platformBadge: 'The Leading Platform for Arabic & Reading Difficulties',
     platformName: 'Al-Najat',
     masterArabic: 'Master',
     arabic: 'Arabic',
     professionalWay: 'in a',
     professional: 'Professional',
     andInnovative: 'and Innovative Way',
-    heroDescription: 'Embark on your Arabic learning journey with the best teachers and interactive curricula. Diverse lessons for all levels.',
+    heroDescription: 'Embark on your Arabic learning journey and overcome reading difficulties with the best teachers and interactive curricula. Diverse lessons and exams for all levels.',
     browseCourses: 'Browse Lessons',
     certifiedCertificates: 'Certified Certificates',
     interactiveContent: 'Interactive Content',
     highQuality: 'High Quality',
+    readingDifficulties: 'Reading Difficulties Support',
     
     // Featured Courses Section
     learningStartsHere: 'Learning Journey Starts Here',
@@ -322,5 +324,35 @@ export const en = {
     loginRequired: 'Please login to contact support',
     startConversation: 'Start a conversation with our support team',
     typeMessage: 'Type your message...',
+  },
+
+  // Exams
+  exams: {
+    badge: 'Electronic Exams',
+    discover: 'Discover',
+    ourExams: 'Our Exams',
+    description: 'Test your Arabic knowledge through our diverse electronic exams',
+    searchPlaceholder: 'Search for an exam...',
+    noExams: 'No exams available',
+    noExamsYet: 'No exams added yet. Stay tuned!',
+    defaultDescription: 'Electronic exam to assess your level',
+    minutes: 'minutes',
+    passingScore: 'Passing Score',
+    startExam: 'Start Exam',
+    duration: 'Duration',
+    questionsCount: 'Questions',
+    examWarning: 'Once you start the exam, the countdown will begin and cannot be paused. Make sure you are ready before starting.',
+    beginExam: 'Begin Exam Now',
+    backToExams: 'Back to Exams',
+    question: 'Question',
+    of: 'of',
+    submitExam: 'Submit Exam',
+    congratulations: 'Congratulations! You passed 🎉',
+    tryAgain: 'Try Again',
+    passed: 'Passed',
+    failed: 'Failed',
+    retakeExam: 'Retake Exam',
+    loginRequired: 'Login required to take exams',
+    examNotFound: 'Exam not found',
   },
 };

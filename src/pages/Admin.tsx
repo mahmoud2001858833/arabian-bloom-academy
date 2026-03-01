@@ -28,6 +28,7 @@ import PaymentManagement from '@/components/admin/PaymentManagement';
 import BlogManagement from '@/components/admin/BlogManagement';
 import ChatManagement from '@/components/admin/ChatManagement';
 import NotificationBell from '@/components/admin/NotificationBell';
+import ExamManagement from '@/components/admin/ExamManagement';
 
 interface Course {
   id: string;
@@ -782,6 +783,10 @@ const Admin = () => {
                 <MessageCircle className="h-4 w-4" />
                 المحادثات
               </TabsTrigger>
+              <TabsTrigger value="exams" className="gap-2 text-foreground/70 data-[state=active]:bg-primary data-[state=active]:text-white rounded-lg px-4 py-2">
+                <HelpCircle className="h-4 w-4" />
+                الامتحانات
+              </TabsTrigger>
             </TabsList>
 
             {/* Courses Tab */}
@@ -1052,6 +1057,11 @@ const Admin = () => {
             {/* Chats Tab */}
             <TabsContent value="chats">
               <ChatManagement />
+            </TabsContent>
+
+            {/* Exams Tab */}
+            <TabsContent value="exams">
+              <ExamManagement />
             </TabsContent>
           </Tabs>
         </div>
