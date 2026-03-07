@@ -119,17 +119,15 @@ const HeroSection = () => {
                   </Link>
                 </Button>
                 
-                {introVideoUrl && (
-                  <Button
-                    size="lg"
-                    variant="outline"
-                    onClick={scrollToVideo}
-                    className="text-lg px-8 py-7 rounded-2xl font-bold border-2 border-accent/40 text-accent hover:bg-accent/10 hover:border-accent transition-all hover:scale-105 group"
-                  >
-                    <Play className="ml-3 h-6 w-6 group-hover:scale-110 transition-transform" />
-                    {t('home.watchIntroVideo')}
-                  </Button>
-                )}
+                <Button
+                  size="lg"
+                  variant="outline"
+                  onClick={introVideoUrl ? scrollToVideo : undefined}
+                  className="text-lg px-8 py-7 rounded-2xl font-bold border-2 border-accent/40 text-accent hover:bg-accent/10 hover:border-accent transition-all hover:scale-105 group"
+                >
+                  <Play className="ml-3 h-6 w-6 group-hover:scale-110 transition-transform" />
+                  {t('home.watchIntroVideo')}
+                </Button>
               </div>
 
               {/* Feature Tags */}
