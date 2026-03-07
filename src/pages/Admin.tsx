@@ -1068,6 +1068,11 @@ const Admin = () => {
             <TabsContent value="exams">
               <ExamManagement />
             </TabsContent>
+
+            {/* Intro Video Tab */}
+            <TabsContent value="intro-video">
+              <IntroVideoManagement />
+            </TabsContent>
           </Tabs>
         </div>
       </main>
