@@ -29,6 +29,7 @@ import BlogManagement from '@/components/admin/BlogManagement';
 import ChatManagement from '@/components/admin/ChatManagement';
 import NotificationBell from '@/components/admin/NotificationBell';
 import ExamManagement from '@/components/admin/ExamManagement';
+import IntroVideoManagement from '@/components/admin/IntroVideoManagement';
 
 interface Course {
   id: string;
@@ -787,6 +788,10 @@ const Admin = () => {
                 <HelpCircle className="h-4 w-4" />
                 الامتحانات
               </TabsTrigger>
+              <TabsTrigger value="intro-video" className="gap-2 text-foreground/70 data-[state=active]:bg-primary data-[state=active]:text-white rounded-lg px-4 py-2">
+                <Video className="h-4 w-4" />
+                الفيديو التعريفي
+              </TabsTrigger>
             </TabsList>
 
             {/* Courses Tab */}
@@ -1062,6 +1067,11 @@ const Admin = () => {
             {/* Exams Tab */}
             <TabsContent value="exams">
               <ExamManagement />
+            </TabsContent>
+
+            {/* Intro Video Tab */}
+            <TabsContent value="intro-video">
+              <IntroVideoManagement />
             </TabsContent>
           </Tabs>
         </div>
