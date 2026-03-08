@@ -19,6 +19,8 @@ import BlogDetails from "./pages/BlogDetails";
 import NotFound from "./pages/NotFound";
 import Exams from "./pages/Exams";
 import ExamTake from "./pages/ExamTake";
+import Privacy from "./pages/Privacy";
+import Terms from "./pages/Terms";
 
 // Create query client instance
 const queryClient = new QueryClient({
@@ -54,6 +56,8 @@ function App() {
                 <Route path="/admin" element={<Admin />} />
                 <Route path="/exams" element={<Exams />} />
                 <Route path="/exams/:examId" element={<ExamTake />} />
+                <Route path="/privacy" element={<Privacy />} />
+                <Route path="/terms" element={<Terms />} />
                 <Route path="*" element={<NotFound />} />
               </Routes>
               <AIGuide />

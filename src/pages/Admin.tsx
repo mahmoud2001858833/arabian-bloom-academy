@@ -630,7 +630,7 @@ const Admin = () => {
   const stats = [
     { icon: Users, label: 'إجمالي الطلاب', value: totalStudents.toString(), color: 'primary', subtitle: 'طالب مسجل' },
     { icon: BookOpen, label: 'الكورسات', value: courses.length.toString(), color: 'primary', subtitle: `${publishedCourses} منشور` },
-    { icon: DollarSign, label: 'الإيرادات', value: `${totalRevenue}`, color: 'accent', subtitle: 'ريال سعودي' },
+    { icon: DollarSign, label: 'الإيرادات', value: `$${totalRevenue}`, color: 'accent', subtitle: 'دولار أمريكي' },
     { icon: TrendingUp, label: 'التسجيلات الجديدة', value: newEnrollments.toString(), color: 'primary', subtitle: 'آخر 7 أيام' },
   ];
 
