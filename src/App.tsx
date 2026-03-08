@@ -19,6 +19,8 @@ import BlogDetails from "./pages/BlogDetails";
 import NotFound from "./pages/NotFound";
 import Exams from "./pages/Exams";
 import ExamTake from "./pages/ExamTake";
+import Privacy from "./pages/Privacy";
+import Terms from "./pages/Terms";
 
 // Create query client instance
 const queryClient = new QueryClient({

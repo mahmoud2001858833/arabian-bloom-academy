@@ -8,7 +8,6 @@ const corsHeaders = {
 const CLOUDFLARE_WORKER_URL = 'https://empty-art-c37e.mdfmmdfds.workers.dev'
 
 Deno.serve(async (req) => {
-  // Handle CORS preflight requests
   if (req.method === 'OPTIONS') {
     return new Response(null, { headers: corsHeaders })
   }
@@ -17,7 +16,6 @@ Deno.serve(async (req) => {
     const url = new URL(req.url)
     const action = url.searchParams.get('action')
 
-    // التحقق من المستخدم
     const authHeader = req.headers.get('Authorization')
     if (!authHeader?.startsWith('Bearer ')) {
       return new Response(
@@ -32,17 +30,16 @@ Deno.serve(async (req) => {
       { global: { headers: { Authorization: authHeader } } }
     )
 
-    const token = authHeader.replace('Bearer ', '')
-    const { data: claimsData, error: claimsError } = await supabase.auth.getClaims(token)
+    const { data: { user }, error: userError } = await supabase.auth.getUser()
     
-    if (claimsError || !claimsData?.claims) {
+    if (userError || !user) {
       return new Response(
         JSON.stringify({ error: 'جلسة غير صالحة' }),
         { status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       )
     }
 
-    const userId = claimsData.claims.sub
+    const userId = user.id
 
     // التحقق من صلاحيات الأدمن
     const { data: roleData } = await supabase
@@ -59,10 +56,8 @@ Deno.serve(async (req) => {
       )
     }
 
-    // معالجة الطلبات حسب النوع
     switch (action) {
       case 'start': {
-        // بدء عملية رفع جديدة
         const body = await req.json()
         const { filename, contentType } = body
 
@@ -90,7 +85,6 @@ Deno.serve(async (req) => {
       }
 
       case 'complete': {
-        // إكمال عملية الرفع
         const body = await req.json()
         const { uploadId, key, parts } = body
 
@@ -118,7 +112,6 @@ Deno.serve(async (req) => {
       }
 
       case 'abort': {
-        // إلغاء عملية الرفع
         const body = await req.json()
         const { uploadId, key } = body
 
