@@ -56,6 +56,8 @@ function App() {
                 <Route path="/admin" element={<Admin />} />
                 <Route path="/exams" element={<Exams />} />
                 <Route path="/exams/:examId" element={<ExamTake />} />
+                <Route path="/privacy" element={<Privacy />} />
+                <Route path="/terms" element={<Terms />} />
                 <Route path="*" element={<NotFound />} />
               </Routes>
               <AIGuide />
