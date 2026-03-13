@@ -25,7 +25,11 @@ const HeroSection = () => {
   }, []);
 
   const scrollToVideo = () => {
-    videoRef.current?.scrollIntoView({ behavior: 'smooth' });
+    if (videoRef.current) {
+      const yOffset = -80;
+      const y = videoRef.current.getBoundingClientRect().top + window.pageYOffset + yOffset;
+      window.scrollTo({ top: y, behavior: 'smooth' });
+    }
   };
 
   return (

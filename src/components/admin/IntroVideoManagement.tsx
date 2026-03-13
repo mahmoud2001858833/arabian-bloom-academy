@@ -15,6 +15,7 @@ const IntroVideoManagement = () => {
   const [savedUrl, setSavedUrl] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [showUploader, setShowUploader] = useState(false);
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 
   useEffect(() => {
     fetchIntroVideo();
