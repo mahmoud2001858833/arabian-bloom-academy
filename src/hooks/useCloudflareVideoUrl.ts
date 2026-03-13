@@ -1,4 +1,4 @@
-const CLOUDFLARE_WORKER_URL = 'https://empty-art-c37e.mdfmmdfds.workers.dev';
+const CLOUDFLARE_WORKER_URL = 'https://bitter-cloud-d66f.janamuhmad.workers.dev';
 
 export const useCloudflareVideoUrl = () => {
   /**

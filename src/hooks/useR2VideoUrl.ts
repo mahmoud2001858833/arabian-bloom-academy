@@ -1,4 +1,4 @@
-const R2_VIDEO_API = 'https://empty-art-c37e.mdfmmdfds.workers.dev';
+const R2_VIDEO_API = 'https://bitter-cloud-d66f.janamuhmad.workers.dev';
 
 interface UploadStartResponse {
   uploadId: string;
