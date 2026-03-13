@@ -5,7 +5,7 @@ const corsHeaders = {
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 }
 
-const CLOUDFLARE_WORKER_URL = 'https://empty-art-c37e.mdfmmdfds.workers.dev'
+const CLOUDFLARE_WORKER_URL = 'https://bitter-cloud-d66f.janamuhmad.workers.dev'
 
 Deno.serve(async (req) => {
   if (req.method === 'OPTIONS') {
