@@ -91,15 +91,39 @@ const IntroVideoManagement = () => {
               <Button
                 variant="destructive"
                 size="sm"
-                onClick={handleRemove}
+                onClick={() => setShowDeleteConfirm(true)}
                 disabled={isLoading}
                 className="rounded-xl"
               >
                 <Trash2 className="ml-2 h-4 w-4" />
-                حذف الفيديو
+                حذف الفيديو التعريفي
               </Button>
             </div>
           )}
+
+          {/* Delete Confirmation Dialog */}
+          <AlertDialog open={showDeleteConfirm} onOpenChange={setShowDeleteConfirm}>
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle className="flex items-center gap-2">
+                  <AlertTriangle className="h-5 w-5 text-destructive" />
+                  تأكيد حذف الفيديو التعريفي
+                </AlertDialogTitle>
+                <AlertDialogDescription>
+                  هل أنت متأكد من حذف الفيديو التعريفي؟ سيتم إزالته من الصفحة الرئيسية.
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter className="gap-2">
+                <AlertDialogCancel>إلغاء</AlertDialogCancel>
+                <AlertDialogAction
+                  onClick={handleRemove}
+                  className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                >
+                  حذف
+                </AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
 
           {/* Upload Section */}
           <div className="space-y-3">
