@@ -35,20 +35,48 @@ const IntroVideoManagement = () => {
     }
   };
 
-  const handleSave = async () => {
-    setIsLoading(true);
+  const persistIntroVideo = async (value: string) => {
+    const timestamp = new Date().toISOString();
+    const { data: existingSetting, error: fetchError } = await supabase
+      .from('site_settings')
+      .select('id')
+      .eq('key', 'intro_video_url')
+      .maybeSingle();
+
+    if (fetchError) {
+      throw fetchError;
+    }
+
+    if (existingSetting?.id) {
+      const { error } = await supabase
+        .from('site_settings')
+        .update({ value, updated_at: timestamp })
+        .eq('id', existingSetting.id);
+
+      if (error) throw error;
+      return;
+    }
+
     const { error } = await supabase
       .from('site_settings')
-      .update({ value: videoUrl, updated_at: new Date().toISOString() })
-      .eq('key', 'intro_video_url');
+      .insert({ key: 'intro_video_url', value, updated_at: timestamp });
 
-    if (error) {
-      toast({ title: 'خطأ', description: 'فشل في حفظ الفيديو التعريفي', variant: 'destructive' });
-    } else {
-      setSavedUrl(videoUrl);
+    if (error) throw error;
+  };
+
+  const handleSave = async (valueToSave = videoUrl) => {
+    setIsLoading(true);
+
+    try {
+      await persistIntroVideo(valueToSave);
+      setVideoUrl(valueToSave);
+      setSavedUrl(valueToSave);
       toast({ title: 'تم بنجاح', description: 'تم حفظ الفيديو التعريفي' });
+    } catch {
+      toast({ title: 'خطأ', description: 'فشل في حفظ الفيديو التعريفي', variant: 'destructive' });
+    } finally {
+      setIsLoading(false);
     }
-    setIsLoading(false);
   };
 
   const handleRemove = async () => {
@@ -137,35 +165,35 @@ const IntroVideoManagement = () => {
               {showUploader ? 'إخفاء أداة الرفع' : 'رفع فيديو من جهازك'}
             </Button>
             
-            {showUploader && (
-              <DualVideoUploader
-                onUploadComplete={(url) => {
-                  setVideoUrl(url);
-                  setShowUploader(false);
-                  toast({ title: 'تم الرفع', description: 'اضغط حفظ لتطبيق التغييرات' });
-                }}
+              {showUploader && (
+                <DualVideoUploader
+                  onUploadComplete={async (url) => {
+                    setVideoUrl(url);
+                    setShowUploader(false);
+                    await handleSave(url);
+                  }}
+                />
+              )}
+            </div>
+
+            {/* Manual URL Input */}
+            <div className="space-y-2">
+              <Label className="text-foreground font-semibold">أو أدخل رابط الفيديو يدوياً</Label>
+              <Input
+                value={videoUrl}
+                onChange={(e) => setVideoUrl(e.target.value)}
+                placeholder="أدخل رابط الفيديو..."
+                className="rounded-xl"
+                dir="ltr"
               />
-            )}
-          </div>
+            </div>
 
-          {/* Manual URL Input */}
-          <div className="space-y-2">
-            <Label className="text-foreground font-semibold">أو أدخل رابط الفيديو يدوياً</Label>
-            <Input
-              value={videoUrl}
-              onChange={(e) => setVideoUrl(e.target.value)}
-              placeholder="أدخل رابط الفيديو..."
-              className="rounded-xl"
-              dir="ltr"
-            />
-          </div>
-
-          {/* Save Button */}
-          <Button
-            onClick={handleSave}
-            disabled={isLoading || videoUrl === savedUrl}
-            className="rounded-xl w-full"
-          >
+            {/* Save Button */}
+            <Button
+              onClick={() => void handleSave()}
+              disabled={isLoading || videoUrl === savedUrl}
+              className="rounded-xl w-full"
+            >
             <Save className="ml-2 h-4 w-4" />
             {isLoading ? 'جاري الحفظ...' : 'حفظ الفيديو التعريفي'}
           </Button>
