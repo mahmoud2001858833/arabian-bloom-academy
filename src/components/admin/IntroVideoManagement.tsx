@@ -35,20 +35,48 @@ const IntroVideoManagement = () => {
     }
   };
 
-  const handleSave = async () => {
-    setIsLoading(true);
+  const persistIntroVideo = async (value: string) => {
+    const timestamp = new Date().toISOString();
+    const { data: existingSetting, error: fetchError } = await supabase
+      .from('site_settings')
+      .select('id')
+      .eq('key', 'intro_video_url')
+      .maybeSingle();
+
+    if (fetchError) {
+      throw fetchError;
+    }
+
+    if (existingSetting?.id) {
+      const { error } = await supabase
+        .from('site_settings')
+        .update({ value, updated_at: timestamp })
+        .eq('id', existingSetting.id);
+
+      if (error) throw error;
+      return;
+    }
+
     const { error } = await supabase
       .from('site_settings')
-      .update({ value: videoUrl, updated_at: new Date().toISOString() })
-      .eq('key', 'intro_video_url');
+      .insert({ key: 'intro_video_url', value, updated_at: timestamp });
 
-    if (error) {
-      toast({ title: 'خطأ', description: 'فشل في حفظ الفيديو التعريفي', variant: 'destructive' });
-    } else {
-      setSavedUrl(videoUrl);
+    if (error) throw error;
+  };
+
+  const handleSave = async (valueToSave = videoUrl) => {
+    setIsLoading(true);
+
+    try {
+      await persistIntroVideo(valueToSave);
+      setVideoUrl(valueToSave);
+      setSavedUrl(valueToSave);
       toast({ title: 'تم بنجاح', description: 'تم حفظ الفيديو التعريفي' });
+    } catch {
+      toast({ title: 'خطأ', description: 'فشل في حفظ الفيديو التعريفي', variant: 'destructive' });
+    } finally {
+      setIsLoading(false);
     }
-    setIsLoading(false);
   };
 
   const handleRemove = async () => {
