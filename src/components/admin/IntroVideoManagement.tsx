@@ -165,35 +165,35 @@ const IntroVideoManagement = () => {
               {showUploader ? 'إخفاء أداة الرفع' : 'رفع فيديو من جهازك'}
             </Button>
             
-            {showUploader && (
-              <DualVideoUploader
-                onUploadComplete={(url) => {
-                  setVideoUrl(url);
-                  setShowUploader(false);
-                  toast({ title: 'تم الرفع', description: 'اضغط حفظ لتطبيق التغييرات' });
-                }}
+              {showUploader && (
+                <DualVideoUploader
+                  onUploadComplete={async (url) => {
+                    setVideoUrl(url);
+                    setShowUploader(false);
+                    await handleSave(url);
+                  }}
+                />
+              )}
+            </div>
+
+            {/* Manual URL Input */}
+            <div className="space-y-2">
+              <Label className="text-foreground font-semibold">أو أدخل رابط الفيديو يدوياً</Label>
+              <Input
+                value={videoUrl}
+                onChange={(e) => setVideoUrl(e.target.value)}
+                placeholder="أدخل رابط الفيديو..."
+                className="rounded-xl"
+                dir="ltr"
               />
-            )}
-          </div>
+            </div>
 
-          {/* Manual URL Input */}
-          <div className="space-y-2">
-            <Label className="text-foreground font-semibold">أو أدخل رابط الفيديو يدوياً</Label>
-            <Input
-              value={videoUrl}
-              onChange={(e) => setVideoUrl(e.target.value)}
-              placeholder="أدخل رابط الفيديو..."
-              className="rounded-xl"
-              dir="ltr"
-            />
-          </div>
-
-          {/* Save Button */}
-          <Button
-            onClick={handleSave}
-            disabled={isLoading || videoUrl === savedUrl}
-            className="rounded-xl w-full"
-          >
+            {/* Save Button */}
+            <Button
+              onClick={() => void handleSave()}
+              disabled={isLoading || videoUrl === savedUrl}
+              className="rounded-xl w-full"
+            >
             <Save className="ml-2 h-4 w-4" />
             {isLoading ? 'جاري الحفظ...' : 'حفظ الفيديو التعريفي'}
           </Button>
