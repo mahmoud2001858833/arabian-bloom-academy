@@ -30,6 +30,7 @@ import ChatManagement from '@/components/admin/ChatManagement';
 import NotificationBell from '@/components/admin/NotificationBell';
 import ExamManagement from '@/components/admin/ExamManagement';
 import IntroVideoManagement from '@/components/admin/IntroVideoManagement';
+import AudioRecorder from '@/components/admin/AudioRecorder';
 
 interface Course {
   id: string;
