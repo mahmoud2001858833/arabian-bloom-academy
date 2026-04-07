@@ -176,6 +176,7 @@ const ExamManagement = () => {
         options: ['', '', '', ''],
         correct_answer: 0,
         order_index: editQuestions.length,
+        audio_url: null,
       },
     ]);
   };
