@@ -213,6 +213,7 @@ const ExamManagement = () => {
       options: q.options,
       correct_answer: q.correct_answer,
       order_index: i,
+      audio_url: q.audio_url || null,
     }));
 
     if (questionsToInsert.length > 0) {
