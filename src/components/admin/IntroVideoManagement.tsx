@@ -144,11 +144,11 @@ const IntroVideoManagement = () => {
             
             {showUploader && (
               <DualVideoUploader
-                onUploadComplete={async (url) => {
+                onUploadComplete={async (_url, key) => {
                   setShowUploader(false);
                   try {
-                    await persistIntroVideo(url);
-                    setSavedUrl(url);
+                    await persistIntroVideo(key);
+                    setSavedUrl(key);
                     toast({ title: 'تم بنجاح', description: 'تم حفظ الفيديو التعريفي' });
                   } catch {
                     toast({ title: 'خطأ', description: 'فشل في حفظ الفيديو التعريفي', variant: 'destructive' });

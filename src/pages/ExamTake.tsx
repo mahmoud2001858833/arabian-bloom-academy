@@ -1,6 +1,6 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { ArrowRight, Clock, CheckCircle, XCircle, AlertTriangle } from 'lucide-react';
+import { ArrowRight, Clock, CheckCircle, XCircle, AlertTriangle, Volume2, Pause } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -20,6 +20,7 @@ interface ExamQuestion {
   options: string[];
   correct_answer: number;
   order_index: number;
+  audio_url?: string | null;
 }
 
 interface Exam {
@@ -29,6 +30,35 @@ interface Exam {
   duration_minutes: number;
   passing_score: number;
 }
+
+const AudioPlayer = ({ src }: { src: string }) => {
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+  const [playing, setPlaying] = useState(false);
+
+  const toggle = () => {
+    if (!audioRef.current) {
+      audioRef.current = new Audio(src);
+      audioRef.current.onended = () => setPlaying(false);
+    }
+    if (playing) {
+      audioRef.current.pause();
+      setPlaying(false);
+    } else {
+      audioRef.current.play();
+      setPlaying(true);
+    }
+  };
+
+  return (
+    <button
+      onClick={toggle}
+      className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-primary/10 hover:bg-primary/20 text-primary font-medium transition-colors"
+    >
+      {playing ? <Pause className="h-4 w-4" /> : <Volume2 className="h-4 w-4" />}
+      {playing ? 'إيقاف الصوت' : 'استمع للسؤال'}
+    </button>
+  );
+};
 
 const ExamTake = () => {
   const { examId } = useParams();
@@ -303,11 +333,16 @@ const ExamTake = () => {
             {/* Question Card */}
             {currentQuestion && (
               <motion.div key={currentQuestion.id} initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.3 }}>
-                <Card className="border-primary/20 shadow-xl rounded-3xl">
+              <Card className="border-primary/20 shadow-xl rounded-3xl">
                   <CardContent className="p-8 space-y-6">
                     <h3 className="text-xl font-bold text-foreground leading-relaxed">
                       {currentQuestion.question}
                     </h3>
+
+                    {/* Audio playback */}
+                    {currentQuestion.audio_url && (
+                      <AudioPlayer src={currentQuestion.audio_url} />
+                    )}
 
                     <div className="space-y-3">
                       {(currentQuestion.options as string[]).map((option, index) => (

@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Plus, Edit, Trash2, Eye, EyeOff, Save, X, HelpCircle, Users } from 'lucide-react';
+import AudioRecorder from '@/components/admin/AudioRecorder';
 import { motion } from 'framer-motion';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -29,6 +30,7 @@ interface ExamQuestion {
   options: string[];
   correct_answer: number;
   order_index: number;
+  audio_url?: string | null;
 }
 
 interface ExamAttempt {
@@ -160,7 +162,11 @@ const ExamManagement = () => {
       .eq('exam_id', exam.id)
       .order('order_index');
 
-    setEditQuestions((data as ExamQuestion[]) || []);
+    setEditQuestions((data || []).map(q => ({
+      ...q,
+      options: Array.isArray(q.options) ? q.options : [],
+      audio_url: (q as any).audio_url || null,
+    })) as ExamQuestion[]);
     setShowQuestionsDialog(true);
   };
 
@@ -174,6 +180,7 @@ const ExamManagement = () => {
         options: ['', '', '', ''],
         correct_answer: 0,
         order_index: editQuestions.length,
+        audio_url: null,
       },
     ]);
   };
@@ -210,6 +217,7 @@ const ExamManagement = () => {
       options: q.options,
       correct_answer: q.correct_answer,
       order_index: i,
+      audio_url: q.audio_url || null,
     }));
 
     if (questionsToInsert.length > 0) {
@@ -368,6 +376,13 @@ const ExamManagement = () => {
                     onChange={(e) => updateQuestion(qIndex, 'question', e.target.value)}
                     placeholder="اكتب السؤال هنا"
                   />
+                  <div className="flex items-center gap-2">
+                    <span className="text-sm text-muted-foreground">أو أضف تسجيل صوتي:</span>
+                    <AudioRecorder
+                      audioUrl={q.audio_url || null}
+                      onAudioChange={(url) => updateQuestion(qIndex, 'audio_url', url)}
+                    />
+                  </div>
                   <div className="grid grid-cols-1 gap-2">
                     {q.options.map((opt, oIndex) => (
                       <div key={oIndex} className="flex items-center gap-2">

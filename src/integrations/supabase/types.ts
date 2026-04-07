@@ -236,6 +236,7 @@ export type Database = {
       }
       exam_questions: {
         Row: {
+          audio_url: string | null
           correct_answer: number
           created_at: string | null
           exam_id: string
@@ -245,6 +246,7 @@ export type Database = {
           question: string
         }
         Insert: {
+          audio_url?: string | null
           correct_answer: number
           created_at?: string | null
           exam_id: string
@@ -254,6 +256,7 @@ export type Database = {
           question: string
         }
         Update: {
+          audio_url?: string | null
           correct_answer?: number
           created_at?: string | null
           exam_id?: string
