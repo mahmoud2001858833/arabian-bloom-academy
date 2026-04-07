@@ -4,7 +4,7 @@ import {
   Users, BookOpen, DollarSign, TrendingUp, Plus, Video, 
   Edit, Trash2, Eye, EyeOff, Save, Layers, Crown, Sparkles,
   Calendar, CheckCircle, BarChart3, CreditCard, FileText,
-  ChevronUp, ChevronDown, FileUp, HelpCircle, X, Upload, MessageCircle
+  ChevronUp, ChevronDown, FileUp, HelpCircle, X, Upload, MessageCircle, Mic
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
@@ -30,6 +30,7 @@ import ChatManagement from '@/components/admin/ChatManagement';
 import NotificationBell from '@/components/admin/NotificationBell';
 import ExamManagement from '@/components/admin/ExamManagement';
 import IntroVideoManagement from '@/components/admin/IntroVideoManagement';
+import AudioRecorder from '@/components/admin/AudioRecorder';
 
 interface Course {
   id: string;
@@ -61,6 +62,7 @@ interface QuizQuestion {
   options: string[];
   correct_answer: number;
   order_index: number;
+  audio_url?: string | null;
 }
 
 interface Quiz {
@@ -519,7 +521,8 @@ const Admin = () => {
       if (questionsData) {
         setQuizQuestions(questionsData.map(q => ({
           ...q,
-          options: Array.isArray(q.options) ? q.options : []
+          options: Array.isArray(q.options) ? q.options : [],
+          audio_url: (q as any).audio_url || null,
         })) as QuizQuestion[]);
       }
     } else {
@@ -538,6 +541,7 @@ const Admin = () => {
       options: ['', '', '', ''],
       correct_answer: 0,
       order_index: quizQuestions.length,
+      audio_url: null,
     };
     setQuizQuestions([...quizQuestions, newQuestion]);
   };
@@ -595,6 +599,7 @@ const Admin = () => {
           options: q.options,
           correct_answer: q.correct_answer,
           order_index: i,
+          audio_url: q.audio_url || null,
         }));
 
         const { error: insertError } = await supabase
@@ -1374,7 +1379,7 @@ const Admin = () => {
                     </div>
                   </CardHeader>
                   <CardContent className="space-y-4">
-                    <div>
+                    <div className="space-y-2">
                       <Label className="font-bold">نص السؤال</Label>
                       <Textarea
                         value={question.question}
@@ -1382,6 +1387,13 @@ const Admin = () => {
                         placeholder="اكتب السؤال هنا..."
                         className="mt-1 rounded-xl"
                       />
+                      <div className="flex items-center gap-2 mt-2">
+                        <Label className="text-sm text-muted-foreground">أو أضف تسجيل صوتي:</Label>
+                        <AudioRecorder
+                          audioUrl={question.audio_url || null}
+                          onAudioChange={(url) => updateQuestion(qIndex, 'audio_url', url)}
+                        />
+                      </div>
                     </div>
                     
                     <div className="space-y-3">

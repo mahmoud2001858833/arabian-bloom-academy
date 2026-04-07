@@ -21,6 +21,7 @@ import Exams from "./pages/Exams";
 import ExamTake from "./pages/ExamTake";
 import Privacy from "./pages/Privacy";
 import Terms from "./pages/Terms";
+import IntroVideo from "./pages/IntroVideo";
 
 // Create query client instance
 const queryClient = new QueryClient({
@@ -58,6 +59,7 @@ function App() {
                 <Route path="/exams/:examId" element={<ExamTake />} />
                 <Route path="/privacy" element={<Privacy />} />
                 <Route path="/terms" element={<Terms />} />
+                <Route path="/intro-video" element={<IntroVideo />} />
                 <Route path="*" element={<NotFound />} />
               </Routes>
               <AIGuide />

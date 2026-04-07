@@ -12,3 +12,5 @@ Allow: /
 
 User-agent: *
 Allow: /
+
+Sitemap: https://arabian-bloom-academy.lovable.app/sitemap.xml

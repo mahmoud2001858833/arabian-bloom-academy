@@ -1,0 +1,1 @@
+ALTER TABLE public.quiz_questions ADD COLUMN audio_url TEXT DEFAULT NULL;
