@@ -1,6 +1,6 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { ArrowRight, Clock, CheckCircle, XCircle, AlertTriangle } from 'lucide-react';
+import { ArrowRight, Clock, CheckCircle, XCircle, AlertTriangle, Volume2, Pause } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -20,6 +20,7 @@ interface ExamQuestion {
   options: string[];
   correct_answer: number;
   order_index: number;
+  audio_url?: string | null;
 }
 
 interface Exam {
