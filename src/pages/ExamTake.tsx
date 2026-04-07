@@ -304,11 +304,16 @@ const ExamTake = () => {
             {/* Question Card */}
             {currentQuestion && (
               <motion.div key={currentQuestion.id} initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.3 }}>
-                <Card className="border-primary/20 shadow-xl rounded-3xl">
+              <Card className="border-primary/20 shadow-xl rounded-3xl">
                   <CardContent className="p-8 space-y-6">
                     <h3 className="text-xl font-bold text-foreground leading-relaxed">
                       {currentQuestion.question}
                     </h3>
+
+                    {/* Audio playback */}
+                    {currentQuestion.audio_url && (
+                      <AudioPlayer src={currentQuestion.audio_url} />
+                    )}
 
                     <div className="space-y-3">
                       {(currentQuestion.options as string[]).map((option, index) => (
