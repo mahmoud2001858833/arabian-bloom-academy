@@ -540,6 +540,7 @@ const Admin = () => {
       options: ['', '', '', ''],
       correct_answer: 0,
       order_index: quizQuestions.length,
+      audio_url: null,
     };
     setQuizQuestions([...quizQuestions, newQuestion]);
   };
