@@ -21,6 +21,7 @@ import Exams from "./pages/Exams";
 import ExamTake from "./pages/ExamTake";
 import Privacy from "./pages/Privacy";
 import Terms from "./pages/Terms";
+import IntroVideo from "./pages/IntroVideo";
 
 // Create query client instance
 const queryClient = new QueryClient({
