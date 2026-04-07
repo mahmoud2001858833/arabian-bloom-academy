@@ -521,7 +521,8 @@ const Admin = () => {
       if (questionsData) {
         setQuizQuestions(questionsData.map(q => ({
           ...q,
-          options: Array.isArray(q.options) ? q.options : []
+          options: Array.isArray(q.options) ? q.options : [],
+          audio_url: (q as any).audio_url || null,
         })) as QuizQuestion[]);
       }
     } else {
