@@ -31,6 +31,35 @@ interface Exam {
   passing_score: number;
 }
 
+const AudioPlayer = ({ src }: { src: string }) => {
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+  const [playing, setPlaying] = useState(false);
+
+  const toggle = () => {
+    if (!audioRef.current) {
+      audioRef.current = new Audio(src);
+      audioRef.current.onended = () => setPlaying(false);
+    }
+    if (playing) {
+      audioRef.current.pause();
+      setPlaying(false);
+    } else {
+      audioRef.current.play();
+      setPlaying(true);
+    }
+  };
+
+  return (
+    <button
+      onClick={toggle}
+      className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-primary/10 hover:bg-primary/20 text-primary font-medium transition-colors"
+    >
+      {playing ? <Pause className="h-4 w-4" /> : <Volume2 className="h-4 w-4" />}
+      {playing ? 'إيقاف الصوت' : 'استمع للسؤال'}
+    </button>
+  );
+};
+
 const ExamTake = () => {
   const { examId } = useParams();
   const navigate = useNavigate();
