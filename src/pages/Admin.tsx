@@ -598,6 +598,7 @@ const Admin = () => {
           options: q.options,
           correct_answer: q.correct_answer,
           order_index: i,
+          audio_url: q.audio_url || null,
         }));
 
         const { error: insertError } = await supabase
