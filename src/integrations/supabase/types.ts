@@ -569,6 +569,7 @@ export type Database = {
       }
       quiz_questions: {
         Row: {
+          audio_url: string | null
           correct_answer: number
           created_at: string
           id: string
@@ -578,6 +579,7 @@ export type Database = {
           quiz_id: string
         }
         Insert: {
+          audio_url?: string | null
           correct_answer: number
           created_at?: string
           id?: string
@@ -587,6 +589,7 @@ export type Database = {
           quiz_id: string
         }
         Update: {
+          audio_url?: string | null
           correct_answer?: number
           created_at?: string
           id?: string
