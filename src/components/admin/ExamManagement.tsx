@@ -371,6 +371,13 @@ const ExamManagement = () => {
                     onChange={(e) => updateQuestion(qIndex, 'question', e.target.value)}
                     placeholder="اكتب السؤال هنا"
                   />
+                  <div className="flex items-center gap-2">
+                    <span className="text-sm text-muted-foreground">أو أضف تسجيل صوتي:</span>
+                    <AudioRecorder
+                      audioUrl={q.audio_url || null}
+                      onAudioChange={(url) => updateQuestion(qIndex, 'audio_url', url)}
+                    />
+                  </div>
                   <div className="grid grid-cols-1 gap-2">
                     {q.options.map((opt, oIndex) => (
                       <div key={oIndex} className="flex items-center gap-2">
