@@ -1378,7 +1378,7 @@ const Admin = () => {
                     </div>
                   </CardHeader>
                   <CardContent className="space-y-4">
-                    <div>
+                    <div className="space-y-2">
                       <Label className="font-bold">نص السؤال</Label>
                       <Textarea
                         value={question.question}
@@ -1386,6 +1386,13 @@ const Admin = () => {
                         placeholder="اكتب السؤال هنا..."
                         className="mt-1 rounded-xl"
                       />
+                      <div className="flex items-center gap-2 mt-2">
+                        <Label className="text-sm text-muted-foreground">أو أضف تسجيل صوتي:</Label>
+                        <AudioRecorder
+                          audioUrl={question.audio_url || null}
+                          onAudioChange={(url) => updateQuestion(qIndex, 'audio_url', url)}
+                        />
+                      </div>
                     </div>
                     
                     <div className="space-y-3">
