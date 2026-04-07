@@ -1,8 +1,7 @@
 import { useState, useEffect } from 'react';
-import { Save, Video, Upload, Trash2, AlertTriangle } from 'lucide-react';
+import { Video, Upload, Trash2, AlertTriangle } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
@@ -12,7 +11,6 @@ import VideoPlayer from '@/components/dashboard/VideoPlayer';
 
 const IntroVideoManagement = () => {
   const { toast } = useToast();
-  const [videoUrl, setVideoUrl] = useState('');
   const [savedUrl, setSavedUrl] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [showUploader, setShowUploader] = useState(false);
@@ -30,7 +28,6 @@ const IntroVideoManagement = () => {
       .single();
 
     if (!error && data?.value) {
-      setVideoUrl(data.value);
       setSavedUrl(data.value);
     }
   };
@@ -43,16 +40,13 @@ const IntroVideoManagement = () => {
       .eq('key', 'intro_video_url')
       .maybeSingle();
 
-    if (fetchError) {
-      throw fetchError;
-    }
+    if (fetchError) throw fetchError;
 
     if (existingSetting?.id) {
       const { error } = await supabase
         .from('site_settings')
         .update({ value, updated_at: timestamp })
         .eq('id', existingSetting.id);
-
       if (error) throw error;
       return;
     }
@@ -60,23 +54,7 @@ const IntroVideoManagement = () => {
     const { error } = await supabase
       .from('site_settings')
       .insert({ key: 'intro_video_url', value, updated_at: timestamp });
-
     if (error) throw error;
-  };
-
-  const handleSave = async (valueToSave = videoUrl) => {
-    setIsLoading(true);
-
-    try {
-      await persistIntroVideo(valueToSave);
-      setVideoUrl(valueToSave);
-      setSavedUrl(valueToSave);
-      toast({ title: 'تم بنجاح', description: 'تم حفظ الفيديو التعريفي' });
-    } catch {
-      toast({ title: 'خطأ', description: 'فشل في حفظ الفيديو التعريفي', variant: 'destructive' });
-    } finally {
-      setIsLoading(false);
-    }
   };
 
   const handleRemove = async () => {
@@ -89,7 +67,6 @@ const IntroVideoManagement = () => {
     if (error) {
       toast({ title: 'خطأ', description: 'فشل في حذف الفيديو', variant: 'destructive' });
     } else {
-      setVideoUrl('');
       setSavedUrl('');
       toast({ title: 'تم بنجاح', description: 'تم حذف الفيديو التعريفي' });
     }
@@ -165,38 +142,21 @@ const IntroVideoManagement = () => {
               {showUploader ? 'إخفاء أداة الرفع' : 'رفع فيديو من جهازك'}
             </Button>
             
-              {showUploader && (
-                <DualVideoUploader
-                  onUploadComplete={async (url) => {
-                    setVideoUrl(url);
-                    setShowUploader(false);
-                    await handleSave(url);
-                  }}
-                />
-              )}
-            </div>
-
-            {/* Manual URL Input */}
-            <div className="space-y-2">
-              <Label className="text-foreground font-semibold">أو أدخل رابط الفيديو يدوياً</Label>
-              <Input
-                value={videoUrl}
-                onChange={(e) => setVideoUrl(e.target.value)}
-                placeholder="أدخل رابط الفيديو..."
-                className="rounded-xl"
-                dir="ltr"
+            {showUploader && (
+              <DualVideoUploader
+                onUploadComplete={async (url) => {
+                  setShowUploader(false);
+                  try {
+                    await persistIntroVideo(url);
+                    setSavedUrl(url);
+                    toast({ title: 'تم بنجاح', description: 'تم حفظ الفيديو التعريفي' });
+                  } catch {
+                    toast({ title: 'خطأ', description: 'فشل في حفظ الفيديو التعريفي', variant: 'destructive' });
+                  }
+                }}
               />
-            </div>
-
-            {/* Save Button */}
-            <Button
-              onClick={() => void handleSave()}
-              disabled={isLoading || videoUrl === savedUrl}
-              className="rounded-xl w-full"
-            >
-            <Save className="ml-2 h-4 w-4" />
-            {isLoading ? 'جاري الحفظ...' : 'حفظ الفيديو التعريفي'}
-          </Button>
+            )}
+          </div>
         </CardContent>
       </Card>
     </div>
