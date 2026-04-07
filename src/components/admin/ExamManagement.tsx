@@ -162,7 +162,11 @@ const ExamManagement = () => {
       .eq('exam_id', exam.id)
       .order('order_index');
 
-    setEditQuestions((data as ExamQuestion[]) || []);
+    setEditQuestions((data || []).map(q => ({
+      ...q,
+      options: Array.isArray(q.options) ? q.options : [],
+      audio_url: (q as any).audio_url || null,
+    })) as ExamQuestion[]);
     setShowQuestionsDialog(true);
   };
 
