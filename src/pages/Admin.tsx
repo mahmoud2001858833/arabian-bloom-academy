@@ -1181,6 +1181,29 @@ const Admin = () => {
                 <Label className="font-medium">نشر الكورس</Label>
               </div>
             </div>
+
+            {/* Auto Translation Button */}
+            <Button
+              type="button"
+              variant="outline"
+              className="rounded-xl gap-2 border-primary/30 text-primary hover:bg-primary/10"
+              onClick={() => translateContent(courseForm.title, courseForm.description, setCourseForm)}
+              disabled={isTranslating || !courseForm.title}
+            >
+              <Languages className="h-4 w-4" />
+              {isTranslating ? 'جاري الترجمة...' : 'ترجمة تلقائية لجميع اللغات'}
+            </Button>
+
+            {/* Show translated titles preview */}
+            {courseForm.title_en && (
+              <div className="p-3 rounded-xl bg-muted/50 space-y-1 text-sm">
+                <p><span className="font-bold text-muted-foreground">EN:</span> {courseForm.title_en}</p>
+                <p><span className="font-bold text-muted-foreground">FR:</span> {courseForm.title_fr}</p>
+                <p><span className="font-bold text-muted-foreground">MS:</span> {courseForm.title_ms}</p>
+                <p><span className="font-bold text-muted-foreground">UR:</span> {courseForm.title_ur}</p>
+                <p><span className="font-bold text-muted-foreground">ID:</span> {courseForm.title_id}</p>
+              </div>
+            )}
           </div>
           
           <DialogFooter>
