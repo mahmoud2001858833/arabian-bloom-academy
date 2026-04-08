@@ -260,49 +260,69 @@ const Admin = () => {
     }
   };
 
+  const i18nFields = { title_en: '', title_fr: '', title_ms: '', title_ur: '', title_id: '', description_en: '', description_fr: '', description_ms: '', description_ur: '', description_id: '' };
+
+  const translateContent = async (title: string, description: string, setter: (fn: (prev: any) => any) => void) => {
+    if (!title) { toast({ title: 'خطأ', description: 'أدخل العنوان بالعربية أولاً', variant: 'destructive' }); return; }
+    setIsTranslating(true);
+    try {
+      const { data, error } = await supabase.functions.invoke('translate-content', {
+        body: { title, description: description || undefined },
+      });
+      if (error) throw error;
+      const tr = data.translations;
+      setter((prev: any) => ({
+        ...prev,
+        title_en: tr.en?.title || prev.title_en,
+        title_fr: tr.fr?.title || prev.title_fr,
+        title_ms: tr.ms?.title || prev.title_ms,
+        title_ur: tr.ur?.title || prev.title_ur,
+        title_id: tr.id?.title || prev.title_id,
+        description_en: tr.en?.description || prev.description_en,
+        description_fr: tr.fr?.description || prev.description_fr,
+        description_ms: tr.ms?.description || prev.description_ms,
+        description_ur: tr.ur?.description || prev.description_ur,
+        description_id: tr.id?.description || prev.description_id,
+      }));
+      toast({ title: 'تم بنجاح', description: 'تمت ترجمة المحتوى لجميع اللغات' });
+    } catch (e) {
+      console.error(e);
+      toast({ title: 'خطأ', description: 'فشل في الترجمة التلقائية', variant: 'destructive' });
+    }
+    setIsTranslating(false);
+  };
+
   const handleSaveCourse = async () => {
     setIsLoading(true);
+    const courseData = {
+      title: courseForm.title,
+      description: courseForm.description,
+      thumbnail_url: courseForm.thumbnail_url,
+      price: courseForm.is_free ? 0 : courseForm.price,
+      is_free: courseForm.is_free,
+      level: courseForm.level,
+      is_published: courseForm.is_published,
+      title_en: courseForm.title_en || null, title_fr: courseForm.title_fr || null,
+      title_ms: courseForm.title_ms || null, title_ur: courseForm.title_ur || null, title_id: courseForm.title_id || null,
+      description_en: courseForm.description_en || null, description_fr: courseForm.description_fr || null,
+      description_ms: courseForm.description_ms || null, description_ur: courseForm.description_ur || null, description_id: courseForm.description_id || null,
+    };
     
     if (courseForm.id) {
-      const { error } = await supabase
-        .from('courses')
-        .update({
-          title: courseForm.title,
-          description: courseForm.description,
-          thumbnail_url: courseForm.thumbnail_url,
-          price: courseForm.is_free ? 0 : courseForm.price,
-          is_free: courseForm.is_free,
-          level: courseForm.level,
-          is_published: courseForm.is_published,
-        })
-        .eq('id', courseForm.id);
-
+      const { error } = await supabase.from('courses').update(courseData).eq('id', courseForm.id);
       if (error) {
         toast({ title: 'خطأ', description: 'فشل في تحديث الكورس', variant: 'destructive' });
       } else {
         toast({ title: 'تم بنجاح', description: 'تم تحديث الكورس' });
-        fetchCourses();
-        setShowCourseDialog(false);
+        fetchCourses(); setShowCourseDialog(false);
       }
     } else {
-      const { error } = await supabase
-        .from('courses')
-        .insert({
-          title: courseForm.title,
-          description: courseForm.description,
-          thumbnail_url: courseForm.thumbnail_url,
-          price: courseForm.is_free ? 0 : courseForm.price,
-          is_free: courseForm.is_free,
-          level: courseForm.level,
-          is_published: courseForm.is_published,
-        });
-
+      const { error } = await supabase.from('courses').insert(courseData);
       if (error) {
         toast({ title: 'خطأ', description: 'فشل في إنشاء الكورس', variant: 'destructive' });
       } else {
         toast({ title: 'تم بنجاح', description: 'تم إنشاء الكورس الجديد' });
-        fetchCourses();
-        setShowCourseDialog(false);
+        fetchCourses(); setShowCourseDialog(false);
       }
     }
     setIsLoading(false);
