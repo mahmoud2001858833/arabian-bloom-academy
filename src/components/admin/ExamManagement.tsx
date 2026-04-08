@@ -194,7 +194,26 @@ const ExamManagement = () => {
   const updateOption = (qIndex: number, oIndex: number, value: string) => {
     const updated = [...editQuestions];
     const options = [...updated[qIndex].options];
-    options[oIndex] = value;
+    const current = options[oIndex];
+    if (typeof current === 'object' && current !== null) {
+      options[oIndex] = { ...(current as any), text: value };
+    } else {
+      options[oIndex] = value;
+    }
+    updated[qIndex].options = options;
+    setEditQuestions(updated);
+  };
+
+  const updateOptionAudio = (qIndex: number, oIndex: number, audioUrl: string | null) => {
+    const updated = [...editQuestions];
+    const options = [...updated[qIndex].options];
+    const current = options[oIndex];
+    const text = typeof current === 'string' ? current : (current as any)?.text || '';
+    if (audioUrl) {
+      options[oIndex] = { text, audio_url: audioUrl } as any;
+    } else {
+      options[oIndex] = text;
+    }
     updated[qIndex].options = options;
     setEditQuestions(updated);
   };
