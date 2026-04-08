@@ -341,7 +341,7 @@ const Dashboard = () => {
                       {/* Content */}
                       <div className="p-5 space-y-4">
                         <h3 className="font-bold text-lg text-foreground line-clamp-1 group-hover:text-primary transition-colors">
-                          {course.title}
+                          {getLocalizedField(course, 'title', language)}
                         </h3>
                         
                         <p className="text-sm text-muted-foreground">
