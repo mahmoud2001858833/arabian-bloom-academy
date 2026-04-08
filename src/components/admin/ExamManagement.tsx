@@ -383,9 +383,9 @@ const ExamManagement = () => {
                       onAudioChange={(url) => updateQuestion(qIndex, 'audio_url', url)}
                     />
                   </div>
-                  <div className="grid grid-cols-1 gap-2">
+                  <div className="grid grid-cols-1 gap-3">
                     {q.options.map((opt, oIndex) => (
-                      <div key={oIndex} className="flex items-center gap-2">
+                      <div key={oIndex} className="flex items-center gap-2 p-2 rounded-xl border border-primary/10 bg-muted/30">
                         <input
                           type="radio"
                           name={`correct-${q.id}`}
@@ -393,12 +393,20 @@ const ExamManagement = () => {
                           onChange={() => updateQuestion(qIndex, 'correct_answer', oIndex)}
                           className="accent-primary"
                         />
-                        <Input
-                          value={opt}
-                          onChange={(e) => updateOption(qIndex, oIndex, e.target.value)}
-                          placeholder={`الخيار ${oIndex + 1}`}
-                          className="flex-1"
-                        />
+                        <div className="flex-1 space-y-2">
+                          <Input
+                            value={typeof opt === 'string' ? opt : (opt as any)?.text || ''}
+                            onChange={(e) => updateOption(qIndex, oIndex, e.target.value)}
+                            placeholder={`الخيار ${oIndex + 1} (نص)`}
+                          />
+                          <div className="flex items-center gap-2">
+                            <span className="text-xs text-muted-foreground">أو تسجيل صوتي:</span>
+                            <AudioRecorder
+                              audioUrl={typeof opt === 'object' && opt !== null ? (opt as any).audio_url || null : null}
+                              onAudioChange={(url) => updateOptionAudio(qIndex, oIndex, url)}
+                            />
+                          </div>
+                        </div>
                       </div>
                     ))}
                   </div>
