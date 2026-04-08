@@ -9,6 +9,7 @@ import { Badge } from '@/components/ui/badge';
 import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
 import { useLanguage } from '@/i18n/LanguageContext';
+import { getLocalizedField } from '@/lib/localized';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
 
