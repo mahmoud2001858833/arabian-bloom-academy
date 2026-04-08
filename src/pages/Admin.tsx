@@ -331,46 +331,33 @@ const Admin = () => {
   const handleSaveLesson = async () => {
     if (!selectedCourse) return;
     setIsLoading(true);
+    const lessonData = {
+      title: lessonForm.title,
+      description: lessonForm.description,
+      video_url: lessonForm.video_url,
+      pdf_url: lessonForm.pdf_url || null,
+      duration_minutes: lessonForm.duration_minutes,
+      title_en: lessonForm.title_en || null, title_fr: lessonForm.title_fr || null,
+      title_ms: lessonForm.title_ms || null, title_ur: lessonForm.title_ur || null, title_id: lessonForm.title_id || null,
+      description_en: lessonForm.description_en || null, description_fr: lessonForm.description_fr || null,
+      description_ms: lessonForm.description_ms || null, description_ur: lessonForm.description_ur || null, description_id: lessonForm.description_id || null,
+    };
     
     if (lessonForm.id) {
-      const { error } = await supabase
-        .from('lessons')
-        .update({
-          title: lessonForm.title,
-          description: lessonForm.description,
-          video_url: lessonForm.video_url,
-          pdf_url: lessonForm.pdf_url || null,
-          duration_minutes: lessonForm.duration_minutes,
-          order_index: lessonForm.order_index,
-        })
-        .eq('id', lessonForm.id);
-
+      const { error } = await supabase.from('lessons').update({ ...lessonData, order_index: lessonForm.order_index }).eq('id', lessonForm.id);
       if (error) {
         toast({ title: 'خطأ', description: 'فشل في تحديث الدرس', variant: 'destructive' });
       } else {
         toast({ title: 'تم بنجاح', description: 'تم تحديث الدرس' });
-        fetchLessons(selectedCourse.id);
-        setShowLessonDialog(false);
+        fetchLessons(selectedCourse.id); setShowLessonDialog(false);
       }
     } else {
-      const { error } = await supabase
-        .from('lessons')
-        .insert({
-          course_id: selectedCourse.id,
-          title: lessonForm.title,
-          description: lessonForm.description,
-          video_url: lessonForm.video_url,
-          pdf_url: lessonForm.pdf_url || null,
-          duration_minutes: lessonForm.duration_minutes,
-          order_index: lessons.length,
-        });
-
+      const { error } = await supabase.from('lessons').insert({ ...lessonData, course_id: selectedCourse.id, order_index: lessons.length });
       if (error) {
         toast({ title: 'خطأ', description: 'فشل في إنشاء الدرس', variant: 'destructive' });
       } else {
         toast({ title: 'تم بنجاح', description: 'تم إنشاء الدرس الجديد' });
-        fetchLessons(selectedCourse.id);
-        setShowLessonDialog(false);
+        fetchLessons(selectedCourse.id); setShowLessonDialog(false);
       }
     }
     setIsLoading(false);
