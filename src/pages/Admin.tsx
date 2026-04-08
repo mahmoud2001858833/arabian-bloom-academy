@@ -1333,6 +1333,25 @@ const Admin = () => {
                 </div>
               )}
             </div>
+
+            {/* Auto Translation Button */}
+            <Button
+              type="button"
+              variant="outline"
+              className="rounded-xl gap-2 border-primary/30 text-primary hover:bg-primary/10"
+              onClick={() => translateContent(lessonForm.title, lessonForm.description, setLessonForm)}
+              disabled={isTranslating || !lessonForm.title}
+            >
+              <Languages className="h-4 w-4" />
+              {isTranslating ? 'جاري الترجمة...' : 'ترجمة تلقائية لجميع اللغات'}
+            </Button>
+
+            {lessonForm.title_en && (
+              <div className="p-3 rounded-xl bg-muted/50 space-y-1 text-sm">
+                <p><span className="font-bold text-muted-foreground">EN:</span> {lessonForm.title_en}</p>
+                <p><span className="font-bold text-muted-foreground">FR:</span> {lessonForm.title_fr}</p>
+              </div>
+            )}
           </div>
           
           <DialogFooter>
