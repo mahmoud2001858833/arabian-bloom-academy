@@ -112,6 +112,8 @@ const Admin = () => {
     is_free: true,
     level: 'beginner',
     is_published: true,
+    title_en: '', title_fr: '', title_ms: '', title_ur: '', title_id: '',
+    description_en: '', description_fr: '', description_ms: '', description_ur: '', description_id: '',
   });
   
   const [lessonForm, setLessonForm] = useState({
@@ -123,6 +125,8 @@ const Admin = () => {
     pdf_url: '',
     duration_minutes: 0,
     order_index: 0,
+    title_en: '', title_fr: '', title_ms: '', title_ur: '', title_id: '',
+    description_en: '', description_fr: '', description_ms: '', description_ur: '', description_id: '',
   });
 
   // Stats state
