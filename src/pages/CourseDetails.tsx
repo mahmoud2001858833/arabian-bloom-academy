@@ -407,7 +407,7 @@ const CourseDetails = () => {
               {/* التسجيل والتقدم */}
               <Card className="bg-card/50 backdrop-blur-sm border-border/50">
                 <CardHeader>
-                  <CardTitle className="text-lg">{course.title}</CardTitle>
+                  <CardTitle className="text-lg">{getLocalizedField(course, 'title', language)}</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
                   {!isEnrolled ? (
