@@ -359,8 +359,8 @@ const CourseDetails = () => {
                     </div>
                   </CardHeader>
                   <CardContent>
-                    {selectedLesson.description && (
-                      <p className="text-muted-foreground">{selectedLesson.description}</p>
+                    {getLocalizedField(selectedLesson, 'description', language) && (
+                      <p className="text-muted-foreground">{getLocalizedField(selectedLesson, 'description', language)}</p>
                     )}
                     {selectedLesson.duration_minutes && (
                       <div className="flex items-center gap-2 mt-4 text-sm text-muted-foreground">
