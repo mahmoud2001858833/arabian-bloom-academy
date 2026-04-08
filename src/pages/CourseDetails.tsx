@@ -343,7 +343,7 @@ const CourseDetails = () => {
                 <Card className="bg-card/50 backdrop-blur-sm border-border/50">
                   <CardHeader>
                     <div className="flex items-center justify-between">
-                      <CardTitle className="text-xl">{selectedLesson.title}</CardTitle>
+                      <CardTitle className="text-xl">{getLocalizedField(selectedLesson, 'title', language)}</CardTitle>
                       {isEnrolled && (
                         <Button
                           variant={isLessonCompleted(selectedLesson.id) ? "secondary" : "default"}
