@@ -90,6 +90,7 @@ const Admin = () => {
   const [showLessonDialog, setShowLessonDialog] = useState(false);
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
   const [deleteTarget, setDeleteTarget] = useState<{ type: 'course' | 'lesson'; id: string } | null>(null);
+  const [isTranslating, setIsTranslating] = useState(false);
   
   // Quiz states
   const [showQuizDialog, setShowQuizDialog] = useState(false);
