@@ -11,6 +11,7 @@ import Footer from '@/components/layout/Footer';
 import PageTransition from '@/components/layout/PageTransition';
 import { supabase } from '@/integrations/supabase/client';
 import { useLanguage } from '@/i18n/LanguageContext';
+import { getLocalizedField } from '@/lib/localized';
 
 interface Course {
   id: string;
