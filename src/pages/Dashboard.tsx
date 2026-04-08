@@ -9,6 +9,7 @@ import { Badge } from '@/components/ui/badge';
 import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
 import { useLanguage } from '@/i18n/LanguageContext';
+import { getLocalizedField } from '@/lib/localized';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
 
@@ -24,7 +25,7 @@ interface EnrolledCourse {
 }
 
 const Dashboard = () => {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   const { user, loading, isAdmin } = useAuth();
   const navigate = useNavigate();
   const [enrolledCourses, setEnrolledCourses] = useState<EnrolledCourse[]>([]);
@@ -310,7 +311,7 @@ const Dashboard = () => {
                       <div className="relative h-40 overflow-hidden">
                         <img
                           src={course.thumbnail_url || 'https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?w=400&h=300&fit=crop'}
-                          alt={course.title}
+                          alt={getLocalizedField(course, 'title', language)}
                           className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
                         />
                         <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
@@ -340,7 +341,7 @@ const Dashboard = () => {
                       {/* Content */}
                       <div className="p-5 space-y-4">
                         <h3 className="font-bold text-lg text-foreground line-clamp-1 group-hover:text-primary transition-colors">
-                          {course.title}
+                          {getLocalizedField(course, 'title', language)}
                         </h3>
                         
                         <p className="text-sm text-muted-foreground">

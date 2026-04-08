@@ -3,6 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { useLanguage } from '@/i18n/LanguageContext';
+import { getLocalizedField } from '@/lib/localized';
 import VideoPlayer from '@/components/dashboard/VideoPlayer';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
@@ -56,7 +57,7 @@ const CourseDetails = () => {
   const { courseId } = useParams<{ courseId: string }>();
   const navigate = useNavigate();
   const { user } = useAuth();
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   
   const [course, setCourse] = useState<Course | null>(null);
   const [lessons, setLessons] = useState<Lesson[]>([]);
@@ -342,7 +343,7 @@ const CourseDetails = () => {
                 <Card className="bg-card/50 backdrop-blur-sm border-border/50">
                   <CardHeader>
                     <div className="flex items-center justify-between">
-                      <CardTitle className="text-xl">{selectedLesson.title}</CardTitle>
+                      <CardTitle className="text-xl">{getLocalizedField(selectedLesson, 'title', language)}</CardTitle>
                       {isEnrolled && (
                         <Button
                           variant={isLessonCompleted(selectedLesson.id) ? "secondary" : "default"}
@@ -358,8 +359,8 @@ const CourseDetails = () => {
                     </div>
                   </CardHeader>
                   <CardContent>
-                    {selectedLesson.description && (
-                      <p className="text-muted-foreground">{selectedLesson.description}</p>
+                    {getLocalizedField(selectedLesson, 'description', language) && (
+                      <p className="text-muted-foreground">{getLocalizedField(selectedLesson, 'description', language)}</p>
                     )}
                     {selectedLesson.duration_minutes && (
                       <div className="flex items-center gap-2 mt-4 text-sm text-muted-foreground">
@@ -377,7 +378,7 @@ const CourseDetails = () => {
                   <CardTitle>{t('courseDetails.aboutCourse')}</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-muted-foreground mb-4">{course.description}</p>
+                  <p className="text-muted-foreground mb-4">{getLocalizedField(course, 'description', language)}</p>
                   <div className="flex flex-wrap gap-3">
                     <Badge variant="outline" className={getLevelColor(course.level)}>
                       <GraduationCap className="w-3 h-3 mr-1" />
@@ -406,7 +407,7 @@ const CourseDetails = () => {
               {/* التسجيل والتقدم */}
               <Card className="bg-card/50 backdrop-blur-sm border-border/50">
                 <CardHeader>
-                  <CardTitle className="text-lg">{course.title}</CardTitle>
+                  <CardTitle className="text-lg">{getLocalizedField(course, 'title', language)}</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
                   {!isEnrolled ? (
@@ -486,7 +487,7 @@ const CourseDetails = () => {
                                 <h4 className={`font-medium truncate ${
                                   isSelected ? 'text-accent' : ''
                                 }`}>
-                                  {lesson.title}
+                                  {getLocalizedField(lesson, 'title', language)}
                                 </h4>
                                 {lesson.duration_minutes && (
                                   <p className="text-xs text-muted-foreground mt-1">

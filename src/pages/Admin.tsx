@@ -4,7 +4,7 @@ import {
   Users, BookOpen, DollarSign, TrendingUp, Plus, Video, 
   Edit, Trash2, Eye, EyeOff, Save, Layers, Crown, Sparkles,
   Calendar, CheckCircle, BarChart3, CreditCard, FileText,
-  ChevronUp, ChevronDown, FileUp, HelpCircle, X, Upload, MessageCircle, Mic
+  ChevronUp, ChevronDown, FileUp, HelpCircle, X, Upload, MessageCircle, Mic, Languages
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
@@ -90,6 +90,7 @@ const Admin = () => {
   const [showLessonDialog, setShowLessonDialog] = useState(false);
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
   const [deleteTarget, setDeleteTarget] = useState<{ type: 'course' | 'lesson'; id: string } | null>(null);
+  const [isTranslating, setIsTranslating] = useState(false);
   
   // Quiz states
   const [showQuizDialog, setShowQuizDialog] = useState(false);
@@ -111,6 +112,8 @@ const Admin = () => {
     is_free: true,
     level: 'beginner',
     is_published: true,
+    title_en: '', title_fr: '', title_ms: '', title_ur: '', title_id: '',
+    description_en: '', description_fr: '', description_ms: '', description_ur: '', description_id: '',
   });
   
   const [lessonForm, setLessonForm] = useState({
@@ -122,6 +125,8 @@ const Admin = () => {
     pdf_url: '',
     duration_minutes: 0,
     order_index: 0,
+    title_en: '', title_fr: '', title_ms: '', title_ur: '', title_id: '',
+    description_en: '', description_fr: '', description_ms: '', description_ur: '', description_id: '',
   });
 
   // Stats state
@@ -255,49 +260,69 @@ const Admin = () => {
     }
   };
 
+  const i18nFields = { title_en: '', title_fr: '', title_ms: '', title_ur: '', title_id: '', description_en: '', description_fr: '', description_ms: '', description_ur: '', description_id: '' };
+
+  const translateContent = async (title: string, description: string, setter: (fn: (prev: any) => any) => void) => {
+    if (!title) { toast({ title: 'خطأ', description: 'أدخل العنوان بالعربية أولاً', variant: 'destructive' }); return; }
+    setIsTranslating(true);
+    try {
+      const { data, error } = await supabase.functions.invoke('translate-content', {
+        body: { title, description: description || undefined },
+      });
+      if (error) throw error;
+      const tr = data.translations;
+      setter((prev: any) => ({
+        ...prev,
+        title_en: tr.en?.title || prev.title_en,
+        title_fr: tr.fr?.title || prev.title_fr,
+        title_ms: tr.ms?.title || prev.title_ms,
+        title_ur: tr.ur?.title || prev.title_ur,
+        title_id: tr.id?.title || prev.title_id,
+        description_en: tr.en?.description || prev.description_en,
+        description_fr: tr.fr?.description || prev.description_fr,
+        description_ms: tr.ms?.description || prev.description_ms,
+        description_ur: tr.ur?.description || prev.description_ur,
+        description_id: tr.id?.description || prev.description_id,
+      }));
+      toast({ title: 'تم بنجاح', description: 'تمت ترجمة المحتوى لجميع اللغات' });
+    } catch (e) {
+      console.error(e);
+      toast({ title: 'خطأ', description: 'فشل في الترجمة التلقائية', variant: 'destructive' });
+    }
+    setIsTranslating(false);
+  };
+
   const handleSaveCourse = async () => {
     setIsLoading(true);
+    const courseData = {
+      title: courseForm.title,
+      description: courseForm.description,
+      thumbnail_url: courseForm.thumbnail_url,
+      price: courseForm.is_free ? 0 : courseForm.price,
+      is_free: courseForm.is_free,
+      level: courseForm.level,
+      is_published: courseForm.is_published,
+      title_en: courseForm.title_en || null, title_fr: courseForm.title_fr || null,
+      title_ms: courseForm.title_ms || null, title_ur: courseForm.title_ur || null, title_id: courseForm.title_id || null,
+      description_en: courseForm.description_en || null, description_fr: courseForm.description_fr || null,
+      description_ms: courseForm.description_ms || null, description_ur: courseForm.description_ur || null, description_id: courseForm.description_id || null,
+    };
     
     if (courseForm.id) {
-      const { error } = await supabase
-        .from('courses')
-        .update({
-          title: courseForm.title,
-          description: courseForm.description,
-          thumbnail_url: courseForm.thumbnail_url,
-          price: courseForm.is_free ? 0 : courseForm.price,
-          is_free: courseForm.is_free,
-          level: courseForm.level,
-          is_published: courseForm.is_published,
-        })
-        .eq('id', courseForm.id);
-
+      const { error } = await supabase.from('courses').update(courseData).eq('id', courseForm.id);
       if (error) {
         toast({ title: 'خطأ', description: 'فشل في تحديث الكورس', variant: 'destructive' });
       } else {
         toast({ title: 'تم بنجاح', description: 'تم تحديث الكورس' });
-        fetchCourses();
-        setShowCourseDialog(false);
+        fetchCourses(); setShowCourseDialog(false);
       }
     } else {
-      const { error } = await supabase
-        .from('courses')
-        .insert({
-          title: courseForm.title,
-          description: courseForm.description,
-          thumbnail_url: courseForm.thumbnail_url,
-          price: courseForm.is_free ? 0 : courseForm.price,
-          is_free: courseForm.is_free,
-          level: courseForm.level,
-          is_published: courseForm.is_published,
-        });
-
+      const { error } = await supabase.from('courses').insert(courseData);
       if (error) {
         toast({ title: 'خطأ', description: 'فشل في إنشاء الكورس', variant: 'destructive' });
       } else {
         toast({ title: 'تم بنجاح', description: 'تم إنشاء الكورس الجديد' });
-        fetchCourses();
-        setShowCourseDialog(false);
+        fetchCourses(); setShowCourseDialog(false);
       }
     }
     setIsLoading(false);
@@ -306,46 +331,33 @@ const Admin = () => {
   const handleSaveLesson = async () => {
     if (!selectedCourse) return;
     setIsLoading(true);
+    const lessonData = {
+      title: lessonForm.title,
+      description: lessonForm.description,
+      video_url: lessonForm.video_url,
+      pdf_url: lessonForm.pdf_url || null,
+      duration_minutes: lessonForm.duration_minutes,
+      title_en: lessonForm.title_en || null, title_fr: lessonForm.title_fr || null,
+      title_ms: lessonForm.title_ms || null, title_ur: lessonForm.title_ur || null, title_id: lessonForm.title_id || null,
+      description_en: lessonForm.description_en || null, description_fr: lessonForm.description_fr || null,
+      description_ms: lessonForm.description_ms || null, description_ur: lessonForm.description_ur || null, description_id: lessonForm.description_id || null,
+    };
     
     if (lessonForm.id) {
-      const { error } = await supabase
-        .from('lessons')
-        .update({
-          title: lessonForm.title,
-          description: lessonForm.description,
-          video_url: lessonForm.video_url,
-          pdf_url: lessonForm.pdf_url || null,
-          duration_minutes: lessonForm.duration_minutes,
-          order_index: lessonForm.order_index,
-        })
-        .eq('id', lessonForm.id);
-
+      const { error } = await supabase.from('lessons').update({ ...lessonData, order_index: lessonForm.order_index }).eq('id', lessonForm.id);
       if (error) {
         toast({ title: 'خطأ', description: 'فشل في تحديث الدرس', variant: 'destructive' });
       } else {
         toast({ title: 'تم بنجاح', description: 'تم تحديث الدرس' });
-        fetchLessons(selectedCourse.id);
-        setShowLessonDialog(false);
+        fetchLessons(selectedCourse.id); setShowLessonDialog(false);
       }
     } else {
-      const { error } = await supabase
-        .from('lessons')
-        .insert({
-          course_id: selectedCourse.id,
-          title: lessonForm.title,
-          description: lessonForm.description,
-          video_url: lessonForm.video_url,
-          pdf_url: lessonForm.pdf_url || null,
-          duration_minutes: lessonForm.duration_minutes,
-          order_index: lessons.length,
-        });
-
+      const { error } = await supabase.from('lessons').insert({ ...lessonData, course_id: selectedCourse.id, order_index: lessons.length });
       if (error) {
         toast({ title: 'خطأ', description: 'فشل في إنشاء الدرس', variant: 'destructive' });
       } else {
         toast({ title: 'تم بنجاح', description: 'تم إنشاء الدرس الجديد' });
-        fetchLessons(selectedCourse.id);
-        setShowLessonDialog(false);
+        fetchLessons(selectedCourse.id); setShowLessonDialog(false);
       }
     }
     setIsLoading(false);
@@ -397,7 +409,7 @@ const Admin = () => {
     }
   };
 
-  const openEditCourse = (course: Course) => {
+  const openEditCourse = (course: Course & Record<string, any>) => {
     setCourseForm({
       id: course.id,
       title: course.title,
@@ -407,25 +419,23 @@ const Admin = () => {
       is_free: course.is_free,
       level: course.level,
       is_published: course.is_published,
+      title_en: course.title_en || '', title_fr: course.title_fr || '', title_ms: course.title_ms || '',
+      title_ur: course.title_ur || '', title_id: course.title_id || '',
+      description_en: course.description_en || '', description_fr: course.description_fr || '', description_ms: course.description_ms || '',
+      description_ur: course.description_ur || '', description_id: course.description_id || '',
     });
     setShowCourseDialog(true);
   };
 
   const openNewCourse = () => {
     setCourseForm({
-      id: '',
-      title: '',
-      description: '',
-      thumbnail_url: '',
-      price: 0,
-      is_free: true,
-      level: 'beginner',
-      is_published: true,
+      id: '', title: '', description: '', thumbnail_url: '', price: 0, is_free: true, level: 'beginner', is_published: true,
+      ...i18nFields,
     });
     setShowCourseDialog(true);
   };
 
-  const openEditLesson = (lesson: Lesson) => {
+  const openEditLesson = (lesson: Lesson & Record<string, any>) => {
     setLessonForm({
       id: lesson.id,
       course_id: lesson.course_id,
@@ -435,6 +445,10 @@ const Admin = () => {
       pdf_url: lesson.pdf_url || '',
       duration_minutes: lesson.duration_minutes,
       order_index: lesson.order_index,
+      title_en: lesson.title_en || '', title_fr: lesson.title_fr || '', title_ms: lesson.title_ms || '',
+      title_ur: lesson.title_ur || '', title_id: lesson.title_id || '',
+      description_en: lesson.description_en || '', description_fr: lesson.description_fr || '', description_ms: lesson.description_ms || '',
+      description_ur: lesson.description_ur || '', description_id: lesson.description_id || '',
     });
     setShowLessonDialog(true);
   };
@@ -442,14 +456,8 @@ const Admin = () => {
   const openNewLesson = () => {
     if (!selectedCourse) return;
     setLessonForm({
-      id: '',
-      course_id: selectedCourse.id,
-      title: '',
-      description: '',
-      video_url: '',
-      pdf_url: '',
-      duration_minutes: 0,
-      order_index: lessons.length,
+      id: '', course_id: selectedCourse.id, title: '', description: '', video_url: '', pdf_url: '', duration_minutes: 0, order_index: lessons.length,
+      ...i18nFields,
     });
     setShowLessonDialog(true);
   };
@@ -1173,6 +1181,29 @@ const Admin = () => {
                 <Label className="font-medium">نشر الكورس</Label>
               </div>
             </div>
+
+            {/* Auto Translation Button */}
+            <Button
+              type="button"
+              variant="outline"
+              className="rounded-xl gap-2 border-primary/30 text-primary hover:bg-primary/10"
+              onClick={() => translateContent(courseForm.title, courseForm.description, setCourseForm)}
+              disabled={isTranslating || !courseForm.title}
+            >
+              <Languages className="h-4 w-4" />
+              {isTranslating ? 'جاري الترجمة...' : 'ترجمة تلقائية لجميع اللغات'}
+            </Button>
+
+            {/* Show translated titles preview */}
+            {courseForm.title_en && (
+              <div className="p-3 rounded-xl bg-muted/50 space-y-1 text-sm">
+                <p><span className="font-bold text-muted-foreground">EN:</span> {courseForm.title_en}</p>
+                <p><span className="font-bold text-muted-foreground">FR:</span> {courseForm.title_fr}</p>
+                <p><span className="font-bold text-muted-foreground">MS:</span> {courseForm.title_ms}</p>
+                <p><span className="font-bold text-muted-foreground">UR:</span> {courseForm.title_ur}</p>
+                <p><span className="font-bold text-muted-foreground">ID:</span> {courseForm.title_id}</p>
+              </div>
+            )}
           </div>
           
           <DialogFooter>
@@ -1302,6 +1333,25 @@ const Admin = () => {
                 </div>
               )}
             </div>
+
+            {/* Auto Translation Button */}
+            <Button
+              type="button"
+              variant="outline"
+              className="rounded-xl gap-2 border-primary/30 text-primary hover:bg-primary/10"
+              onClick={() => translateContent(lessonForm.title, lessonForm.description, setLessonForm)}
+              disabled={isTranslating || !lessonForm.title}
+            >
+              <Languages className="h-4 w-4" />
+              {isTranslating ? 'جاري الترجمة...' : 'ترجمة تلقائية لجميع اللغات'}
+            </Button>
+
+            {lessonForm.title_en && (
+              <div className="p-3 rounded-xl bg-muted/50 space-y-1 text-sm">
+                <p><span className="font-bold text-muted-foreground">EN:</span> {lessonForm.title_en}</p>
+                <p><span className="font-bold text-muted-foreground">FR:</span> {lessonForm.title_fr}</p>
+              </div>
+            )}
           </div>
           
           <DialogFooter>

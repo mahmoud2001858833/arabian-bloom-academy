@@ -11,6 +11,7 @@ import Footer from '@/components/layout/Footer';
 import PageTransition from '@/components/layout/PageTransition';
 import { supabase } from '@/integrations/supabase/client';
 import { useLanguage } from '@/i18n/LanguageContext';
+import { getLocalizedField } from '@/lib/localized';
 
 interface Course {
   id: string;
@@ -48,7 +49,7 @@ const cardVariants = {
 };
 
 const Courses = () => {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   const [courses, setCourses] = useState<Course[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [levelFilter, setLevelFilter] = useState('all');
@@ -88,8 +89,10 @@ const Courses = () => {
   };
 
   const filteredCourses = courses.filter((course) => {
-    const matchesSearch = course.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                         course.description?.toLowerCase().includes(searchQuery.toLowerCase());
+    const localTitle = getLocalizedField(course, 'title', language);
+    const localDesc = getLocalizedField(course, 'description', language);
+    const matchesSearch = localTitle.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                         localDesc.toLowerCase().includes(searchQuery.toLowerCase());
     const matchesLevel = levelFilter === 'all' || course.level === levelFilter;
     
     return matchesSearch && matchesLevel;
@@ -221,7 +224,7 @@ const Courses = () => {
                         <div className="relative h-52 overflow-hidden">
                           <img
                             src={course.thumbnail_url || 'https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?w=400&h=300&fit=crop'}
-                            alt={course.title}
+                            alt={getLocalizedField(course, 'title', language)}
                             className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
                           />
                           <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
@@ -262,11 +265,11 @@ const Courses = () => {
                         {/* Content */}
                         <div className="p-6 space-y-4">
                           <h3 className="font-bold text-xl text-foreground line-clamp-2 group-hover:text-primary transition-colors">
-                            {course.title}
+                            {getLocalizedField(course, 'title', language)}
                           </h3>
                           
                           <p className="text-muted-foreground line-clamp-2 leading-relaxed">
-                            {course.description || t('courses.discoverContent')}
+                            {getLocalizedField(course, 'description', language) || t('courses.discoverContent')}
                           </p>
 
                           <Button 

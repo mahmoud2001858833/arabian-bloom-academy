@@ -126,6 +126,11 @@ export type Database = {
         Row: {
           created_at: string
           description: string | null
+          description_en: string | null
+          description_fr: string | null
+          description_id: string | null
+          description_ms: string | null
+          description_ur: string | null
           id: string
           is_free: boolean | null
           is_published: boolean | null
@@ -133,11 +138,21 @@ export type Database = {
           price: number | null
           thumbnail_url: string | null
           title: string
+          title_en: string | null
+          title_fr: string | null
+          title_id: string | null
+          title_ms: string | null
+          title_ur: string | null
           updated_at: string
         }
         Insert: {
           created_at?: string
           description?: string | null
+          description_en?: string | null
+          description_fr?: string | null
+          description_id?: string | null
+          description_ms?: string | null
+          description_ur?: string | null
           id?: string
           is_free?: boolean | null
           is_published?: boolean | null
@@ -145,11 +160,21 @@ export type Database = {
           price?: number | null
           thumbnail_url?: string | null
           title: string
+          title_en?: string | null
+          title_fr?: string | null
+          title_id?: string | null
+          title_ms?: string | null
+          title_ur?: string | null
           updated_at?: string
         }
         Update: {
           created_at?: string
           description?: string | null
+          description_en?: string | null
+          description_fr?: string | null
+          description_id?: string | null
+          description_ms?: string | null
+          description_ur?: string | null
           id?: string
           is_free?: boolean | null
           is_published?: boolean | null
@@ -157,6 +182,11 @@ export type Database = {
           price?: number | null
           thumbnail_url?: string | null
           title?: string
+          title_en?: string | null
+          title_fr?: string | null
+          title_id?: string | null
+          title_ms?: string | null
+          title_ur?: string | null
           updated_at?: string
         }
         Relationships: []
@@ -345,11 +375,21 @@ export type Database = {
           course_id: string
           created_at: string
           description: string | null
+          description_en: string | null
+          description_fr: string | null
+          description_id: string | null
+          description_ms: string | null
+          description_ur: string | null
           duration_minutes: number | null
           id: string
           order_index: number
           pdf_url: string | null
           title: string
+          title_en: string | null
+          title_fr: string | null
+          title_id: string | null
+          title_ms: string | null
+          title_ur: string | null
           updated_at: string
           video_url: string | null
         }
@@ -357,11 +397,21 @@ export type Database = {
           course_id: string
           created_at?: string
           description?: string | null
+          description_en?: string | null
+          description_fr?: string | null
+          description_id?: string | null
+          description_ms?: string | null
+          description_ur?: string | null
           duration_minutes?: number | null
           id?: string
           order_index?: number
           pdf_url?: string | null
           title: string
+          title_en?: string | null
+          title_fr?: string | null
+          title_id?: string | null
+          title_ms?: string | null
+          title_ur?: string | null
           updated_at?: string
           video_url?: string | null
         }
@@ -369,11 +419,21 @@ export type Database = {
           course_id?: string
           created_at?: string
           description?: string | null
+          description_en?: string | null
+          description_fr?: string | null
+          description_id?: string | null
+          description_ms?: string | null
+          description_ur?: string | null
           duration_minutes?: number | null
           id?: string
           order_index?: number
           pdf_url?: string | null
           title?: string
+          title_en?: string | null
+          title_fr?: string | null
+          title_id?: string | null
+          title_ms?: string | null
+          title_ur?: string | null
           updated_at?: string
           video_url?: string | null
         }
