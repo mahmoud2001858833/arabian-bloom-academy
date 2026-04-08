@@ -409,7 +409,7 @@ const Admin = () => {
     }
   };
 
-  const openEditCourse = (course: Course) => {
+  const openEditCourse = (course: Course & Record<string, any>) => {
     setCourseForm({
       id: course.id,
       title: course.title,
@@ -419,25 +419,23 @@ const Admin = () => {
       is_free: course.is_free,
       level: course.level,
       is_published: course.is_published,
+      title_en: course.title_en || '', title_fr: course.title_fr || '', title_ms: course.title_ms || '',
+      title_ur: course.title_ur || '', title_id: course.title_id || '',
+      description_en: course.description_en || '', description_fr: course.description_fr || '', description_ms: course.description_ms || '',
+      description_ur: course.description_ur || '', description_id: course.description_id || '',
     });
     setShowCourseDialog(true);
   };
 
   const openNewCourse = () => {
     setCourseForm({
-      id: '',
-      title: '',
-      description: '',
-      thumbnail_url: '',
-      price: 0,
-      is_free: true,
-      level: 'beginner',
-      is_published: true,
+      id: '', title: '', description: '', thumbnail_url: '', price: 0, is_free: true, level: 'beginner', is_published: true,
+      ...i18nFields,
     });
     setShowCourseDialog(true);
   };
 
-  const openEditLesson = (lesson: Lesson) => {
+  const openEditLesson = (lesson: Lesson & Record<string, any>) => {
     setLessonForm({
       id: lesson.id,
       course_id: lesson.course_id,
@@ -447,6 +445,10 @@ const Admin = () => {
       pdf_url: lesson.pdf_url || '',
       duration_minutes: lesson.duration_minutes,
       order_index: lesson.order_index,
+      title_en: lesson.title_en || '', title_fr: lesson.title_fr || '', title_ms: lesson.title_ms || '',
+      title_ur: lesson.title_ur || '', title_id: lesson.title_id || '',
+      description_en: lesson.description_en || '', description_fr: lesson.description_fr || '', description_ms: lesson.description_ms || '',
+      description_ur: lesson.description_ur || '', description_id: lesson.description_id || '',
     });
     setShowLessonDialog(true);
   };
@@ -454,14 +456,8 @@ const Admin = () => {
   const openNewLesson = () => {
     if (!selectedCourse) return;
     setLessonForm({
-      id: '',
-      course_id: selectedCourse.id,
-      title: '',
-      description: '',
-      video_url: '',
-      pdf_url: '',
-      duration_minutes: 0,
-      order_index: lessons.length,
+      id: '', course_id: selectedCourse.id, title: '', description: '', video_url: '', pdf_url: '', duration_minutes: 0, order_index: lessons.length,
+      ...i18nFields,
     });
     setShowLessonDialog(true);
   };
