@@ -262,7 +262,12 @@ const Admin = () => {
 
   const i18nFields = { title_en: '', title_fr: '', title_ms: '', title_ur: '', title_id: '', description_en: '', description_fr: '', description_ms: '', description_ur: '', description_id: '' };
 
-  const translateContent = async (title: string, description: string, setter: (fn: (prev: any) => any) => void) => {
+  const translateContent = async (
+    title: string,
+    description: string,
+    setter: (fn: (prev: any) => any) => void,
+    options?: { table: 'courses' | 'lessons'; id?: string }
+  ) => {
     if (!title) { toast({ title: 'خطأ', description: 'أدخل العنوان بالعربية أولاً', variant: 'destructive' }); return; }
     setIsTranslating(true);
     try {
@@ -271,20 +276,42 @@ const Admin = () => {
       });
       if (error) throw error;
       const tr = data.translations;
+      const translatedFields = {
+        title_en: tr.en?.title || '',
+        title_fr: tr.fr?.title || '',
+        title_ms: tr.ms?.title || '',
+        title_ur: tr.ur?.title || '',
+        title_id: tr.id?.title || '',
+        description_en: tr.en?.description || '',
+        description_fr: tr.fr?.description || '',
+        description_ms: tr.ms?.description || '',
+        description_ur: tr.ur?.description || '',
+        description_id: tr.id?.description || '',
+      };
+
       setter((prev: any) => ({
         ...prev,
-        title_en: tr.en?.title || prev.title_en,
-        title_fr: tr.fr?.title || prev.title_fr,
-        title_ms: tr.ms?.title || prev.title_ms,
-        title_ur: tr.ur?.title || prev.title_ur,
-        title_id: tr.id?.title || prev.title_id,
-        description_en: tr.en?.description || prev.description_en,
-        description_fr: tr.fr?.description || prev.description_fr,
-        description_ms: tr.ms?.description || prev.description_ms,
-        description_ur: tr.ur?.description || prev.description_ur,
-        description_id: tr.id?.description || prev.description_id,
+        ...translatedFields,
       }));
-      toast({ title: 'تم بنجاح', description: 'تمت ترجمة المحتوى لجميع اللغات' });
+
+      if (options?.id) {
+        const { error: saveError } = await supabase
+          .from(options.table)
+          .update(translatedFields)
+          .eq('id', options.id);
+
+        if (saveError) throw saveError;
+
+        if (options.table === 'courses') {
+          fetchCourses();
+        } else if (selectedCourse?.id) {
+          fetchLessons(selectedCourse.id);
+        }
+
+        toast({ title: 'تم بنجاح', description: 'تمت ترجمة المحتوى وحفظه لجميع اللغات' });
+      } else {
+        toast({ title: 'تم بنجاح', description: 'تمت ترجمة المحتوى لجميع اللغات، اضغط حفظ لتثبيت العنصر الجديد' });
+      }
     } catch (e) {
       console.error(e);
       toast({ title: 'خطأ', description: 'فشل في الترجمة التلقائية', variant: 'destructive' });
@@ -1187,7 +1214,7 @@ const Admin = () => {
               type="button"
               variant="outline"
               className="rounded-xl gap-2 border-primary/30 text-primary hover:bg-primary/10"
-              onClick={() => translateContent(courseForm.title, courseForm.description, setCourseForm)}
+              onClick={() => translateContent(courseForm.title, courseForm.description, setCourseForm, { table: 'courses', id: courseForm.id || undefined })}
               disabled={isTranslating || !courseForm.title}
             >
               <Languages className="h-4 w-4" />
@@ -1339,7 +1366,7 @@ const Admin = () => {
               type="button"
               variant="outline"
               className="rounded-xl gap-2 border-primary/30 text-primary hover:bg-primary/10"
-              onClick={() => translateContent(lessonForm.title, lessonForm.description, setLessonForm)}
+              onClick={() => translateContent(lessonForm.title, lessonForm.description, setLessonForm, { table: 'lessons', id: lessonForm.id || undefined })}
               disabled={isTranslating || !lessonForm.title}
             >
               <Languages className="h-4 w-4" />
