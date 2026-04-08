@@ -378,7 +378,7 @@ const CourseDetails = () => {
                   <CardTitle>{t('courseDetails.aboutCourse')}</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-muted-foreground mb-4">{course.description}</p>
+                  <p className="text-muted-foreground mb-4">{getLocalizedField(course, 'description', language)}</p>
                   <div className="flex flex-wrap gap-3">
                     <Badge variant="outline" className={getLevelColor(course.level)}>
                       <GraduationCap className="w-3 h-3 mr-1" />
