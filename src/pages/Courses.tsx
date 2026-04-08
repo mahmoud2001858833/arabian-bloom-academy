@@ -89,8 +89,10 @@ const Courses = () => {
   };
 
   const filteredCourses = courses.filter((course) => {
-    const matchesSearch = course.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                         course.description?.toLowerCase().includes(searchQuery.toLowerCase());
+    const localTitle = getLocalizedField(course, 'title', language);
+    const localDesc = getLocalizedField(course, 'description', language);
+    const matchesSearch = localTitle.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                         localDesc.toLowerCase().includes(searchQuery.toLowerCase());
     const matchesLevel = levelFilter === 'all' || course.level === levelFilter;
     
     return matchesSearch && matchesLevel;
