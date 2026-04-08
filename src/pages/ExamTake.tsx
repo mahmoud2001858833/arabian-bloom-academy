@@ -345,28 +345,37 @@ const ExamTake = () => {
                     )}
 
                     <div className="space-y-3">
-                      {(currentQuestion.options as string[]).map((option, index) => (
-                        <button
-                          key={index}
-                          onClick={() => handleSelectAnswer(currentQuestion.id, index)}
-                          className={`w-full text-right p-4 rounded-2xl border-2 transition-all duration-200 ${
-                            answers[currentQuestion.id] === index
-                              ? 'border-primary bg-primary/10 text-primary font-bold'
-                              : 'border-primary/10 hover:border-primary/30 hover:bg-primary/5 text-foreground'
-                          }`}
-                        >
-                          <span className="inline-flex items-center gap-3">
-                            <span className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold ${
+                      {(currentQuestion.options as any[]).map((option, index) => {
+                        const optionText = typeof option === 'string' ? option : option?.text || '';
+                        const optionAudio = typeof option === 'object' && option !== null ? option.audio_url : null;
+                        return (
+                          <button
+                            key={index}
+                            onClick={() => handleSelectAnswer(currentQuestion.id, index)}
+                            className={`w-full text-right p-4 rounded-2xl border-2 transition-all duration-200 ${
                               answers[currentQuestion.id] === index
-                                ? 'bg-primary text-primary-foreground'
-                                : 'bg-primary/10 text-primary'
-                            }`}>
-                              {String.fromCharCode(65 + index)}
+                                ? 'border-primary bg-primary/10 text-primary font-bold'
+                                : 'border-primary/10 hover:border-primary/30 hover:bg-primary/5 text-foreground'
+                            }`}
+                          >
+                            <span className="inline-flex items-center gap-3">
+                              <span className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold ${
+                                answers[currentQuestion.id] === index
+                                  ? 'bg-primary text-primary-foreground'
+                                  : 'bg-primary/10 text-primary'
+                              }`}>
+                                {String.fromCharCode(65 + index)}
+                              </span>
+                              {optionText}
+                              {optionAudio && (
+                                <span onClick={(e) => e.stopPropagation()}>
+                                  <AudioPlayer src={optionAudio} />
+                                </span>
+                              )}
                             </span>
-                            {option}
-                          </span>
-                        </button>
-                      ))}
+                          </button>
+                        );
+                      })}
                     </div>
 
                     {/* Navigation */}
