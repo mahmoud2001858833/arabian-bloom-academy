@@ -16,7 +16,17 @@ import Footer from '@/components/layout/Footer';
 interface EnrolledCourse {
   id: string;
   title: string;
+  title_en?: string | null;
+  title_fr?: string | null;
+  title_ms?: string | null;
+  title_ur?: string | null;
+  title_id?: string | null;
   description: string | null;
+  description_en?: string | null;
+  description_fr?: string | null;
+  description_ms?: string | null;
+  description_ur?: string | null;
+  description_id?: string | null;
   thumbnail_url: string | null;
   level: string | null;
   totalLessons: number;
@@ -112,7 +122,17 @@ const Dashboard = () => {
           return {
             id: course.id,
             title: course.title,
+            title_en: course.title_en,
+            title_fr: course.title_fr,
+            title_ms: course.title_ms,
+            title_ur: course.title_ur,
+            title_id: course.title_id,
             description: course.description,
+            description_en: course.description_en,
+            description_fr: course.description_fr,
+            description_ms: course.description_ms,
+            description_ur: course.description_ur,
+            description_id: course.description_id,
             thumbnail_url: course.thumbnail_url,
             level: course.level,
             totalLessons,
