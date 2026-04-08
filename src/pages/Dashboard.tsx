@@ -311,7 +311,7 @@ const Dashboard = () => {
                       <div className="relative h-40 overflow-hidden">
                         <img
                           src={course.thumbnail_url || 'https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?w=400&h=300&fit=crop'}
-                          alt={course.title}
+                          alt={getLocalizedField(course, 'title', language)}
                           className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
                         />
                         <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
