@@ -487,7 +487,7 @@ const CourseDetails = () => {
                                 <h4 className={`font-medium truncate ${
                                   isSelected ? 'text-accent' : ''
                                 }`}>
-                                  {lesson.title}
+                                  {getLocalizedField(lesson, 'title', language)}
                                 </h4>
                                 {lesson.duration_minutes && (
                                   <p className="text-xs text-muted-foreground mt-1">
