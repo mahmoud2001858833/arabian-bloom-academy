@@ -265,11 +265,11 @@ const Courses = () => {
                         {/* Content */}
                         <div className="p-6 space-y-4">
                           <h3 className="font-bold text-xl text-foreground line-clamp-2 group-hover:text-primary transition-colors">
-                            {course.title}
+                            {getLocalizedField(course, 'title', language)}
                           </h3>
                           
                           <p className="text-muted-foreground line-clamp-2 leading-relaxed">
-                            {course.description || t('courses.discoverContent')}
+                            {getLocalizedField(course, 'description', language) || t('courses.discoverContent')}
                           </p>
 
                           <Button 
