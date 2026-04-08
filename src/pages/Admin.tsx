@@ -4,7 +4,7 @@ import {
   Users, BookOpen, DollarSign, TrendingUp, Plus, Video, 
   Edit, Trash2, Eye, EyeOff, Save, Layers, Crown, Sparkles,
   Calendar, CheckCircle, BarChart3, CreditCard, FileText,
-  ChevronUp, ChevronDown, FileUp, HelpCircle, X, Upload, MessageCircle, Mic
+  ChevronUp, ChevronDown, FileUp, HelpCircle, X, Upload, MessageCircle, Mic, Languages
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
