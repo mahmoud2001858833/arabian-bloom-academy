@@ -25,7 +25,7 @@ interface EnrolledCourse {
 }
 
 const Dashboard = () => {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   const { user, loading, isAdmin } = useAuth();
   const navigate = useNavigate();
   const [enrolledCourses, setEnrolledCourses] = useState<EnrolledCourse[]>([]);
