@@ -125,9 +125,11 @@ const Admin = () => {
     pdf_url: '',
     duration_minutes: 0,
     order_index: 0,
+    exam_id: '',
     title_en: '', title_fr: '', title_ms: '', title_ur: '', title_id: '',
     description_en: '', description_fr: '', description_ms: '', description_ur: '', description_id: '',
   });
+  const [allExams, setAllExams] = useState<{id: string; title: string}[]>([]);
 
   // Stats state
   const [totalStudents, setTotalStudents] = useState(0);
