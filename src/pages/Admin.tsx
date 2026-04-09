@@ -1519,7 +1519,7 @@ const Admin = () => {
                     <div className="space-y-3">
                       <Label className="font-bold">الخيارات (اختر الإجابة الصحيحة)</Label>
                       {question.options.map((option, optIndex) => (
-                        <div key={optIndex} className="flex items-center gap-3">
+                        <div key={optIndex} className="flex items-center gap-3 p-2 rounded-xl border border-border bg-muted/30">
                           <input
                             type="radio"
                             name={`correct-${question.id}`}
@@ -1527,12 +1527,33 @@ const Admin = () => {
                             onChange={() => updateQuestion(qIndex, 'correct_answer', optIndex)}
                             className="w-4 h-4 text-primary"
                           />
-                          <Input
-                            value={option}
-                            onChange={(e) => updateQuestionOption(qIndex, optIndex, e.target.value)}
-                            placeholder={`الخيار ${optIndex + 1}`}
-                            className="flex-1 rounded-xl"
-                          />
+                          <div className="flex-1 space-y-2">
+                            <Input
+                              value={typeof option === 'string' ? option : (option as any)?.text || ''}
+                              onChange={(e) => updateQuestionOption(qIndex, optIndex, e.target.value)}
+                              placeholder={`الخيار ${optIndex + 1} (نص)`}
+                              className="flex-1 rounded-xl"
+                            />
+                            <div className="flex items-center gap-2">
+                              <span className="text-xs text-muted-foreground">أو تسجيل صوتي:</span>
+                              <AudioRecorder
+                                audioUrl={typeof option === 'object' && option !== null ? (option as any).audio_url || null : null}
+                                onAudioChange={(url) => {
+                                  const updated = [...quizQuestions];
+                                  const opts = [...updated[qIndex].options];
+                                  const current = opts[optIndex];
+                                  const text = typeof current === 'string' ? current : (current as any)?.text || '';
+                                  if (url) {
+                                    opts[optIndex] = { text, audio_url: url } as any;
+                                  } else {
+                                    opts[optIndex] = text;
+                                  }
+                                  updated[qIndex].options = opts;
+                                  setQuizQuestions(updated);
+                                }}
+                              />
+                            </div>
+                          </div>
                           {question.correct_answer === optIndex && (
                             <Badge className="bg-emerald-500/20 text-emerald-600 border-emerald-500/30">
                               صحيح

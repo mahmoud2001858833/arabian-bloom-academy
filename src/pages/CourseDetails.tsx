@@ -49,6 +49,7 @@ interface Lesson {
   duration_minutes: number | null;
   order_index: number;
   exam_id: string | null;
+  is_free_preview: boolean;
 }
 
 interface LessonProgress {
