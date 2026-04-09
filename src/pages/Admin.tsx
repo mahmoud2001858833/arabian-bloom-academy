@@ -1376,6 +1376,18 @@ const Admin = () => {
               )}
             </div>
 
+            {/* Free Preview Toggle */}
+            <div className="flex items-center gap-3 p-3 rounded-xl border border-border bg-muted/30">
+              <Switch 
+                checked={lessonForm.is_free_preview} 
+                onCheckedChange={(checked) => setLessonForm({ ...lessonForm, is_free_preview: checked })}
+              />
+              <div>
+                <Label className="font-bold">معاينة مجانية</Label>
+                <p className="text-xs text-muted-foreground">اجعل هذا الدرس متاحاً للجميع قبل الدفع</p>
+              </div>
+            </div>
+
             {/* Exam Linking */}
             <div className="grid gap-2">
               <Label className="font-bold">ربط امتحان بالدرس (اختياري)</Label>
