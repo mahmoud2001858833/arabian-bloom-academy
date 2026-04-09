@@ -309,7 +309,7 @@ const CourseDetails = () => {
               <Card className="overflow-hidden bg-card/50 backdrop-blur-sm border-border/50">
                 <CardContent className="p-0">
                   {/* التحقق من الاشتراك قبل عرض الفيديو */}
-                  {isEnrolled || course.is_free ? (
+                  {isEnrolled || course.is_free || selectedLesson?.is_free_preview ? (
                     selectedLesson?.video_url ? (
                       <VideoPlayer 
                         videoKey={selectedLesson.video_url} 
