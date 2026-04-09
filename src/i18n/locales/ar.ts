@@ -329,6 +329,22 @@ export const ar = {
     typeMessage: 'اكتب رسالتك...',
   },
 
+  // Reviews
+  reviews: {
+    badge: 'آراء الطلاب',
+    title: 'ماذا يقول طلابنا',
+    subtitle: 'اطلع على تجارب طلابنا مع المنصة',
+    reviewsCount: 'تقييم',
+    noReviews: 'لا توجد تقييمات بعد. كن أول من يقيّم!',
+    addReview: 'أضف تقييمك',
+    editReview: 'تعديل تقييمك',
+    commentPlaceholder: 'شاركنا رأيك في المنصة...',
+    thankYou: 'شكراً لك!',
+    reviewSaved: 'تم حفظ تقييمك بنجاح',
+    anonymous: 'مستخدم',
+    reviews: 'التقييمات',
+  },
+
   // Exams
   exams: {
     badge: 'امتحانات إلكترونية',
@@ -357,5 +373,11 @@ export const ar = {
     retakeExam: 'إعادة الامتحان',
     loginRequired: 'يجب تسجيل الدخول لتقديم الامتحان',
     examNotFound: 'الامتحان غير موجود',
+    viewCorrectAnswers: 'مشاهدة الإجابات الصحيحة',
+    hideCorrectAnswers: 'إخفاء الإجابات الصحيحة',
+    correctAnswer: 'الإجابة الصحيحة',
+    yourAnswer: 'إجابتك',
+    linkedExam: 'امتحان مرتبط',
+    takeExam: 'ابدأ الامتحان',
   },
 };

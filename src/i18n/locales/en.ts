@@ -329,6 +329,22 @@ export const en = {
     typeMessage: 'Type your message...',
   },
 
+  // Reviews
+  reviews: {
+    badge: 'Student Reviews',
+    title: 'What Our Students Say',
+    subtitle: 'See the experiences of our students with the platform',
+    reviewsCount: 'reviews',
+    noReviews: 'No reviews yet. Be the first to review!',
+    addReview: 'Add Your Review',
+    editReview: 'Edit Your Review',
+    commentPlaceholder: 'Share your opinion about the platform...',
+    thankYou: 'Thank You!',
+    reviewSaved: 'Your review has been saved successfully',
+    anonymous: 'User',
+    reviews: 'Reviews',
+  },
+
   // Exams
   exams: {
     badge: 'Electronic Exams',
@@ -357,5 +373,11 @@ export const en = {
     retakeExam: 'Retake Exam',
     loginRequired: 'Login required to take exams',
     examNotFound: 'Exam not found',
+    viewCorrectAnswers: 'View Correct Answers',
+    hideCorrectAnswers: 'Hide Correct Answers',
+    correctAnswer: 'Correct Answer',
+    yourAnswer: 'Your Answer',
+    linkedExam: 'Linked Exam',
+    takeExam: 'Take Exam',
   },
 };
