@@ -126,6 +126,7 @@ const Admin = () => {
     duration_minutes: 0,
     order_index: 0,
     exam_id: '',
+    is_free_preview: false,
     title_en: '', title_fr: '', title_ms: '', title_ur: '', title_id: '',
     description_en: '', description_fr: '', description_ms: '', description_ur: '', description_id: '',
   });
