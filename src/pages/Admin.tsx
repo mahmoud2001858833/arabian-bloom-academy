@@ -477,6 +477,7 @@ const Admin = () => {
       duration_minutes: lesson.duration_minutes,
       order_index: lesson.order_index,
       exam_id: (lesson as any).exam_id || '',
+      is_free_preview: !!(lesson as any).is_free_preview,
       title_en: lesson.title_en || '', title_fr: lesson.title_fr || '', title_ms: lesson.title_ms || '',
       title_ur: lesson.title_ur || '', title_id: lesson.title_id || '',
       description_en: lesson.description_en || '', description_fr: lesson.description_fr || '', description_ms: lesson.description_ms || '',
@@ -490,7 +491,7 @@ const Admin = () => {
     if (!selectedCourse) return;
     setLessonForm({
       id: '', course_id: selectedCourse.id, title: '', description: '', video_url: '', pdf_url: '', duration_minutes: 0, order_index: lessons.length,
-      exam_id: '',
+      exam_id: '', is_free_preview: false,
       ...i18nFields,
     });
     fetchAllExams();
