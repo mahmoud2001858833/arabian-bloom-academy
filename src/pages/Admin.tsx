@@ -604,7 +604,12 @@ const Admin = () => {
 
   const updateQuestionOption = (qIndex: number, optIndex: number, value: string) => {
     const updated = [...quizQuestions];
-    updated[qIndex].options[optIndex] = value;
+    const current = updated[qIndex].options[optIndex];
+    if (typeof current === 'object' && current !== null) {
+      updated[qIndex].options[optIndex] = { ...(current as any), text: value };
+    } else {
+      updated[qIndex].options[optIndex] = value;
+    }
     setQuizQuestions(updated);
   };
 
