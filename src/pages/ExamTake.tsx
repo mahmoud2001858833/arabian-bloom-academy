@@ -77,6 +77,7 @@ const ExamTake = () => {
   const [score, setScore] = useState(0);
   const [passed, setPassed] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [showAnswers, setShowAnswers] = useState(false);
 
   useEffect(() => {
     if (!user) {
@@ -249,7 +250,6 @@ const ExamTake = () => {
 
   // Results screen
   if (examFinished) {
-    const [showAnswers, setShowAnswers] = useState(false);
 
     return (
       <PageTransition>
