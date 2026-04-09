@@ -474,11 +474,13 @@ const Admin = () => {
       pdf_url: lesson.pdf_url || '',
       duration_minutes: lesson.duration_minutes,
       order_index: lesson.order_index,
+      exam_id: (lesson as any).exam_id || '',
       title_en: lesson.title_en || '', title_fr: lesson.title_fr || '', title_ms: lesson.title_ms || '',
       title_ur: lesson.title_ur || '', title_id: lesson.title_id || '',
       description_en: lesson.description_en || '', description_fr: lesson.description_fr || '', description_ms: lesson.description_ms || '',
       description_ur: lesson.description_ur || '', description_id: lesson.description_id || '',
     });
+    fetchAllExams();
     setShowLessonDialog(true);
   };
 
@@ -486,9 +488,16 @@ const Admin = () => {
     if (!selectedCourse) return;
     setLessonForm({
       id: '', course_id: selectedCourse.id, title: '', description: '', video_url: '', pdf_url: '', duration_minutes: 0, order_index: lessons.length,
+      exam_id: '',
       ...i18nFields,
     });
+    fetchAllExams();
     setShowLessonDialog(true);
+  };
+
+  const fetchAllExams = async () => {
+    const { data } = await supabase.from('exams').select('id, title').order('title');
+    setAllExams(data || []);
   };
 
   // Scroll functions for courses list
