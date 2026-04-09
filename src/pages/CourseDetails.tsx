@@ -25,9 +25,11 @@ import {
   ChevronLeft,
   Lock,
   GraduationCap,
-  CreditCard
+  CreditCard,
+  FileText
 } from 'lucide-react';
 import { toast } from 'sonner';
+import { Link } from 'react-router-dom';
 
 interface Course {
   id: string;
@@ -46,6 +48,7 @@ interface Lesson {
   video_url: string | null;
   duration_minutes: number | null;
   order_index: number;
+  exam_id: string | null;
 }
 
 interface LessonProgress {
