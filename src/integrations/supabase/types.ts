@@ -383,6 +383,7 @@ export type Database = {
           duration_minutes: number | null
           exam_id: string | null
           id: string
+          is_free_preview: boolean
           order_index: number
           pdf_url: string | null
           title: string
@@ -406,6 +407,7 @@ export type Database = {
           duration_minutes?: number | null
           exam_id?: string | null
           id?: string
+          is_free_preview?: boolean
           order_index?: number
           pdf_url?: string | null
           title: string
@@ -429,6 +431,7 @@ export type Database = {
           duration_minutes?: number | null
           exam_id?: string | null
           id?: string
+          is_free_preview?: boolean
           order_index?: number
           pdf_url?: string | null
           title?: string

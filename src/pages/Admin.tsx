@@ -126,6 +126,7 @@ const Admin = () => {
     duration_minutes: 0,
     order_index: 0,
     exam_id: '',
+    is_free_preview: false,
     title_en: '', title_fr: '', title_ms: '', title_ur: '', title_id: '',
     description_en: '', description_fr: '', description_ms: '', description_ur: '', description_id: '',
   });
@@ -367,6 +368,7 @@ const Admin = () => {
       pdf_url: lessonForm.pdf_url || null,
       duration_minutes: lessonForm.duration_minutes,
       exam_id: lessonForm.exam_id || null,
+      is_free_preview: lessonForm.is_free_preview,
       title_en: lessonForm.title_en || null, title_fr: lessonForm.title_fr || null,
       title_ms: lessonForm.title_ms || null, title_ur: lessonForm.title_ur || null, title_id: lessonForm.title_id || null,
       description_en: lessonForm.description_en || null, description_fr: lessonForm.description_fr || null,
@@ -476,6 +478,7 @@ const Admin = () => {
       duration_minutes: lesson.duration_minutes,
       order_index: lesson.order_index,
       exam_id: (lesson as any).exam_id || '',
+      is_free_preview: !!(lesson as any).is_free_preview,
       title_en: lesson.title_en || '', title_fr: lesson.title_fr || '', title_ms: lesson.title_ms || '',
       title_ur: lesson.title_ur || '', title_id: lesson.title_id || '',
       description_en: lesson.description_en || '', description_fr: lesson.description_fr || '', description_ms: lesson.description_ms || '',
@@ -489,7 +492,7 @@ const Admin = () => {
     if (!selectedCourse) return;
     setLessonForm({
       id: '', course_id: selectedCourse.id, title: '', description: '', video_url: '', pdf_url: '', duration_minutes: 0, order_index: lessons.length,
-      exam_id: '',
+      exam_id: '', is_free_preview: false,
       ...i18nFields,
     });
     fetchAllExams();
@@ -601,7 +604,12 @@ const Admin = () => {
 
   const updateQuestionOption = (qIndex: number, optIndex: number, value: string) => {
     const updated = [...quizQuestions];
-    updated[qIndex].options[optIndex] = value;
+    const current = updated[qIndex].options[optIndex];
+    if (typeof current === 'object' && current !== null) {
+      updated[qIndex].options[optIndex] = { ...(current as any), text: value };
+    } else {
+      updated[qIndex].options[optIndex] = value;
+    }
     setQuizQuestions(updated);
   };
 
@@ -1373,6 +1381,18 @@ const Admin = () => {
               )}
             </div>
 
+            {/* Free Preview Toggle */}
+            <div className="flex items-center gap-3 p-3 rounded-xl border border-border bg-muted/30">
+              <Switch 
+                checked={lessonForm.is_free_preview} 
+                onCheckedChange={(checked) => setLessonForm({ ...lessonForm, is_free_preview: checked })}
+              />
+              <div>
+                <Label className="font-bold">معاينة مجانية</Label>
+                <p className="text-xs text-muted-foreground">اجعل هذا الدرس متاحاً للجميع قبل الدفع</p>
+              </div>
+            </div>
+
             {/* Exam Linking */}
             <div className="grid gap-2">
               <Label className="font-bold">ربط امتحان بالدرس (اختياري)</Label>
@@ -1504,7 +1524,7 @@ const Admin = () => {
                     <div className="space-y-3">
                       <Label className="font-bold">الخيارات (اختر الإجابة الصحيحة)</Label>
                       {question.options.map((option, optIndex) => (
-                        <div key={optIndex} className="flex items-center gap-3">
+                        <div key={optIndex} className="flex items-center gap-3 p-2 rounded-xl border border-border bg-muted/30">
                           <input
                             type="radio"
                             name={`correct-${question.id}`}
@@ -1512,12 +1532,33 @@ const Admin = () => {
                             onChange={() => updateQuestion(qIndex, 'correct_answer', optIndex)}
                             className="w-4 h-4 text-primary"
                           />
-                          <Input
-                            value={option}
-                            onChange={(e) => updateQuestionOption(qIndex, optIndex, e.target.value)}
-                            placeholder={`الخيار ${optIndex + 1}`}
-                            className="flex-1 rounded-xl"
-                          />
+                          <div className="flex-1 space-y-2">
+                            <Input
+                              value={typeof option === 'string' ? option : (option as any)?.text || ''}
+                              onChange={(e) => updateQuestionOption(qIndex, optIndex, e.target.value)}
+                              placeholder={`الخيار ${optIndex + 1} (نص)`}
+                              className="flex-1 rounded-xl"
+                            />
+                            <div className="flex items-center gap-2">
+                              <span className="text-xs text-muted-foreground">أو تسجيل صوتي:</span>
+                              <AudioRecorder
+                                audioUrl={typeof option === 'object' && option !== null ? (option as any).audio_url || null : null}
+                                onAudioChange={(url) => {
+                                  const updated = [...quizQuestions];
+                                  const opts = [...updated[qIndex].options];
+                                  const current = opts[optIndex];
+                                  const text = typeof current === 'string' ? current : (current as any)?.text || '';
+                                  if (url) {
+                                    opts[optIndex] = { text, audio_url: url } as any;
+                                  } else {
+                                    opts[optIndex] = text;
+                                  }
+                                  updated[qIndex].options = opts;
+                                  setQuizQuestions(updated);
+                                }}
+                              />
+                            </div>
+                          </div>
                           {question.correct_answer === optIndex && (
                             <Badge className="bg-emerald-500/20 text-emerald-600 border-emerald-500/30">
                               صحيح

@@ -1,0 +1,1 @@
+ALTER TABLE public.lessons ADD COLUMN is_free_preview boolean NOT NULL DEFAULT false;
