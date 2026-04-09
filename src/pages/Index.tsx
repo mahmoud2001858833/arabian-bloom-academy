@@ -3,6 +3,7 @@ import Footer from '@/components/layout/Footer';
 import HeroSection from '@/components/home/HeroSection';
 import FeaturedCourses from '@/components/home/FeaturedCourses';
 import WhyUs from '@/components/home/WhyUs';
+import ReviewsSection from '@/components/home/ReviewsSection';
 import PageTransition from '@/components/layout/PageTransition';
 
 const Index = () => {
@@ -13,6 +14,7 @@ const Index = () => {
         <main className="flex-1 pt-24">
           <HeroSection />
           <FeaturedCourses />
+          <ReviewsSection />
           <WhyUs />
         </main>
         <Footer />

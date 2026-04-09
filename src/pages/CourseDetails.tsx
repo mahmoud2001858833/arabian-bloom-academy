@@ -25,9 +25,11 @@ import {
   ChevronLeft,
   Lock,
   GraduationCap,
-  CreditCard
+  CreditCard,
+  FileText
 } from 'lucide-react';
 import { toast } from 'sonner';
+import { Link } from 'react-router-dom';
 
 interface Course {
   id: string;
@@ -46,6 +48,7 @@ interface Lesson {
   video_url: string | null;
   duration_minutes: number | null;
   order_index: number;
+  exam_id: string | null;
 }
 
 interface LessonProgress {
@@ -366,6 +369,21 @@ const CourseDetails = () => {
                       <div className="flex items-center gap-2 mt-4 text-sm text-muted-foreground">
                         <Clock className="w-4 h-4" />
                         <span>{selectedLesson.duration_minutes} {t('courseDetails.minute')}</span>
+                      </div>
+                    )}
+                    {selectedLesson.exam_id && (
+                      <div className="mt-4 p-3 bg-accent/10 rounded-xl border border-accent/20">
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center gap-2 text-accent font-bold text-sm">
+                            <FileText className="w-4 h-4" />
+                            {t('exams.linkedExam')}
+                          </div>
+                          <Button size="sm" variant="gold" className="rounded-lg" asChild>
+                            <Link to={`/exams/${selectedLesson.exam_id}`}>
+                              {t('exams.takeExam')}
+                            </Link>
+                          </Button>
+                        </div>
                       </div>
                     )}
                   </CardContent>

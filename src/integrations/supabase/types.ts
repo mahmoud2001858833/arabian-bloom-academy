@@ -381,6 +381,7 @@ export type Database = {
           description_ms: string | null
           description_ur: string | null
           duration_minutes: number | null
+          exam_id: string | null
           id: string
           order_index: number
           pdf_url: string | null
@@ -403,6 +404,7 @@ export type Database = {
           description_ms?: string | null
           description_ur?: string | null
           duration_minutes?: number | null
+          exam_id?: string | null
           id?: string
           order_index?: number
           pdf_url?: string | null
@@ -425,6 +427,7 @@ export type Database = {
           description_ms?: string | null
           description_ur?: string | null
           duration_minutes?: number | null
+          exam_id?: string | null
           id?: string
           order_index?: number
           pdf_url?: string | null
@@ -443,6 +446,13 @@ export type Database = {
             columns: ["course_id"]
             isOneToOne: false
             referencedRelation: "courses"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "lessons_exam_id_fkey"
+            columns: ["exam_id"]
+            isOneToOne: false
+            referencedRelation: "exams"
             referencedColumns: ["id"]
           },
         ]
@@ -702,6 +712,36 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      reviews: {
+        Row: {
+          comment: string | null
+          created_at: string
+          id: string
+          is_approved: boolean
+          rating: number
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          comment?: string | null
+          created_at?: string
+          id?: string
+          is_approved?: boolean
+          rating: number
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          comment?: string | null
+          created_at?: string
+          id?: string
+          is_approved?: boolean
+          rating?: number
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
       }
       site_settings: {
         Row: {

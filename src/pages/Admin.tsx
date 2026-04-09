@@ -125,9 +125,11 @@ const Admin = () => {
     pdf_url: '',
     duration_minutes: 0,
     order_index: 0,
+    exam_id: '',
     title_en: '', title_fr: '', title_ms: '', title_ur: '', title_id: '',
     description_en: '', description_fr: '', description_ms: '', description_ur: '', description_id: '',
   });
+  const [allExams, setAllExams] = useState<{id: string; title: string}[]>([]);
 
   // Stats state
   const [totalStudents, setTotalStudents] = useState(0);
@@ -364,6 +366,7 @@ const Admin = () => {
       video_url: lessonForm.video_url,
       pdf_url: lessonForm.pdf_url || null,
       duration_minutes: lessonForm.duration_minutes,
+      exam_id: lessonForm.exam_id || null,
       title_en: lessonForm.title_en || null, title_fr: lessonForm.title_fr || null,
       title_ms: lessonForm.title_ms || null, title_ur: lessonForm.title_ur || null, title_id: lessonForm.title_id || null,
       description_en: lessonForm.description_en || null, description_fr: lessonForm.description_fr || null,
@@ -472,11 +475,13 @@ const Admin = () => {
       pdf_url: lesson.pdf_url || '',
       duration_minutes: lesson.duration_minutes,
       order_index: lesson.order_index,
+      exam_id: (lesson as any).exam_id || '',
       title_en: lesson.title_en || '', title_fr: lesson.title_fr || '', title_ms: lesson.title_ms || '',
       title_ur: lesson.title_ur || '', title_id: lesson.title_id || '',
       description_en: lesson.description_en || '', description_fr: lesson.description_fr || '', description_ms: lesson.description_ms || '',
       description_ur: lesson.description_ur || '', description_id: lesson.description_id || '',
     });
+    fetchAllExams();
     setShowLessonDialog(true);
   };
 
@@ -484,9 +489,16 @@ const Admin = () => {
     if (!selectedCourse) return;
     setLessonForm({
       id: '', course_id: selectedCourse.id, title: '', description: '', video_url: '', pdf_url: '', duration_minutes: 0, order_index: lessons.length,
+      exam_id: '',
       ...i18nFields,
     });
+    fetchAllExams();
     setShowLessonDialog(true);
+  };
+
+  const fetchAllExams = async () => {
+    const { data } = await supabase.from('exams').select('id, title').order('title');
+    setAllExams(data || []);
   };
 
   // Scroll functions for courses list
@@ -1359,6 +1371,22 @@ const Admin = () => {
                   </div>
                 </div>
               )}
+            </div>
+
+            {/* Exam Linking */}
+            <div className="grid gap-2">
+              <Label className="font-bold">ربط امتحان بالدرس (اختياري)</Label>
+              <Select value={lessonForm.exam_id || 'none'} onValueChange={(v) => setLessonForm({ ...lessonForm, exam_id: v === 'none' ? '' : v })}>
+                <SelectTrigger className="rounded-xl border-border">
+                  <SelectValue placeholder="اختر امتحان..." />
+                </SelectTrigger>
+                <SelectContent className="bg-card border-border">
+                  <SelectItem value="none">بدون امتحان</SelectItem>
+                  {allExams.map(exam => (
+                    <SelectItem key={exam.id} value={exam.id}>{exam.title}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
 
             {/* Auto Translation Button */}

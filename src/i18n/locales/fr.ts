@@ -335,6 +335,22 @@ export const fr = {
     typeMessage: 'Tapez votre message...',
   },
 
+  // Reviews
+  reviews: {
+    badge: 'Avis des Étudiants',
+    title: 'Ce Que Disent Nos Étudiants',
+    subtitle: 'Découvrez les expériences de nos étudiants avec la plateforme',
+    reviewsCount: 'avis',
+    noReviews: "Pas encore d'avis. Soyez le premier!",
+    addReview: 'Ajouter Votre Avis',
+    editReview: 'Modifier Votre Avis',
+    commentPlaceholder: 'Partagez votre opinion sur la plateforme...',
+    thankYou: 'Merci!',
+    reviewSaved: 'Votre avis a été enregistré avec succès',
+    anonymous: 'Utilisateur',
+    reviews: 'Avis',
+  },
+
   // Exams
   exams: {
     badge: 'Examens Électroniques',
@@ -363,5 +379,11 @@ export const fr = {
     retakeExam: "Repasser l'Examen",
     loginRequired: 'Connexion requise pour passer les examens',
     examNotFound: 'Examen non trouvé',
+    viewCorrectAnswers: 'Voir les Réponses Correctes',
+    hideCorrectAnswers: 'Masquer les Réponses Correctes',
+    correctAnswer: 'Réponse Correcte',
+    yourAnswer: 'Votre Réponse',
+    linkedExam: 'Examen Lié',
+    takeExam: "Passer l'Examen",
   },
 };
