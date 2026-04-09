@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { ArrowRight, Clock, CheckCircle, XCircle, AlertTriangle, Volume2, Pause } from 'lucide-react';
+import { ArrowRight, Clock, CheckCircle, XCircle, AlertTriangle, Volume2, Pause, Eye, EyeOff } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -249,12 +249,14 @@ const ExamTake = () => {
 
   // Results screen
   if (examFinished) {
+    const [showAnswers, setShowAnswers] = useState(false);
+
     return (
       <PageTransition>
         <div className="min-h-screen flex flex-col bg-gradient-to-br from-purple-50/50 via-white to-purple-100/30">
           <Navbar />
           <main className="flex-1 pt-24 pb-16">
-            <div className="container mx-auto px-4 max-w-2xl">
+            <div className="container mx-auto px-4 max-w-3xl">
               <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }}>
                 <Card className="border-primary/20 shadow-xl rounded-3xl overflow-hidden text-center">
                   <CardContent className="p-8 space-y-6">
@@ -280,9 +282,17 @@ const ExamTake = () => {
                       {t('exams.passingScore')}: {exam.passing_score}%
                     </p>
 
-                    <div className="flex gap-4 justify-center pt-4">
+                    <div className="flex gap-4 justify-center pt-4 flex-wrap">
                       <Button onClick={() => navigate('/exams')} variant="outline" className="rounded-xl">
                         {t('exams.backToExams')}
+                      </Button>
+                      <Button
+                        onClick={() => setShowAnswers(!showAnswers)}
+                        variant="outline"
+                        className="rounded-xl gap-2"
+                      >
+                        {showAnswers ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                        {showAnswers ? t('exams.hideCorrectAnswers') : t('exams.viewCorrectAnswers')}
                       </Button>
                       <Button
                         onClick={() => {
@@ -299,6 +309,51 @@ const ExamTake = () => {
                     </div>
                   </CardContent>
                 </Card>
+
+                {/* Correct Answers Section */}
+                {showAnswers && (
+                  <div className="mt-6 space-y-4">
+                    {questions.map((q, i) => {
+                      const userAnswer = answers[q.id];
+                      const isCorrect = userAnswer === q.correct_answer;
+                      return (
+                        <Card key={q.id} className={`border-2 rounded-2xl ${isCorrect ? 'border-emerald-500/30' : 'border-red-500/30'}`}>
+                          <CardContent className="p-5 space-y-3">
+                            <div className="flex items-start gap-3">
+                              <div className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 ${isCorrect ? 'bg-emerald-100 text-emerald-600' : 'bg-red-100 text-red-600'}`}>
+                                {isCorrect ? <CheckCircle className="h-4 w-4" /> : <XCircle className="h-4 w-4" />}
+                              </div>
+                              <div className="flex-1">
+                                <p className="font-bold text-foreground">{i + 1}. {q.question}</p>
+                                {q.audio_url && <AudioPlayer src={q.audio_url} />}
+                              </div>
+                            </div>
+                            <div className="space-y-2 mr-11">
+                              {(q.options as any[]).map((opt, oi) => {
+                                const optText = typeof opt === 'string' ? opt : opt?.text || '';
+                                const isCorrectOpt = oi === q.correct_answer;
+                                const isUserOpt = oi === userAnswer;
+                                return (
+                                  <div key={oi} className={`flex items-center gap-2 p-2 rounded-xl text-sm ${
+                                    isCorrectOpt ? 'bg-emerald-50 text-emerald-700 font-bold' : 
+                                    isUserOpt && !isCorrectOpt ? 'bg-red-50 text-red-700 line-through' : 'text-muted-foreground'
+                                  }`}>
+                                    <span className="w-6 h-6 rounded-full flex items-center justify-center text-xs bg-muted">
+                                      {String.fromCharCode(65 + oi)}
+                                    </span>
+                                    {optText}
+                                    {isCorrectOpt && <Badge className="bg-emerald-500/20 text-emerald-600 border-0 text-xs mr-auto">{t('exams.correctAnswer')}</Badge>}
+                                    {isUserOpt && !isCorrectOpt && <Badge className="bg-red-500/20 text-red-600 border-0 text-xs mr-auto">{t('exams.yourAnswer')}</Badge>}
+                                  </div>
+                                );
+                              })}
+                            </div>
+                          </CardContent>
+                        </Card>
+                      );
+                    })}
+                  </div>
+                )}
               </motion.div>
             </div>
           </main>
