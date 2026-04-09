@@ -1373,6 +1373,22 @@ const Admin = () => {
               )}
             </div>
 
+            {/* Exam Linking */}
+            <div className="grid gap-2">
+              <Label className="font-bold">ربط امتحان بالدرس (اختياري)</Label>
+              <Select value={lessonForm.exam_id || 'none'} onValueChange={(v) => setLessonForm({ ...lessonForm, exam_id: v === 'none' ? '' : v })}>
+                <SelectTrigger className="rounded-xl border-border">
+                  <SelectValue placeholder="اختر امتحان..." />
+                </SelectTrigger>
+                <SelectContent className="bg-card border-border">
+                  <SelectItem value="none">بدون امتحان</SelectItem>
+                  {allExams.map(exam => (
+                    <SelectItem key={exam.id} value={exam.id}>{exam.title}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+
             {/* Auto Translation Button */}
             <Button
               type="button"
