@@ -366,6 +366,7 @@ const Admin = () => {
       video_url: lessonForm.video_url,
       pdf_url: lessonForm.pdf_url || null,
       duration_minutes: lessonForm.duration_minutes,
+      exam_id: lessonForm.exam_id || null,
       title_en: lessonForm.title_en || null, title_fr: lessonForm.title_fr || null,
       title_ms: lessonForm.title_ms || null, title_ur: lessonForm.title_ur || null, title_id: lessonForm.title_id || null,
       description_en: lessonForm.description_en || null, description_fr: lessonForm.description_fr || null,
