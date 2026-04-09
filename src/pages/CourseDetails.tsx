@@ -463,75 +463,83 @@ const CourseDetails = () => {
                 </CardContent>
               </Card>
 
-              {/* قائمة الدروس - تظهر فقط بعد الاشتراك */}
-              {(isEnrolled || course.is_free) && (
-                <Card className="bg-card/50 backdrop-blur-sm border-border/50">
-                  <CardHeader>
-                    <CardTitle className="text-lg flex items-center gap-2">
-                      <BookOpen className="w-5 h-5" />
-                      {t('courseDetails.lesson')}
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent className="p-0">
-                    <div className="divide-y divide-border/50">
-                      {lessons.map((lesson, index) => {
-                        const isCompleted = isLessonCompleted(lesson.id);
-                        const isSelected = selectedLesson?.id === lesson.id;
+              {/* قائمة الدروس */}
+              <Card className="bg-card/50 backdrop-blur-sm border-border/50">
+                <CardHeader>
+                  <CardTitle className="text-lg flex items-center gap-2">
+                    <BookOpen className="w-5 h-5" />
+                    {t('courseDetails.lesson')}
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="p-0">
+                  <div className="divide-y divide-border/50">
+                    {lessons.map((lesson, index) => {
+                      const isCompleted = isLessonCompleted(lesson.id);
+                      const isSelected = selectedLesson?.id === lesson.id;
+                      const canAccess = isEnrolled || course.is_free || lesson.is_free_preview;
 
-                        return (
-                          <button
-                            key={lesson.id}
-                            onClick={() => setSelectedLesson(lesson)}
-                            className={`w-full p-4 text-right transition-colors ${
-                              isSelected 
-                                ? 'bg-accent/10 border-r-2 border-accent' 
-                                : 'hover:bg-muted/50'
-                            } cursor-pointer`}
-                          >
-                            <div className="flex items-center gap-3">
-                              <div className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 ${
-                                isCompleted 
-                                  ? 'bg-green-500/20 text-green-400' 
-                                  : isSelected 
-                                    ? 'bg-accent/20 text-accent'
-                                    : 'bg-muted text-muted-foreground'
+                      return (
+                        <button
+                          key={lesson.id}
+                          onClick={() => canAccess && setSelectedLesson(lesson)}
+                          className={`w-full p-4 text-right transition-colors ${
+                            isSelected 
+                              ? 'bg-accent/10 border-r-2 border-accent' 
+                              : canAccess ? 'hover:bg-muted/50' : 'opacity-60'
+                          } ${canAccess ? 'cursor-pointer' : 'cursor-not-allowed'}`}
+                        >
+                          <div className="flex items-center gap-3">
+                            <div className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 ${
+                              isCompleted 
+                                ? 'bg-green-500/20 text-green-400' 
+                                : isSelected 
+                                  ? 'bg-accent/20 text-accent'
+                                  : 'bg-muted text-muted-foreground'
+                            }`}>
+                              {isCompleted ? (
+                                <CheckCircle className="w-4 h-4" />
+                              ) : !canAccess ? (
+                                <Lock className="w-4 h-4" />
+                              ) : (
+                                <span className="text-sm font-medium">{index + 1}</span>
+                              )}
+                            </div>
+                            <div className="flex-1 min-w-0">
+                              <h4 className={`font-medium truncate ${
+                                isSelected ? 'text-accent' : ''
                               }`}>
-                                {isCompleted ? (
-                                  <CheckCircle className="w-4 h-4" />
-                                ) : (
-                                  <span className="text-sm font-medium">{index + 1}</span>
-                                )}
-                              </div>
-                              <div className="flex-1 min-w-0">
-                                <h4 className={`font-medium truncate ${
-                                  isSelected ? 'text-accent' : ''
-                                }`}>
-                                  {getLocalizedField(lesson, 'title', language)}
-                                </h4>
+                                {getLocalizedField(lesson, 'title', language)}
+                              </h4>
+                              <div className="flex items-center gap-2 mt-1">
                                 {lesson.duration_minutes && (
-                                  <p className="text-xs text-muted-foreground mt-1">
+                                  <p className="text-xs text-muted-foreground">
                                     {lesson.duration_minutes} {t('courseDetails.minute')}
                                   </p>
                                 )}
+                                {lesson.is_free_preview && !isEnrolled && !course.is_free && (
+                                  <Badge variant="outline" className="text-[10px] px-1.5 py-0 bg-primary/10 text-primary border-primary/30">
+                                    معاينة مجانية
+                                  </Badge>
+                                )}
                               </div>
-                              {isSelected && lesson.video_url && (
-                                <PlayCircle className="w-5 h-5 text-accent flex-shrink-0" />
-                              )}
                             </div>
-                          </button>
-                        );
-                      })}
-                    </div>
+                            {isSelected && lesson.video_url && canAccess && (
+                              <PlayCircle className="w-5 h-5 text-accent flex-shrink-0" />
+                            )}
+                          </div>
+                        </button>
+                      );
+                    })}
+                  </div>
 
-                    {lessons.length === 0 && (
-                      <div className="p-8 text-center text-muted-foreground">
-                        <BookOpen className="w-12 h-12 mx-auto mb-3 opacity-50" />
-                        <p>{t('courses.noCourses')}</p>
-                      </div>
-                    )}
-                  </CardContent>
-                </Card>
-              )}
+                  {lessons.length === 0 && (
+                    <div className="p-8 text-center text-muted-foreground">
+                      <BookOpen className="w-12 h-12 mx-auto mb-3 opacity-50" />
+                      <p>{t('courses.noCourses')}</p>
+                    </div>
+                  )}
+                </CardContent>
+              </Card>
             </div>
           </div>
         </main>
