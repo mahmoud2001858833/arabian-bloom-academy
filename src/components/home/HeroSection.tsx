@@ -112,6 +112,17 @@ const HeroSection = () => {
                 </Link>
               </Button>
               
+              <Button
+                size="lg"
+                className="text-lg px-8 py-7 rounded-2xl font-bold bg-gradient-to-r from-yellow-500 to-amber-500 text-white hover:from-yellow-600 hover:to-amber-600 transition-all hover:scale-105 shadow-lg shadow-amber-500/25 group"
+                asChild
+              >
+                <Link to="/offers">
+                  <span className="ml-3 text-xl">🎁</span>
+                  {t('offers.title')}
+                </Link>
+              </Button>
+              
               {hasIntroVideo && (
                 <Button
                   size="lg"

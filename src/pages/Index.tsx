@@ -4,6 +4,7 @@ import HeroSection from '@/components/home/HeroSection';
 import FeaturedCourses from '@/components/home/FeaturedCourses';
 import WhyUs from '@/components/home/WhyUs';
 import ReviewsSection from '@/components/home/ReviewsSection';
+import AnnouncementBar from '@/components/home/AnnouncementBar';
 import PageTransition from '@/components/layout/PageTransition';
 
 const Index = () => {
@@ -11,6 +12,7 @@ const Index = () => {
     <PageTransition>
       <div className="min-h-screen flex flex-col bg-gradient-to-br from-purple-50/50 via-white to-purple-100/30">
         <Navbar />
+        <AnnouncementBar />
         <main className="flex-1 pt-24">
           <HeroSection />
           <FeaturedCourses />

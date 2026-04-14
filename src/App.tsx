@@ -23,6 +23,8 @@ import Privacy from "./pages/Privacy";
 import Terms from "./pages/Terms";
 import IntroVideo from "./pages/IntroVideo";
 import Reviews from "./pages/Reviews";
+import Offers from "./pages/Offers";
+import Books from "./pages/Books";
 
 // Create query client instance
 const queryClient = new QueryClient({
@@ -62,6 +64,8 @@ function App() {
                 <Route path="/terms" element={<Terms />} />
                 <Route path="/intro-video" element={<IntroVideo />} />
                 <Route path="/reviews" element={<Reviews />} />
+                <Route path="/offers" element={<Offers />} />
+                <Route path="/books" element={<Books />} />
                 <Route path="*" element={<NotFound />} />
               </Routes>
               <AIGuide />

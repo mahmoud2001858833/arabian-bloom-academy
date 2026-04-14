@@ -33,6 +33,8 @@ const Navbar = () => {
     { href: '/', label: t('nav.home') },
     { href: '/courses', label: t('nav.courses') },
     { href: '/exams', label: t('nav.exams') },
+    { href: '/books', label: t('nav.books') },
+    { href: '/offers', label: t('nav.offers') },
     { href: '/blog', label: t('nav.blog') },
     { href: '/reviews', label: t('reviews.reviews') },
     { href: '/about', label: t('nav.about') },

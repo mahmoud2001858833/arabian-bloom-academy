@@ -14,6 +14,8 @@ export const fr = {
     profile: 'Profil',
     logout: 'Déconnexion',
     user: 'Utilisateur',
+    books: 'Books',
+    offers: 'Offers',
   },
 
   // Auth
@@ -385,5 +387,21 @@ export const fr = {
     yourAnswer: 'Votre Réponse',
     linkedExam: 'Examen Lié',
     takeExam: "Passer l'Examen",
+  },
+  offers: {
+    badge: "Offers",
+    title: "Offers",
+    subtitle: "Check out the latest offers",
+    noOffers: "No offers available",
+    watchVideo: "Watch Video",
+  },
+  books: {
+    badge: "Digital Library",
+    title: "Books",
+    subtitle: "Discover our digital books",
+    noBooks: "No books available",
+    buy: "Buy",
+    download: "Download",
+    purchaseSuccess: "Book purchased successfully!",
   },
 };

@@ -52,6 +52,7 @@ const Exams = () => {
 
   const fetchExams = async () => {
     try {
+      // Get exams that are published
       const { data, error } = await supabase
         .from('exams')
         .select('*')
@@ -59,7 +60,14 @@ const Exams = () => {
         .order('created_at', { ascending: false });
 
       if (!error && data) {
-        setExams(data);
+        // Filter out exams linked to lessons
+        const { data: linkedExamIds } = await supabase
+          .from('lessons')
+          .select('exam_id')
+          .not('exam_id', 'is', null);
+        
+        const linkedIds = new Set((linkedExamIds || []).map(l => l.exam_id));
+        setExams(data.filter(exam => !linkedIds.has(exam.id)));
       }
     } catch (error) {
       console.error('Error:', error);

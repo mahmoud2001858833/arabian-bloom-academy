@@ -70,7 +70,8 @@ const Courses = () => {
       const { data, error } = await supabase
         .from('courses')
         .select('*')
-        .eq('is_published', true);
+        .eq('is_published', true)
+        .order('sort_order', { ascending: true });
 
       if (error) {
         console.error('Error fetching courses:', error);

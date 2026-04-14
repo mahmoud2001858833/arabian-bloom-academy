@@ -14,6 +14,8 @@ export const ms = {
     profile: 'Profil',
     logout: 'Log Keluar',
     user: 'Pengguna',
+    books: 'Books',
+    offers: 'Offers',
   },
 
   // Auth
@@ -354,5 +356,21 @@ export const ms = {
     loginRequired: 'Log masuk diperlukan untuk menduduki peperiksaan', examNotFound: 'Peperiksaan tidak ditemui',
     viewCorrectAnswers: 'Lihat Jawapan Betul', hideCorrectAnswers: 'Sembunyikan Jawapan Betul',
     correctAnswer: 'Jawapan Betul', yourAnswer: 'Jawapan Anda', linkedExam: 'Peperiksaan Berkaitan', takeExam: 'Ambil Peperiksaan',
+  },
+  offers: {
+    badge: "Offers",
+    title: "Offers",
+    subtitle: "Check out the latest offers",
+    noOffers: "No offers available",
+    watchVideo: "Watch Video",
+  },
+  books: {
+    badge: "Digital Library",
+    title: "Books",
+    subtitle: "Discover our digital books",
+    noBooks: "No books available",
+    buy: "Buy",
+    download: "Download",
+    purchaseSuccess: "Book purchased successfully!",
   },
 };

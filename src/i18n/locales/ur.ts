@@ -14,6 +14,8 @@ export const ur = {
     profile: 'پروفائل',
     logout: 'لاگ آؤٹ',
     user: 'صارف',
+    books: 'Books',
+    offers: 'Offers',
   },
 
   // Auth
@@ -354,5 +356,21 @@ export const ur = {
     loginRequired: 'امتحان دینے کے لیے لاگ ان ضروری ہے', examNotFound: 'امتحان نہیں ملا',
     viewCorrectAnswers: 'صحیح جوابات دیکھیں', hideCorrectAnswers: 'صحیح جوابات چھپائیں',
     correctAnswer: 'صحیح جواب', yourAnswer: 'آپ کا جواب', linkedExam: 'متعلقہ امتحان', takeExam: 'امتحان دیں',
+  },
+  offers: {
+    badge: "Offers",
+    title: "Offers",
+    subtitle: "Check out the latest offers",
+    noOffers: "No offers available",
+    watchVideo: "Watch Video",
+  },
+  books: {
+    badge: "Digital Library",
+    title: "Books",
+    subtitle: "Discover our digital books",
+    noBooks: "No books available",
+    buy: "Buy",
+    download: "Download",
+    purchaseSuccess: "Book purchased successfully!",
   },
 };

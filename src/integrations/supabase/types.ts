@@ -122,9 +122,81 @@ export type Database = {
         }
         Relationships: []
       }
+      book_purchases: {
+        Row: {
+          amount: number
+          book_id: string
+          created_at: string
+          id: string
+          status: string
+          user_id: string
+        }
+        Insert: {
+          amount: number
+          book_id: string
+          created_at?: string
+          id?: string
+          status?: string
+          user_id: string
+        }
+        Update: {
+          amount?: number
+          book_id?: string
+          created_at?: string
+          id?: string
+          status?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "book_purchases_book_id_fkey"
+            columns: ["book_id"]
+            isOneToOne: false
+            referencedRelation: "books"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      books: {
+        Row: {
+          cover_image_url: string | null
+          created_at: string
+          currency: string
+          description: string | null
+          id: string
+          is_published: boolean
+          pdf_url: string | null
+          price: number
+          title: string
+        }
+        Insert: {
+          cover_image_url?: string | null
+          created_at?: string
+          currency?: string
+          description?: string | null
+          id?: string
+          is_published?: boolean
+          pdf_url?: string | null
+          price?: number
+          title: string
+        }
+        Update: {
+          cover_image_url?: string | null
+          created_at?: string
+          currency?: string
+          description?: string | null
+          id?: string
+          is_published?: boolean
+          pdf_url?: string | null
+          price?: number
+          title?: string
+        }
+        Relationships: []
+      }
       courses: {
         Row: {
           created_at: string
+          currency: string
           description: string | null
           description_en: string | null
           description_fr: string | null
@@ -136,6 +208,7 @@ export type Database = {
           is_published: boolean | null
           level: string | null
           price: number | null
+          sort_order: number
           thumbnail_url: string | null
           title: string
           title_en: string | null
@@ -147,6 +220,7 @@ export type Database = {
         }
         Insert: {
           created_at?: string
+          currency?: string
           description?: string | null
           description_en?: string | null
           description_fr?: string | null
@@ -158,6 +232,7 @@ export type Database = {
           is_published?: boolean | null
           level?: string | null
           price?: number | null
+          sort_order?: number
           thumbnail_url?: string | null
           title: string
           title_en?: string | null
@@ -169,6 +244,7 @@ export type Database = {
         }
         Update: {
           created_at?: string
+          currency?: string
           description?: string | null
           description_en?: string | null
           description_fr?: string | null
@@ -180,6 +256,7 @@ export type Database = {
           is_published?: boolean | null
           level?: string | null
           price?: number | null
+          sort_order?: number
           thumbnail_url?: string | null
           title?: string
           title_en?: string | null
@@ -459,6 +536,36 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      offers: {
+        Row: {
+          created_at: string
+          description: string | null
+          id: string
+          image_url: string | null
+          is_active: boolean
+          title: string
+          video_url: string | null
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          image_url?: string | null
+          is_active?: boolean
+          title: string
+          video_url?: string | null
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          image_url?: string | null
+          is_active?: boolean
+          title?: string
+          video_url?: string | null
+        }
+        Relationships: []
       }
       payment_settings: {
         Row: {
