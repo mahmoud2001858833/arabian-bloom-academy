@@ -1155,6 +1155,18 @@ const Admin = () => {
             <TabsContent value="intro-video">
               <IntroVideoManagement />
             </TabsContent>
+
+            <TabsContent value="dashboard">
+              <AdminDashboard />
+            </TabsContent>
+
+            <TabsContent value="offers">
+              <OffersManagement />
+            </TabsContent>
+
+            <TabsContent value="books">
+              <BookManagement />
+            </TabsContent>
           </Tabs>
         </div>
       </main>
