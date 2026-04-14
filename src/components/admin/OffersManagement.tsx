@@ -9,7 +9,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '
 import { Badge } from '@/components/ui/badge';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
-import { Plus, Trash2, Edit, Gift, Megaphone, Loader2, Save, Image, Video } from 'lucide-react';
+import { Plus, Trash2, Edit, Gift, Megaphone, Loader2, Save, Languages } from 'lucide-react';
 
 interface Offer {
   id: string;
@@ -20,6 +20,8 @@ interface Offer {
   is_active: boolean;
   created_at: string;
 }
+
+const LANG_SUFFIXES = ['en', 'fr', 'ms', 'ur', 'id'];
 
 const OffersManagement = () => {
   const { toast } = useToast();
@@ -33,6 +35,8 @@ const OffersManagement = () => {
   const [announcementText, setAnnouncementText] = useState('');
   const [announcementActive, setAnnouncementActive] = useState(false);
   const [savingAnnouncement, setSavingAnnouncement] = useState(false);
+  const [translatingAnnouncement, setTranslatingAnnouncement] = useState(false);
+  const [translatingOffer, setTranslatingOffer] = useState<string | null>(null);
 
   useEffect(() => {
     fetchOffers();
@@ -65,6 +69,73 @@ const OffersManagement = () => {
     }
     toast({ title: 'تم الحفظ', description: 'تم حفظ إعدادات شريط الإعلانات' });
     setSavingAnnouncement(false);
+  };
+
+  const translateAnnouncement = async () => {
+    if (!announcementText.trim()) {
+      toast({ title: 'خطأ', description: 'أدخل نص الإعلان أولاً', variant: 'destructive' });
+      return;
+    }
+    setTranslatingAnnouncement(true);
+    try {
+      const { data, error } = await supabase.functions.invoke('translate-content', {
+        body: { title: announcementText, description: '' },
+      });
+      if (error) throw error;
+
+      // Save translations to site_settings
+      for (const lang of LANG_SUFFIXES) {
+        const key = `announcement_bar_text_${lang}`;
+        const value = data?.translations?.[lang]?.title || '';
+        if (value) {
+          const { data: existing } = await supabase.from('site_settings').select('id').eq('key', key).single();
+          if (existing) {
+            await supabase.from('site_settings').update({ value }).eq('key', key);
+          } else {
+            await supabase.from('site_settings').insert({ key, value });
+          }
+        }
+      }
+      toast({ title: 'تمت الترجمة', description: 'تم ترجمة شريط الإعلانات لجميع اللغات' });
+    } catch (e) {
+      console.error(e);
+      toast({ title: 'خطأ', description: 'فشلت الترجمة', variant: 'destructive' });
+    }
+    setTranslatingAnnouncement(false);
+  };
+
+  const translateOffer = async (offer: Offer) => {
+    setTranslatingOffer(offer.id);
+    try {
+      const { data, error } = await supabase.functions.invoke('translate-content', {
+        body: { title: offer.title, description: offer.description || '' },
+      });
+      if (error) throw error;
+
+      // Save translations to site_settings using offer-specific keys
+      for (const lang of LANG_SUFFIXES) {
+        const titleKey = `offer_${offer.id}_title_${lang}`;
+        const descKey = `offer_${offer.id}_desc_${lang}`;
+        const titleVal = data?.translations?.[lang]?.title || '';
+        const descVal = data?.translations?.[lang]?.description || '';
+        
+        for (const [key, value] of [[titleKey, titleVal], [descKey, descVal]]) {
+          if (value) {
+            const { data: existing } = await supabase.from('site_settings').select('id').eq('key', key).single();
+            if (existing) {
+              await supabase.from('site_settings').update({ value }).eq('key', key);
+            } else {
+              await supabase.from('site_settings').insert({ key, value });
+            }
+          }
+        }
+      }
+      toast({ title: 'تمت الترجمة', description: `تم ترجمة العرض "${offer.title}" لجميع اللغات` });
+    } catch (e) {
+      console.error(e);
+      toast({ title: 'خطأ', description: 'فشلت الترجمة', variant: 'destructive' });
+    }
+    setTranslatingOffer(null);
   };
 
   const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -122,10 +193,16 @@ const OffersManagement = () => {
             placeholder="نص الإعلان الذي سيظهر في الشريط..."
             className="rounded-xl h-12"
           />
-          <Button onClick={saveAnnouncement} disabled={savingAnnouncement} className="gap-2 rounded-xl">
-            {savingAnnouncement ? <Loader2 className="h-4 w-4 animate-spin" /> : <Save className="h-4 w-4" />}
-            حفظ الإعلان
-          </Button>
+          <div className="flex gap-2">
+            <Button onClick={saveAnnouncement} disabled={savingAnnouncement} className="gap-2 rounded-xl">
+              {savingAnnouncement ? <Loader2 className="h-4 w-4 animate-spin" /> : <Save className="h-4 w-4" />}
+              حفظ الإعلان
+            </Button>
+            <Button onClick={translateAnnouncement} disabled={translatingAnnouncement || !announcementText.trim()} variant="outline" className="gap-2 rounded-xl">
+              {translatingAnnouncement ? <Loader2 className="h-4 w-4 animate-spin" /> : <Languages className="h-4 w-4" />}
+              ترجمة لجميع اللغات
+            </Button>
+          </div>
         </CardContent>
       </Card>
 
@@ -161,6 +238,16 @@ const OffersManagement = () => {
                   </div>
                   <div className="flex items-center gap-2">
                     <Badge variant={offer.is_active ? 'default' : 'secondary'}>{offer.is_active ? 'نشط' : 'معطل'}</Badge>
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      onClick={() => translateOffer(offer)}
+                      disabled={translatingOffer === offer.id}
+                      className="gap-1"
+                    >
+                      {translatingOffer === offer.id ? <Loader2 className="h-3 w-3 animate-spin" /> : <Languages className="h-3 w-3" />}
+                      ترجمة
+                    </Button>
                     <Button size="icon" variant="ghost" onClick={() => openEdit(offer)}><Edit className="h-4 w-4" /></Button>
                     <Button size="icon" variant="ghost" className="text-destructive" onClick={() => handleDelete(offer.id)}><Trash2 className="h-4 w-4" /></Button>
                   </div>

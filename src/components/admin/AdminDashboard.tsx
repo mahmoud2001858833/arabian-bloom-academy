@@ -15,6 +15,7 @@ interface UserInfo {
   email: string;
   full_name: string | null;
   created_at: string;
+  enrolledCourses: number;
 }
 
 const COLORS = ['hsl(270,70%,50%)', 'hsl(42,95%,55%)', 'hsl(150,60%,45%)', 'hsl(0,70%,55%)'];
@@ -52,8 +53,19 @@ const AdminDashboard = () => {
       const { data, error } = await supabase.functions.invoke('get-users', {
         headers: { Authorization: `Bearer ${session.access_token}` },
       });
+      
+      // Fetch all enrollments to count per user
+      const { data: enrollments } = await supabase.from('enrollments').select('user_id');
+      const enrollmentMap: Record<string, number> = {};
+      (enrollments || []).forEach(e => {
+        enrollmentMap[e.user_id] = (enrollmentMap[e.user_id] || 0) + 1;
+      });
+
       if (!error && data?.users) {
-        setUsers(data.users);
+        setUsers(data.users.map((u: any) => ({
+          ...u,
+          enrolledCourses: enrollmentMap[u.id] || 0,
+        })));
       }
     } catch (e) {
       console.error('Error fetching users:', e);
@@ -279,6 +291,7 @@ const AdminDashboard = () => {
                   <TableHead className="text-right font-bold">#</TableHead>
                   <TableHead className="text-right font-bold">الاسم</TableHead>
                   <TableHead className="text-right font-bold">البريد الإلكتروني</TableHead>
+                  <TableHead className="text-right font-bold">الحالة</TableHead>
                   <TableHead className="text-right font-bold">تاريخ التسجيل</TableHead>
                 </TableRow>
               </TableHeader>
@@ -288,12 +301,19 @@ const AdminDashboard = () => {
                     <TableCell className="font-mono text-muted-foreground">{i + 1}</TableCell>
                     <TableCell className="font-medium">{user.full_name || '—'}</TableCell>
                     <TableCell dir="ltr" className="text-left">{user.email}</TableCell>
+                    <TableCell>
+                      {user.enrolledCourses > 0 ? (
+                        <Badge className="bg-primary/15 text-primary border-primary/30">مسجل ({user.enrolledCourses} كورس)</Badge>
+                      ) : (
+                        <Badge variant="secondary">غير مسجل</Badge>
+                      )}
+                    </TableCell>
                     <TableCell>{new Date(user.created_at).toLocaleDateString('ar-SA')}</TableCell>
                   </TableRow>
                 ))}
                 {filteredUsers.length === 0 && (
                   <TableRow>
-                    <TableCell colSpan={4} className="text-center text-muted-foreground py-8">
+                    <TableCell colSpan={5} className="text-center text-muted-foreground py-8">
                       لا توجد نتائج
                     </TableCell>
                   </TableRow>
