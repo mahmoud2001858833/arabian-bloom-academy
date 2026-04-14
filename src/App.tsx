@@ -38,7 +38,7 @@ const queryClient = new QueryClient({
 
 // Application component with correct provider hierarchy
 // Order: QueryClientProvider -> LanguageProvider -> AuthProvider -> TooltipProvider
-// v3
+// v4
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
