@@ -380,4 +380,24 @@ export const ar = {
     linkedExam: 'امتحان مرتبط',
     takeExam: 'ابدأ الامتحان',
   },
+
+  // Offers
+  offers: {
+    badge: 'عروض حصرية',
+    title: 'العروض',
+    subtitle: 'اطلع على أحدث العروض والخصومات',
+    noOffers: 'لا توجد عروض حالياً',
+    watchVideo: 'شاهد الفيديو',
+  },
+
+  // Books
+  books: {
+    badge: 'مكتبة رقمية',
+    title: 'الكتب',
+    subtitle: 'اكتشف مجموعتنا من الكتب الرقمية',
+    noBooks: 'لا توجد كتب متاحة حالياً',
+    buy: 'شراء',
+    download: 'تحميل الكتاب',
+    purchaseSuccess: 'تم شراء الكتاب بنجاح! يمكنك تحميله الآن',
+  },
 };
