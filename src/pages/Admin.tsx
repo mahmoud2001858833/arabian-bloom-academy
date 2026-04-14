@@ -862,6 +862,18 @@ const Admin = () => {
                 <Video className="h-4 w-4" />
                 الفيديو التعريفي
               </TabsTrigger>
+              <TabsTrigger value="dashboard" className="gap-2 text-foreground/70 data-[state=active]:bg-primary data-[state=active]:text-white rounded-lg px-4 py-2">
+                <BarChart3 className="h-4 w-4" />
+                لوحة المعلومات
+              </TabsTrigger>
+              <TabsTrigger value="offers" className="gap-2 text-foreground/70 data-[state=active]:bg-primary data-[state=active]:text-white rounded-lg px-4 py-2">
+                <Sparkles className="h-4 w-4" />
+                العروض
+              </TabsTrigger>
+              <TabsTrigger value="books" className="gap-2 text-foreground/70 data-[state=active]:bg-primary data-[state=active]:text-white rounded-lg px-4 py-2">
+                <FileText className="h-4 w-4" />
+                الكتب
+              </TabsTrigger>
             </TabsList>
 
             {/* Courses Tab */}
