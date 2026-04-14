@@ -57,29 +57,19 @@ const Reviews = () => {
     }
 
     if (user) {
-      const { data: myReview } = await supabase
-        .from('reviews')
-        .select('*')
-        .eq('user_id', user.id)
-        .maybeSingle();
-      if (myReview) {
-        setUserReview(myReview as Review);
-        setRating(myReview.rating);
-        setComment(myReview.comment || '');
-      }
+      // No longer restricting to single review - user can add multiple
+      setUserReview(null);
     }
   };
 
   const handleSubmit = async () => {
     if (!user) return;
     setSubmitting(true);
-    if (userReview) {
-      await supabase.from('reviews').update({ rating, comment, updated_at: new Date().toISOString() }).eq('id', userReview.id);
-    } else {
-      await supabase.from('reviews').insert({ user_id: user.id, rating, comment });
-    }
+    await supabase.from('reviews').insert({ user_id: user.id, rating, comment });
     toast({ title: t('reviews.thankYou'), description: t('reviews.reviewSaved') });
     setShowDialog(false);
+    setRating(5);
+    setComment('');
     fetchReviews();
     setSubmitting(false);
   };
@@ -117,9 +107,9 @@ const Reviews = () => {
               )}
 
               {user && (
-                <Button onClick={() => setShowDialog(true)} className="mt-6 rounded-xl gap-2">
+                <Button onClick={() => { setRating(5); setComment(''); setShowDialog(true); }} className="mt-6 rounded-xl gap-2">
                   <Plus className="h-4 w-4" />
-                  {userReview ? t('reviews.editReview') : t('reviews.addReview')}
+                  {t('reviews.addReview')}
                 </Button>
               )}
             </div>
