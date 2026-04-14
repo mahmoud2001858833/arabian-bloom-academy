@@ -31,6 +31,9 @@ import NotificationBell from '@/components/admin/NotificationBell';
 import ExamManagement from '@/components/admin/ExamManagement';
 import IntroVideoManagement from '@/components/admin/IntroVideoManagement';
 import AudioRecorder from '@/components/admin/AudioRecorder';
+import AdminDashboard from '@/components/admin/AdminDashboard';
+import OffersManagement from '@/components/admin/OffersManagement';
+import BookManagement from '@/components/admin/BookManagement';
 
 interface Course {
   id: string;
@@ -112,6 +115,8 @@ const Admin = () => {
     is_free: true,
     level: 'beginner',
     is_published: true,
+    currency: 'USD',
+    sort_order: 0,
     title_en: '', title_fr: '', title_ms: '', title_ur: '', title_id: '',
     description_en: '', description_fr: '', description_ms: '', description_ur: '', description_id: '',
   });
@@ -332,6 +337,8 @@ const Admin = () => {
       is_free: courseForm.is_free,
       level: courseForm.level,
       is_published: courseForm.is_published,
+      currency: courseForm.currency,
+      sort_order: courseForm.sort_order,
       title_en: courseForm.title_en || null, title_fr: courseForm.title_fr || null,
       title_ms: courseForm.title_ms || null, title_ur: courseForm.title_ur || null, title_id: courseForm.title_id || null,
       description_en: courseForm.description_en || null, description_fr: courseForm.description_fr || null,
@@ -451,6 +458,8 @@ const Admin = () => {
       is_free: course.is_free,
       level: course.level,
       is_published: course.is_published,
+      currency: course.currency || 'USD',
+      sort_order: course.sort_order || 0,
       title_en: course.title_en || '', title_fr: course.title_fr || '', title_ms: course.title_ms || '',
       title_ur: course.title_ur || '', title_id: course.title_id || '',
       description_en: course.description_en || '', description_fr: course.description_fr || '', description_ms: course.description_ms || '',
@@ -462,6 +471,7 @@ const Admin = () => {
   const openNewCourse = () => {
     setCourseForm({
       id: '', title: '', description: '', thumbnail_url: '', price: 0, is_free: true, level: 'beginner', is_published: true,
+      currency: 'USD', sort_order: courses.length,
       ...i18nFields,
     });
     setShowCourseDialog(true);
