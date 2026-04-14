@@ -1,112 +1,130 @@
 
 
-# خطة التطوير: قسم الامتحانات الإلكترونية + تعليم صعوبات القراءة
+# خطة تطوير شاملة للمنصة
 
-## ملخص
-سنضيف قسم جديد للامتحانات الإلكترونية المستقلة (غير المرتبطة بالدروس) مع نظام إدارة متكامل في لوحة الأدمن، بالإضافة لتحديث وصف المنصة ليشمل تعليم صعوبات القراءة.
-
----
-
-## المهام
-
-### 1. إنشاء جداول قاعدة البيانات للامتحانات المستقلة
-
-جدول `exams` لتخزين الامتحانات:
-- id, title, description, duration_minutes, passing_score, is_published, created_at
-
-جدول `exam_questions` لأسئلة الامتحان:
-- id, exam_id, question, options (jsonb), correct_answer, order_index
-
-جدول `exam_attempts` لمحاولات الطلاب:
-- id, user_id, exam_id, score, passed, answers (jsonb), started_at, completed_at
-
-مع سياسات RLS مناسبة (الأدمن يدير كل شيء، المستخدمون يرون الامتحانات المنشورة ويسجلون محاولاتهم).
-
-### 2. صفحة الامتحانات للطلاب (`/exams`)
-
-- صفحة عرض قائمة الامتحانات المتاحة مع بحث وتصفية
-- صفحة تقديم الامتحان (`/exams/:examId`) مع مؤقت زمني
-- عرض النتيجة بعد الانتهاء (نجاح/رسوب مع النسبة)
-- يتطلب تسجيل الدخول لتقديم الامتحان
-
-### 3. نظام إدارة الامتحانات في لوحة الأدمن
-
-- تبويب جديد "الامتحانات" في لوحة التحكم
-- إنشاء/تعديل/حذف امتحانات
-- إضافة أسئلة متعددة الخيارات (4 خيارات) مع تحديد الإجابة الصحيحة
-- تحديد مدة الامتحان ونسبة النجاح
-- نشر/إلغاء نشر الامتحان
-- عرض نتائج الطلاب ومحاولاتهم
-
-### 4. إضافة رابط الامتحانات في التنقل
-
-- إضافة رابط "الامتحانات" في شريط التنقل (Navbar) بجانب الدروس والمدونة
-
-### 5. تحديث وصف المنصة لصعوبات القراءة
-
-- تحديث النصوص في HeroSection و About و الترجمات لتشمل أن المنصة متخصصة في تعليم صعوبات القراءة
-- تحديث الوصف الرئيسي والشعارات
-
-### 6. تحديث الترجمات
-
-- إضافة مفاتيح الترجمة الجديدة لجميع اللغات الست (ar, en, fr, ms, ur, id) لقسم الامتحانات وصعوبات القراءة
+هذه خطة تفصيلية لجميع الميزات المطلوبة. نظراً لكثرة التغييرات، سأقسمها إلى مراحل.
 
 ---
 
-## التفاصيل التقنية
+## المرحلة 1: لوحة معلومات احترافية للأدمن
 
-### قاعدة البيانات (Migration)
-```sql
--- جدول الامتحانات
-CREATE TABLE public.exams (
-  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
-  title text NOT NULL,
-  description text,
-  duration_minutes integer DEFAULT 30,
-  passing_score integer DEFAULT 70,
-  is_published boolean DEFAULT false,
-  created_at timestamptz DEFAULT now()
-);
+### ما سيتم بناؤه:
+- لوحة بيانات شاملة تعرض: عدد المستخدمين مع إيميل كل مستخدم، الإيرادات، التسجيلات، الكورسات النشطة
+- تمثيل بياني احترافي باستخدام Recharts (مخططات بيانية للإيرادات الشهرية، التسجيلات، توزيع الطلاب)
+- جدول المستخدمين المسجلين مع الإيميل والاسم وتاريخ التسجيل
+- إعدادات متعددة: البريد الإلكتروني للمنصة (قابل للتعديل)
 
-ALTER TABLE public.exams ENABLE ROW LEVEL SECURITY;
+### التغييرات التقنية:
+- إنشاء مكون `AdminDashboard.tsx` جديد بداخل مجلد admin
+- استخدام `ChartContainer` و Recharts للمخططات البيانية
+- جلب بيانات المستخدمين من `profiles` و `auth.users` (عبر edge function)
+- حفظ البريد الإلكتروني للمنصة في جدول `site_settings`
 
--- جدول أسئلة الامتحانات
-CREATE TABLE public.exam_questions (
-  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
-  exam_id uuid REFERENCES public.exams(id) ON DELETE CASCADE NOT NULL,
-  question text NOT NULL,
-  options jsonb NOT NULL DEFAULT '[]',
-  correct_answer integer NOT NULL,
-  order_index integer DEFAULT 0,
-  created_at timestamptz DEFAULT now()
-);
+---
 
-ALTER TABLE public.exam_questions ENABLE ROW LEVEL SECURITY;
+## المرحلة 2: ترتيب الكورسات + اختيار العملة
 
--- جدول محاولات الامتحانات
-CREATE TABLE public.exam_attempts (
-  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
-  user_id uuid NOT NULL,
-  exam_id uuid REFERENCES public.exams(id) ON DELETE CASCADE NOT NULL,
-  score integer NOT NULL,
-  passed boolean NOT NULL,
-  answers jsonb NOT NULL DEFAULT '[]',
-  started_at timestamptz DEFAULT now(),
-  completed_at timestamptz DEFAULT now()
-);
+### ما سيتم بناؤه:
+- خيار ترتيب الكورسات (سحب وإفلات أو أسهم) لتحديد أي كورس يظهر أولاً للطلاب
+- خيار اختيار العملة (دولار USD أو دينار JOD) عند إنشاء الكورس
 
-ALTER TABLE public.exam_attempts ENABLE ROW LEVEL SECURITY;
-```
+### التغييرات التقنية:
+- إضافة عمود `sort_order` و `currency` لجدول `courses` (migration)
+- تعديل نموذج إنشاء الكورس في `Admin.tsx` لإضافة اختيار العملة
+- تعديل `Courses.tsx` ليرتب حسب `sort_order`
 
-### الملفات الجديدة
-- `src/pages/Exams.tsx` - صفحة عرض الامتحانات
-- `src/pages/ExamTake.tsx` - صفحة تقديم الامتحان مع المؤقت
-- `src/components/admin/ExamManagement.tsx` - مكون إدارة الامتحانات في الأدمن
+---
 
-### الملفات المعدلة
-- `src/App.tsx` - إضافة المسارات الجديدة
-- `src/components/layout/Navbar.tsx` - إضافة رابط الامتحانات
-- `src/pages/Admin.tsx` - إضافة تبويب الامتحانات
-- `src/components/home/HeroSection.tsx` - تحديث الوصف
-- `src/i18n/locales/*.ts` - إضافة الترجمات (6 ملفات)
+## المرحلة 3: تحسين طلبات الدفع + فتح الكورس فوراً
+
+### ما سيتم بناؤه:
+- عرض جميع معلومات الطالب (الاسم، الإيميل، تاريخ التسجيل) مع طلب الدفع
+- عند موافقة الأدمن، يفتح الكورس فوراً للطالب (هذا موجود فعلاً في `PaymentManagement` - سأتأكد من عمله بشكل صحيح)
+
+### التغييرات التقنية:
+- تعديل `PaymentManagement.tsx` لجلب وعرض الإيميل من `auth.users` عبر edge function
+- التأكد من أن الموافقة تنشئ enrollment فوراً (موجود بالفعل)
+
+---
+
+## المرحلة 4: نظام العروض (Offers)
+
+### ما سيتم بناؤه:
+- تبويب جديد "العروض" في لوحة الأدمن
+- زر "العروض" بجانب زر الفيديو التعريفي في الصفحة الرئيسية بلون ذهبي
+- رفع: اسم العرض، وصف، صورة، فيديو (اختياري)
+- صفحة عرض العروض للطلاب
+- خط إعلانات (announcement bar) متحرك أحمر تحت الهيدر يمكن تفعيله/تعطيله من لوحة التحكم
+
+### التغييرات التقنية:
+- إنشاء جدول `offers` (id, title, description, image_url, video_url, is_active, created_at)
+- إنشاء جدول أو إعداد في `site_settings` لخط الإعلانات (announcement_bar_text, announcement_bar_active)
+- إنشاء صفحة `Offers.tsx` ومكون `AnnouncementBar.tsx`
+- إضافة رابط في `Navbar.tsx` و `HeroSection.tsx`
+- إنشاء bucket تخزين للصور
+
+---
+
+## المرحلة 5: نظام الكتب الرقمية (E-Books)
+
+### ما سيتم بناؤه:
+- تبويب "الكتب" في لوحة الأدمن لرفع كتاب PDF مع وصف ومعلومات وسعر
+- خيار "الكتب" في الهيدر (Navbar)
+- صفحة عرض الكتب للطلاب
+- تنزيل PDF تلقائي بعد الدفع
+
+### التغييرات التقنية:
+- إنشاء جدول `books` (id, title, description, price, currency, pdf_url, cover_image_url, is_published, created_at)
+- إنشاء جدول `book_purchases` (id, user_id, book_id, amount, status, created_at)
+- إنشاء bucket `book-files` و `book-covers`
+- صفحة `Books.tsx` و `BookDetails.tsx`
+- مكون `BookManagement.tsx` في الأدمن
+- RLS policies للوصول المحمي
+
+---
+
+## المرحلة 6: تغييرات UI متنوعة
+
+### ما سيتم بناؤه:
+1. **أيقونة الدعم الفني**: تغيير من أيقونة WhatsApp إلى أيقونة سماعة هاتف (Headphones) - هذا موجود فعلاً!
+2. **بطاقات WhyUs**: إضافة لمسة بنفسجية وحيوية أكثر للبطاقات في الصفحة الرئيسية
+3. **الامتحانات المربوطة بالدروس**: لا تظهر في صفحة الامتحانات العامة (فلترة الامتحانات المرتبطة بدروس)
+4. **التقييمات المتعددة**: السماح للطالب بإضافة أكثر من تقييم (إزالة القيد الحالي unique constraint)
+
+### التغييرات التقنية:
+- تعديل `SupportChat.tsx` لتغيير الأيقونة إلى `Phone`/`Headphones`
+- تعديل `WhyUs.tsx` لإضافة ألوان بنفسجية وتأثيرات حركية
+- تعديل `Exams.tsx` لاستثناء الامتحانات المربوطة بدروس
+- تعديل constraint في `reviews` للسماح بتقييمات متعددة + تعديل `Reviews.tsx`
+
+---
+
+## ملخص التغييرات التقنية
+
+### جداول جديدة (Database Migrations):
+- `offers` - العروض
+- `books` - الكتب الرقمية
+- `book_purchases` - مشتريات الكتب
+- إضافة أعمدة `sort_order` و `currency` لـ `courses`
+- إزالة unique constraint من `reviews`
+
+### ملفات جديدة:
+- `src/components/admin/AdminDashboard.tsx`
+- `src/components/admin/OffersManagement.tsx`
+- `src/components/admin/BookManagement.tsx`
+- `src/components/home/AnnouncementBar.tsx`
+- `src/pages/Offers.tsx`
+- `src/pages/Books.tsx`
+- `supabase/functions/get-users/index.ts` (لجلب بيانات المستخدمين)
+
+### ملفات معدلة:
+- `src/pages/Admin.tsx` - إضافة التبويبات الجديدة
+- `src/pages/Index.tsx` - إضافة AnnouncementBar
+- `src/components/layout/Navbar.tsx` - إضافة روابط الكتب والعروض
+- `src/components/home/HeroSection.tsx` - زر العروض
+- `src/components/home/WhyUs.tsx` - تحسين البطاقات
+- `src/components/support/SupportChat.tsx` - تغيير الأيقونة
+- `src/pages/Exams.tsx` - فلترة الامتحانات
+- `src/pages/Reviews.tsx` - تقييمات متعددة
+- `src/components/admin/PaymentManagement.tsx` - عرض معلومات الطالب
 
