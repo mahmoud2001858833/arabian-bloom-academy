@@ -4,14 +4,15 @@ import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { useLanguage } from '@/i18n/LanguageContext';
 import { getLocalizedField } from '@/lib/localized';
+import { getPaddlePriceIdForCourse } from '@/lib/paddle';
+import { usePaddleCheckout } from '@/hooks/usePaddleCheckout';
 import VideoPlayer from '@/components/dashboard/VideoPlayer';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
 import PageTransition from '@/components/layout/PageTransition';
 import ClickPaymentModal from '@/components/payment/ClickPaymentModal';
 import PaymentMethodSelector from '@/components/payment/PaymentMethodSelector';
-import PayPalPaymentModal from '@/components/payment/PayPalPaymentModal';
-import PayPalGuestModal from '@/components/payment/PayPalGuestModal';
+import { PaymentTestModeBanner } from '@/components/PaymentTestModeBanner';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -62,6 +63,7 @@ const CourseDetails = () => {
   const navigate = useNavigate();
   const { user } = useAuth();
   const { t, language } = useLanguage();
+  const { openCheckout, loading: checkoutLoading } = usePaddleCheckout();
   
   const [course, setCourse] = useState<Course | null>(null);
   const [lessons, setLessons] = useState<Lesson[]>([]);
@@ -72,8 +74,6 @@ const CourseDetails = () => {
   const [enrolling, setEnrolling] = useState(false);
   const [showPaymentModal, setShowPaymentModal] = useState(false);
   const [showPaymentSelector, setShowPaymentSelector] = useState(false);
-  const [showPayPalModal, setShowPayPalModal] = useState(false);
-  const [showPayPalGuestModal, setShowPayPalGuestModal] = useState(false);
 
   useEffect(() => {
     if (courseId) {
@@ -85,7 +85,6 @@ const CourseDetails = () => {
     try {
       setLoading(true);
       
-      // جلب بيانات الكورس
       const { data: courseData, error: courseError } = await supabase
         .from('courses')
         .select('*')
@@ -101,7 +100,6 @@ const CourseDetails = () => {
 
       setCourse(courseData);
 
-      // جلب الدروس
       const { data: lessonsData, error: lessonsError } = await supabase
         .from('lessons')
         .select('*')
@@ -111,12 +109,10 @@ const CourseDetails = () => {
       if (lessonsError) throw lessonsError;
       setLessons(lessonsData || []);
 
-      // تحديد الدرس الأول كافتراضي
       if (lessonsData && lessonsData.length > 0) {
         setSelectedLesson(lessonsData[0]);
       }
 
-      // التحقق من التسجيل وجلب التقدم إذا كان المستخدم مسجل
       if (user) {
         const { data: enrollmentData } = await supabase
           .from('enrollments')
@@ -152,13 +148,11 @@ const CourseDetails = () => {
       return;
     }
 
-    // إذا كان الكورس مدفوع، نعرض نافذة الدفع
     if (!course?.is_free && course?.price && course.price > 0) {
       setShowPaymentSelector(true);
       return;
     }
 
-    // إذا كان الكورس مجاني، نسجل مباشرة
     try {
       setEnrolling(true);
       
@@ -181,8 +175,29 @@ const CourseDetails = () => {
     }
   };
 
+  const handlePaddleCheckout = async () => {
+    if (!course || !user) return;
+    
+    const priceId = getPaddlePriceIdForCourse(course.id);
+    if (!priceId) {
+      toast.error('Payment not configured for this course');
+      return;
+    }
+
+    try {
+      await openCheckout({
+        priceId,
+        customerEmail: user.email,
+        customData: { userId: user.id },
+        successUrl: `${window.location.origin}/courses/${course.id}?checkout=success`,
+      });
+    } catch (error) {
+      console.error('Checkout error:', error);
+      toast.error(t('payment.paymentError'));
+    }
+  };
+
   const handlePaymentSuccess = () => {
-    // تحديث البيانات بعد إرسال طلب الدفع
     fetchCourseData();
     toast.success(t('payment.paymentSuccess'));
   };
@@ -249,6 +264,18 @@ const CourseDetails = () => {
     }
   };
 
+  // Handle checkout success from URL
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    if (params.get('checkout') === 'success') {
+      toast.success(t('payment.paymentSuccess'));
+      // Remove query param
+      window.history.replaceState({}, '', window.location.pathname);
+      // Refresh data after a short delay for webhook to process
+      setTimeout(() => fetchCourseData(), 2000);
+    }
+  }, []);
+
   if (loading) {
     return (
       <div className="min-h-screen bg-background">
@@ -288,9 +315,9 @@ const CourseDetails = () => {
     <PageTransition>
       <div className="min-h-screen bg-background">
         <Navbar />
+        <PaymentTestModeBanner />
         
         <main className="container mx-auto px-4 py-8">
-          {/* رأس الصفحة */}
           <div className="flex items-center gap-4 mb-6">
             <Button 
               variant="ghost" 
@@ -303,12 +330,9 @@ const CourseDetails = () => {
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            {/* القسم الرئيسي - الفيديو */}
             <div className="lg:col-span-2 space-y-6">
-              {/* مشغل الفيديو */}
               <Card className="overflow-hidden bg-card/50 backdrop-blur-sm border-border/50">
                 <CardContent className="p-0">
-                  {/* التحقق من الاشتراك قبل عرض الفيديو */}
                   {isEnrolled || course.is_free || selectedLesson?.is_free_preview ? (
                     selectedLesson?.video_url ? (
                       <VideoPlayer 
@@ -342,7 +366,6 @@ const CourseDetails = () => {
                 </CardContent>
               </Card>
 
-              {/* معلومات الدرس الحالي */}
               {selectedLesson && (
                 <Card className="bg-card/50 backdrop-blur-sm border-border/50">
                   <CardHeader>
@@ -391,7 +414,6 @@ const CourseDetails = () => {
                 </Card>
               )}
 
-              {/* معلومات الكورس */}
               <Card className="bg-card/50 backdrop-blur-sm border-border/50">
                 <CardHeader>
                   <CardTitle>{t('courseDetails.aboutCourse')}</CardTitle>
@@ -421,9 +443,7 @@ const CourseDetails = () => {
               </Card>
             </div>
 
-            {/* الشريط الجانبي - قائمة الدروس */}
             <div className="space-y-6">
-              {/* التسجيل والتقدم */}
               <Card className="bg-card/50 backdrop-blur-sm border-border/50">
                 <CardHeader>
                   <CardTitle className="text-lg">{getLocalizedField(course, 'title', language)}</CardTitle>
@@ -463,7 +483,6 @@ const CourseDetails = () => {
                 </CardContent>
               </Card>
 
-              {/* قائمة الدروس */}
               <Card className="bg-card/50 backdrop-blur-sm border-border/50">
                 <CardHeader>
                   <CardTitle className="text-lg flex items-center gap-2">
@@ -546,7 +565,6 @@ const CourseDetails = () => {
 
         <Footer />
 
-        {/* نافذة اختيار طريقة الدفع */}
         {course && (
           <>
             <PaymentMethodSelector
@@ -554,29 +572,12 @@ const CourseDetails = () => {
               onOpenChange={setShowPaymentSelector}
               courseTitle={course.title}
               coursePrice={course.price || 0}
-              onSelectPayPal={() => setShowPayPalModal(true)}
+              onSelectPaddle={handlePaddleCheckout}
               onSelectClick={() => setShowPaymentModal(true)}
-              onSelectPayPalGuest={() => setShowPayPalGuestModal(true)}
             />
             <ClickPaymentModal
               open={showPaymentModal}
               onOpenChange={setShowPaymentModal}
-              courseId={course.id}
-              courseTitle={course.title}
-              coursePrice={course.price || 0}
-              onSuccess={handlePaymentSuccess}
-            />
-            <PayPalPaymentModal
-              open={showPayPalModal}
-              onOpenChange={setShowPayPalModal}
-              courseId={course.id}
-              courseTitle={course.title}
-              coursePrice={course.price || 0}
-              onSuccess={handlePaymentSuccess}
-            />
-            <PayPalGuestModal
-              open={showPayPalGuestModal}
-              onOpenChange={setShowPayPalGuestModal}
               courseId={course.id}
               courseTitle={course.title}
               coursePrice={course.price || 0}

@@ -8,9 +8,8 @@ interface PaymentMethodSelectorProps {
   onOpenChange: (open: boolean) => void;
   courseTitle: string;
   coursePrice: number;
-  onSelectPayPal: () => void;
+  onSelectPaddle: () => void;
   onSelectClick: () => void;
-  onSelectPayPalGuest: () => void;
 }
 
 const PaymentMethodSelector = ({
@@ -18,9 +17,8 @@ const PaymentMethodSelector = ({
   onOpenChange,
   courseTitle,
   coursePrice,
-  onSelectPayPal,
+  onSelectPaddle,
   onSelectClick,
-  onSelectPayPalGuest,
 }: PaymentMethodSelectorProps) => {
   const { t } = useLanguage();
 
@@ -44,24 +42,12 @@ const PaymentMethodSelector = ({
           <Button
             onClick={() => {
               onOpenChange(false);
-              onSelectPayPal();
+              onSelectPaddle();
             }}
             className="w-full h-14 gap-3 text-base"
             variant="gold"
           >
             <Globe className="h-5 w-5" />
-            {t('payment.payWithPayPal')}
-          </Button>
-
-          <Button
-            onClick={() => {
-              onOpenChange(false);
-              onSelectPayPalGuest();
-            }}
-            variant="outline"
-            className="w-full h-14 gap-3 text-base"
-          >
-            <CreditCard className="h-5 w-5" />
             {t('payment.payWithCard')}
           </Button>
 
