@@ -44,6 +44,7 @@ interface PendingPayment {
   created_at: string;
   course?: { title: string };
   profile?: { full_name: string | null } | null;
+  email?: string;
 }
 
 const PaymentManagement = () => {
@@ -111,7 +112,24 @@ const PaymentManagement = () => {
 
       if (error) throw error;
 
-      // Fetch profiles separately
+      // Fetch profiles and emails
+      let usersMap: Record<string, string> = {};
+      try {
+        const { data: session } = await supabase.auth.getSession();
+        if (session?.session?.access_token) {
+          const { data: usersData } = await supabase.functions.invoke('get-users', {
+            headers: { Authorization: `Bearer ${session.session.access_token}` },
+          });
+          if (usersData?.users) {
+            usersData.users.forEach((u: any) => {
+              usersMap[u.id] = u.email;
+            });
+          }
+        }
+      } catch (e) {
+        console.log('Could not fetch user emails');
+      }
+
       const paymentsWithProfiles = await Promise.all(
         (data || []).map(async (payment) => {
           const { data: profile } = await supabase
@@ -123,6 +141,7 @@ const PaymentManagement = () => {
           return {
             ...payment,
             profile,
+            email: usersMap[payment.user_id] || null,
           };
         })
       );
@@ -343,6 +362,11 @@ const PaymentManagement = () => {
                             <p className="text-sm text-muted-foreground">
                               الطالب: {payment.profile?.full_name || 'غير معروف'}
                             </p>
+                            {payment.email && (
+                              <p className="text-sm text-muted-foreground">
+                                البريد: <span dir="ltr" className="font-mono text-xs">{payment.email}</span>
+                              </p>
+                            )}
                             <p className="text-lg font-bold text-accent mt-1">
                               ${payment.amount}
                             </p>
@@ -472,6 +496,10 @@ const PaymentManagement = () => {
               <div className="p-4 rounded-xl bg-muted/50 space-y-2">
                 <p><strong>الكورس:</strong> {selectedPayment.course?.title}</p>
                 <p><strong>الطالب:</strong> {selectedPayment.profile?.full_name || 'غير معروف'}</p>
+                {selectedPayment.email && (
+                  <p><strong>البريد:</strong> <span dir="ltr" className="font-mono text-sm">{selectedPayment.email}</span></p>
+                )}
+                <p><strong>تاريخ الطلب:</strong> {new Date(selectedPayment.created_at).toLocaleDateString('ar-SA', { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' })}</p>
                 <p><strong>المبلغ:</strong> ${selectedPayment.amount}</p>
                 <Button
                   variant="outline"
