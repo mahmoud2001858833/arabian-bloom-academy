@@ -14,6 +14,8 @@ export const ar = {
     profile: 'الملف الشخصي',
     logout: 'تسجيل الخروج',
     user: 'مستخدم',
+    books: 'الكتب',
+    offers: 'العروض',
   },
 
   // Auth
