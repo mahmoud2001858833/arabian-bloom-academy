@@ -21,6 +21,7 @@ import Exams from "./pages/Exams";
 import ExamTake from "./pages/ExamTake";
 import Privacy from "./pages/Privacy";
 import Terms from "./pages/Terms";
+import Refund from "./pages/Refund";
 import IntroVideo from "./pages/IntroVideo";
 import Reviews from "./pages/Reviews";
 import Offers from "./pages/Offers";
@@ -63,6 +64,7 @@ function App() {
                 <Route path="/exams/:examId" element={<ExamTake />} />
                 <Route path="/privacy" element={<Privacy />} />
                 <Route path="/terms" element={<Terms />} />
+                <Route path="/refund" element={<Refund />} />
                 <Route path="/intro-video" element={<IntroVideo />} />
                 <Route path="/reviews" element={<Reviews />} />
                 <Route path="/offers" element={<Offers />} />

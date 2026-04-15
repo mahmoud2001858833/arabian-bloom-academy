@@ -1,6 +1,7 @@
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
 import { useLanguage } from '@/i18n/LanguageContext';
+import { Link } from 'react-router-dom';
 
 const Terms = () => {
   const { t, language } = useLanguage();
@@ -16,6 +17,17 @@ const Terms = () => {
           </h1>
           
           <div className="prose prose-lg max-w-none space-y-8 text-muted-foreground">
+            <section className="bg-card rounded-2xl p-8 border border-primary/10">
+              <h2 className="text-2xl font-bold text-foreground mb-4">
+                {isRtl ? 'هوية البائع' : 'Seller Identity'}
+              </h2>
+              <p>
+                {isRtl
+                  ? 'هذه الشروط صادرة عن XBUILD (المشغّل التجاري لمنصة النجاة التعليمية). باستخدامك للمنصة فإنك تتعاقد مع XBUILD.'
+                  : 'These terms are issued by XBUILD (the commercial operator of the Al-Najat educational platform). By using the platform you are contracting with XBUILD.'}
+              </p>
+            </section>
+
             <section className="bg-card rounded-2xl p-8 border border-primary/10">
               <h2 className="text-2xl font-bold text-foreground mb-4">
                 {isRtl ? 'القبول بالشروط' : 'Acceptance of Terms'}
@@ -41,10 +53,14 @@ const Terms = () => {
 
             <section className="bg-card rounded-2xl p-8 border border-primary/10">
               <h2 className="text-2xl font-bold text-foreground mb-4">
-                {isRtl ? 'المحتوى التعليمي' : 'Educational Content'}
+                {isRtl ? 'المحتوى التعليمي والملكية الفكرية' : 'Educational Content & Intellectual Property'}
               </h2>
+              <p className="mb-3">
+                {isRtl
+                  ? 'تحتفظ XBUILD بملكية جميع حقوق الملكية الفكرية للمنصة ومحتواها بما في ذلك البرمجيات والمواد التعليمية والعلامات التجارية.'
+                  : 'XBUILD retains ownership of all intellectual property rights in the platform and its content, including software, educational materials, and branding.'}
+              </p>
               <ul className="list-disc list-inside space-y-2">
-                <li>{isRtl ? 'جميع المواد التعليمية محمية بحقوق الملكية الفكرية' : 'All educational materials are protected by intellectual property rights'}</li>
                 <li>{isRtl ? 'لا يجوز نسخ أو توزيع أو مشاركة المحتوى دون إذن مسبق' : 'Content may not be copied, distributed, or shared without prior permission'}</li>
                 <li>{isRtl ? 'الوصول إلى الدروس المدفوعة يتطلب إتمام عملية الدفع' : 'Access to paid lessons requires completing the payment process'}</li>
                 <li>{isRtl ? 'نحتفظ بحق تعديل أو تحديث المحتوى في أي وقت' : 'We reserve the right to modify or update content at any time'}</li>
@@ -53,26 +69,78 @@ const Terms = () => {
 
             <section className="bg-card rounded-2xl p-8 border border-primary/10">
               <h2 className="text-2xl font-bold text-foreground mb-4">
-                {isRtl ? 'الدفع والاسترداد' : 'Payment and Refunds'}
+                {isRtl ? 'سوء الاستخدام' : 'Misuse'}
               </h2>
               <ul className="list-disc list-inside space-y-2">
-                <li>{isRtl ? 'أسعار الدروس بالدولار الأمريكي وقابلة للتغيير' : 'Lesson prices are in US Dollars and subject to change'}</li>
-                <li>{isRtl ? 'يتم تفعيل الاشتراك بعد التحقق من الدفع' : 'Subscription is activated after payment verification'}</li>
-                <li>{isRtl ? 'يمكن طلب استرداد المبلغ خلال 7 أيام من الشراء' : 'Refunds can be requested within 7 days of purchase'}</li>
-                <li>{isRtl ? 'لا يمكن استرداد المبلغ بعد مشاهدة أكثر من 30% من الدرس' : 'No refunds after watching more than 30% of the lesson'}</li>
+                <li>{isRtl ? 'يجب استخدام المنصة لأغراض تعليمية مشروعة فقط' : 'The platform must be used for lawful educational purposes only'}</li>
+                <li>{isRtl ? 'يُمنع نشر محتوى مسيء أو غير لائق أو احتيالي' : 'Publishing offensive, inappropriate, or fraudulent content is prohibited'}</li>
+                <li>{isRtl ? 'يُمنع محاولة اختراق أو تعطيل أو استخراج بيانات المنصة' : 'Attempting to hack, disrupt, or scrape the platform is prohibited'}</li>
+                <li>{isRtl ? 'يُمنع انتهاك حقوق الملكية الفكرية' : 'Intellectual property infringement is prohibited'}</li>
+                <li>{isRtl ? 'يجب احترام جميع المستخدمين والمعلمين' : 'All users and teachers must be treated with respect'}</li>
               </ul>
             </section>
 
             <section className="bg-card rounded-2xl p-8 border border-primary/10">
               <h2 className="text-2xl font-bold text-foreground mb-4">
-                {isRtl ? 'سلوك المستخدم' : 'User Conduct'}
+                {isRtl ? 'الدفع والاشتراكات' : 'Payment & Subscriptions'}
               </h2>
+              <p className="mb-3">
+                {isRtl
+                  ? 'تتم معالجة طلباتنا بواسطة الموزع الإلكتروني Paddle.com. شركة Paddle.com هي التاجر المسجّل (Merchant of Record) لجميع طلباتنا. تتولى Paddle جميع استفسارات خدمة العملاء المتعلقة بالدفع وتتعامل مع المرتجعات.'
+                  : 'Our order process is conducted by our online reseller Paddle.com. Paddle.com is the Merchant of Record for all our orders. Paddle provides all customer service inquiries and handles returns.'}
+              </p>
+              <p className="mb-3">
+                {isRtl
+                  ? 'للاطلاع على تفاصيل الدفع والفوترة والضرائب والإلغاء والاسترداد، يرجى مراجعة '
+                  : 'For details on payment, billing, tax, cancellation, and refunds, please refer to '}
+                <a href="https://www.paddle.com/legal/checkout-buyer-terms" target="_blank" rel="noopener noreferrer" className="text-primary underline">
+                  {isRtl ? 'شروط المشتري من Paddle' : "Paddle's Buyer Terms"}
+                </a>.
+              </p>
               <ul className="list-disc list-inside space-y-2">
-                <li>{isRtl ? 'يجب استخدام المنصة لأغراض تعليمية فقط' : 'The platform must be used for educational purposes only'}</li>
-                <li>{isRtl ? 'يُمنع نشر محتوى مسيء أو غير لائق' : 'Publishing offensive or inappropriate content is prohibited'}</li>
-                <li>{isRtl ? 'يُمنع محاولة اختراق أو تعطيل المنصة' : 'Attempting to hack or disrupt the platform is prohibited'}</li>
-                <li>{isRtl ? 'يجب احترام جميع المستخدمين والمعلمين' : 'All users and teachers must be treated with respect'}</li>
+                <li>{isRtl ? 'أسعار الدروس بالدولار الأمريكي وقابلة للتغيير' : 'Lesson prices are in US Dollars and subject to change'}</li>
+                <li>{isRtl ? 'يتم تفعيل الاشتراك بعد التحقق من الدفع' : 'Access is activated after payment verification'}</li>
               </ul>
+            </section>
+
+            <section className="bg-card rounded-2xl p-8 border border-primary/10">
+              <h2 className="text-2xl font-bold text-foreground mb-4">
+                {isRtl ? 'سياسة الاسترداد' : 'Refund Policy'}
+              </h2>
+              <p>
+                {isRtl
+                  ? 'نقدم ضمان استرداد الأموال خلال 14 يوماً. إذا لم تكن راضياً عن شرائك، يمكنك طلب استرداد كامل المبلغ خلال 14 يوماً من تاريخ الطلب. تتم معالجة عمليات الاسترداد بواسطة مزود الدفع الخاص بنا Paddle. لطلب استرداد، قم بزيارة '
+                  : 'We offer a 14-day money-back guarantee. If you are not satisfied with your purchase, you can request a full refund within 14 days of your order date. Refunds are processed by our payment provider, Paddle. To request a refund, visit '}
+                <a href="https://paddle.net" target="_blank" rel="noopener noreferrer" className="text-primary underline">paddle.net</a>
+                {isRtl ? ' أو تواصل مع فريق الدعم.' : ' or contact our support team.'}
+              </p>
+              <p className="mt-2">
+                <Link to="/refund" className="text-primary underline">
+                  {isRtl ? 'اقرأ سياسة الاسترداد الكاملة' : 'Read the full Refund Policy'}
+                </Link>
+              </p>
+            </section>
+
+            <section className="bg-card rounded-2xl p-8 border border-primary/10">
+              <h2 className="text-2xl font-bold text-foreground mb-4">
+                {isRtl ? 'مستوى الخدمة' : 'Service Level'}
+              </h2>
+              <p>
+                {isRtl
+                  ? 'نسعى لتوفير خدمة مستمرة وموثوقة، لكننا لا نضمن أن المنصة ستعمل بدون انقطاع أو أخطاء في جميع الأوقات. قد تحدث فترات صيانة أو تحديثات تؤثر مؤقتاً على الوصول.'
+                  : 'We strive to provide a continuous and reliable service, but we do not guarantee that the platform will be uninterrupted or error-free at all times. Maintenance periods or updates may temporarily affect access.'}
+              </p>
+            </section>
+
+            <section className="bg-card rounded-2xl p-8 border border-primary/10">
+              <h2 className="text-2xl font-bold text-foreground mb-4">
+                {isRtl ? 'التعليق والإنهاء' : 'Suspension & Termination'}
+              </h2>
+              <p>
+                {isRtl
+                  ? 'يحق لنا تعليق أو إنهاء وصولك إلى المنصة في حالات: الإخلال الجوهري بالشروط، عدم الدفع، مخاطر أمنية أو احتيال، أو الانتهاكات المتكررة أو الجسيمة للسياسات.'
+                  : 'We may suspend or terminate your access to the platform for: material breach of these terms, non-payment, security or fraud risk, or repeated/serious policy violations.'}
+              </p>
             </section>
 
             <section className="bg-card rounded-2xl p-8 border border-primary/10">

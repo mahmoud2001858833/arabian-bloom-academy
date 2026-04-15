@@ -18,38 +18,65 @@ const Privacy = () => {
           <div className="prose prose-lg max-w-none space-y-8 text-muted-foreground">
             <section className="bg-card rounded-2xl p-8 border border-primary/10">
               <h2 className="text-2xl font-bold text-foreground mb-4">
-                {isRtl ? 'مقدمة' : 'Introduction'}
+                {isRtl ? 'من نحن — هوية المتحكم بالبيانات' : 'Who We Are — Data Controller'}
               </h2>
               <p>
-                {isRtl 
-                  ? 'نحن في منصة النجاة نلتزم بحماية خصوصيتك وبياناتك الشخصية. توضح سياسة الخصوصية هذه كيفية جمعنا واستخدامنا وحمايتنا لمعلوماتك عند استخدام منصتنا التعليمية.'
-                  : 'At Al-Najat Platform, we are committed to protecting your privacy and personal data. This Privacy Policy explains how we collect, use, and protect your information when you use our educational platform.'}
+                {isRtl
+                  ? 'هذه السياسة صادرة عن XBUILD (المشغّل التجاري لمنصة النجاة التعليمية). نحن المتحكم بالبيانات المسؤول عن معالجة بياناتك الشخصية وفقاً لهذه السياسة.'
+                  : 'This Privacy Notice is issued by XBUILD (the commercial operator of the Al-Najat educational platform). We are the data controller responsible for the processing of your personal data in accordance with this policy.'}
               </p>
             </section>
 
             <section className="bg-card rounded-2xl p-8 border border-primary/10">
               <h2 className="text-2xl font-bold text-foreground mb-4">
-                {isRtl ? 'المعلومات التي نجمعها' : 'Information We Collect'}
+                {isRtl ? 'البيانات الشخصية التي نجمعها' : 'Personal Data We Collect'}
               </h2>
               <ul className="list-disc list-inside space-y-2">
                 <li>{isRtl ? 'الاسم الكامل والبريد الإلكتروني عند التسجيل' : 'Full name and email address upon registration'}</li>
-                <li>{isRtl ? 'معلومات الدفع عند شراء الدروس' : 'Payment information when purchasing lessons'}</li>
+                <li>{isRtl ? 'بيانات تسجيل الدخول (كلمة المرور المشفّرة)' : 'Login credentials (encrypted password)'}</li>
                 <li>{isRtl ? 'تقدمك في الدروس ونتائج الامتحانات' : 'Your lesson progress and exam results'}</li>
-                <li>{isRtl ? 'بيانات الاستخدام وسجلات الأنشطة' : 'Usage data and activity logs'}</li>
+                <li>{isRtl ? 'رسائل الدعم الفني' : 'Support messages'}</li>
+                <li>{isRtl ? 'بيانات الاستخدام وعنوان IP ومعرّفات الجهاز' : 'Usage data, IP address, and device identifiers'}</li>
               </ul>
             </section>
 
             <section className="bg-card rounded-2xl p-8 border border-primary/10">
               <h2 className="text-2xl font-bold text-foreground mb-4">
-                {isRtl ? 'كيف نستخدم معلوماتك' : 'How We Use Your Information'}
+                {isRtl ? 'أغراض المعالجة والأساس القانوني' : 'Purposes & Legal Basis'}
               </h2>
               <ul className="list-disc list-inside space-y-2">
-                <li>{isRtl ? 'تقديم الخدمات التعليمية وتحسينها' : 'Providing and improving educational services'}</li>
-                <li>{isRtl ? 'إدارة حسابك وتتبع تقدمك' : 'Managing your account and tracking your progress'}</li>
-                <li>{isRtl ? 'التواصل معك بشأن الدروس والتحديثات' : 'Communicating with you about lessons and updates'}</li>
-                <li>{isRtl ? 'معالجة المدفوعات وإصدار الشهادات' : 'Processing payments and issuing certificates'}</li>
-                <li>{isRtl ? 'تحسين تجربة المستخدم على المنصة' : 'Improving user experience on the platform'}</li>
+                <li>{isRtl ? 'تقديم الخدمات التعليمية وإدارة حسابك — الأساس: تنفيذ العقد' : 'Providing educational services and managing your account — Basis: contract performance'}</li>
+                <li>{isRtl ? 'معالجة المدفوعات وإصدار الشهادات — الأساس: تنفيذ العقد' : 'Processing payments and issuing certificates — Basis: contract performance'}</li>
+                <li>{isRtl ? 'تحسين المنصة وتحليل الاستخدام — الأساس: المصلحة المشروعة' : 'Improving the platform and usage analytics — Basis: legitimate interest'}</li>
+                <li>{isRtl ? 'منع الاحتيال وحماية الأمان — الأساس: المصلحة المشروعة والالتزام القانوني' : 'Fraud prevention and security — Basis: legitimate interest and legal obligation'}</li>
+                <li>{isRtl ? 'التواصل بشأن الدروس والتحديثات — الأساس: الموافقة' : 'Communicating about lessons and updates — Basis: consent'}</li>
               </ul>
+            </section>
+
+            <section className="bg-card rounded-2xl p-8 border border-primary/10">
+              <h2 className="text-2xl font-bold text-foreground mb-4">
+                {isRtl ? 'مشاركة البيانات مع أطراف ثالثة' : 'Data Sharing & Recipients'}
+              </h2>
+              <ul className="list-disc list-inside space-y-2">
+                <li>{isRtl
+                  ? 'Paddle.com — بصفتها التاجر المسجّل (Merchant of Record)، تتلقى بيانات الدفع والمستخدم لمعالجة المعاملات والضرائب والفواتير وإدارة الاشتراكات'
+                  : 'Paddle.com — as the Merchant of Record, receives user and payment data to process transactions, tax compliance, invoicing, and subscription management'}</li>
+                <li>{isRtl ? 'مزودو خدمات الاستضافة والبنية التحتية' : 'Hosting and infrastructure service providers'}</li>
+                <li>{isRtl ? 'أدوات التحليل والدعم الفني' : 'Analytics and support tooling providers'}</li>
+                <li>{isRtl ? 'المستشارون المهنيون (قانونيون ومحاسبيون) عند الحاجة' : 'Professional advisers (legal, accounting) when necessary'}</li>
+                <li>{isRtl ? 'الجهات الرسمية عندما يقتضي القانون ذلك' : 'Authorities where required by law'}</li>
+              </ul>
+            </section>
+
+            <section className="bg-card rounded-2xl p-8 border border-primary/10">
+              <h2 className="text-2xl font-bold text-foreground mb-4">
+                {isRtl ? 'فترات الاحتفاظ بالبيانات' : 'Data Retention'}
+              </h2>
+              <p>
+                {isRtl
+                  ? 'نحتفظ ببياناتك الشخصية طالما كان حسابك نشطاً أو حسب الحاجة لتقديم خدماتنا. عند حذف حسابك، نحذف بياناتك أو نجعلها مجهولة الهوية خلال 90 يوماً، ما لم يكن الاحتفاظ بها مطلوباً بموجب القانون (مثل السجلات المالية التي تُحفظ لمدة تصل إلى 7 سنوات).'
+                  : 'We retain your personal data for as long as your account is active or as needed to provide our services. Upon account deletion, we delete or anonymise your data within 90 days, unless retention is required by law (e.g. financial records may be kept for up to 7 years).'}
+              </p>
             </section>
 
             <section className="bg-card rounded-2xl p-8 border border-primary/10">
@@ -58,8 +85,19 @@ const Privacy = () => {
               </h2>
               <p>
                 {isRtl
-                  ? 'نحن نستخدم تقنيات أمان متقدمة لحماية بياناتك الشخصية من الوصول غير المصرح به أو الاستخدام أو الإفصاح. جميع البيانات مشفرة ومحمية وفقاً لأفضل الممارسات الأمنية.'
-                  : 'We use advanced security technologies to protect your personal data from unauthorized access, use, or disclosure. All data is encrypted and protected according to security best practices.'}
+                  ? 'نلتزم بتطبيق تدابير تقنية وتنظيمية مناسبة لحماية بياناتك الشخصية، بما في ذلك التشفير وضوابط الوصول والمراقبة الأمنية المستمرة.'
+                  : 'We are committed to implementing appropriate technical and organisational measures to protect your personal data, including encryption, access controls, and ongoing security monitoring.'}
+              </p>
+            </section>
+
+            <section className="bg-card rounded-2xl p-8 border border-primary/10">
+              <h2 className="text-2xl font-bold text-foreground mb-4">
+                {isRtl ? 'ملفات تعريف الارتباط (Cookies)' : 'Cookies'}
+              </h2>
+              <p>
+                {isRtl
+                  ? 'نستخدم ملفات تعريف الارتباط الأساسية لتشغيل المنصة وملفات التحليل لتحسين تجربتك. يمكنك إدارة تفضيلاتك من خلال إعدادات المتصفح.'
+                  : 'We use essential cookies to operate the platform and analytics cookies to improve your experience. You can manage your preferences through your browser settings.'}
               </p>
             </section>
 
@@ -68,10 +106,12 @@ const Privacy = () => {
                 {isRtl ? 'حقوقك' : 'Your Rights'}
               </h2>
               <ul className="list-disc list-inside space-y-2">
-                <li>{isRtl ? 'الوصول إلى بياناتك الشخصية وتعديلها' : 'Access and modify your personal data'}</li>
-                <li>{isRtl ? 'طلب حذف حسابك وبياناتك' : 'Request deletion of your account and data'}</li>
+                <li>{isRtl ? 'الوصول إلى بياناتك الشخصية وتعديلها' : 'Access and rectify your personal data'}</li>
+                <li>{isRtl ? 'طلب حذف حسابك وبياناتك' : 'Request erasure of your account and data'}</li>
+                <li>{isRtl ? 'تقييد أو الاعتراض على المعالجة' : 'Restrict or object to processing'}</li>
+                <li>{isRtl ? 'الحصول على نسخة من بياناتك (قابلية النقل)' : 'Data portability — obtain a copy of your data'}</li>
+                <li>{isRtl ? 'سحب موافقتك في أي وقت' : 'Withdraw consent at any time'}</li>
                 <li>{isRtl ? 'إلغاء الاشتراك من الرسائل التسويقية' : 'Unsubscribe from marketing communications'}</li>
-                <li>{isRtl ? 'الحصول على نسخة من بياناتك' : 'Obtain a copy of your data'}</li>
               </ul>
             </section>
 
@@ -81,8 +121,8 @@ const Privacy = () => {
               </h2>
               <p>
                 {isRtl
-                  ? 'إذا كان لديك أي أسئلة حول سياسة الخصوصية، يمكنك التواصل معنا عبر واتساب أو من خلال نظام الدعم في المنصة.'
-                  : 'If you have any questions about the Privacy Policy, you can contact us via WhatsApp or through the platform support system.'}
+                  ? 'إذا كان لديك أي أسئلة حول سياسة الخصوصية أو ترغب في ممارسة حقوقك، يمكنك التواصل معنا عبر واتساب أو من خلال نظام الدعم في المنصة.'
+                  : 'If you have any questions about this Privacy Notice or wish to exercise your rights, you can contact us via WhatsApp or through the platform support system.'}
               </p>
             </section>
           </div>
