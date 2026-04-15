@@ -189,7 +189,7 @@ const CourseDetails = () => {
         priceId,
         customerEmail: user.email,
         customData: { userId: user.id },
-        successUrl: `${window.location.origin}/courses/${course.id}?checkout=success`,
+        successUrl: `${window.location.origin}/payment-success?course=${course.id}`,
       });
     } catch (error) {
       console.error('Checkout error:', error);
