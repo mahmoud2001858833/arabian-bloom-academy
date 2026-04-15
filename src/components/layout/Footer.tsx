@@ -5,7 +5,7 @@ import { useLanguage } from '@/i18n/LanguageContext';
 import logo from '@/assets/new-logo.png';
 
 const Footer = () => {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   const currentYear = new Date().getFullYear();
 
   const scrollToTop = () => {
@@ -102,6 +102,7 @@ const Footer = () => {
           <div className="flex gap-6 text-sm text-white/60">
             <Link to="/terms" className="hover:text-gold transition-colors">{t('footer.termsOfUse')}</Link>
             <Link to="/privacy" className="hover:text-gold transition-colors">{t('footer.privacyPolicy')}</Link>
+            <Link to="/refund" className="hover:text-gold transition-colors">{language === 'ar' || language === 'ur' ? 'سياسة الاسترداد' : 'Refund Policy'}</Link>
           </div>
         </div>
       </div>
