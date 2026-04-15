@@ -5,7 +5,7 @@ import { useLanguage } from '@/i18n/LanguageContext';
 import logo from '@/assets/new-logo.png';
 
 const Footer = () => {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   const currentYear = new Date().getFullYear();
 
   const scrollToTop = () => {
