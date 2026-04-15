@@ -25,6 +25,7 @@ import IntroVideo from "./pages/IntroVideo";
 import Reviews from "./pages/Reviews";
 import Offers from "./pages/Offers";
 import Books from "./pages/Books";
+import PaymentSuccess from "./pages/PaymentSuccess";
 
 // Create query client instance
 const queryClient = new QueryClient({
