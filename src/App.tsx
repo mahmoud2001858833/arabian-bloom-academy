@@ -67,6 +67,7 @@ function App() {
                 <Route path="/reviews" element={<Reviews />} />
                 <Route path="/offers" element={<Offers />} />
                 <Route path="/books" element={<Books />} />
+                <Route path="/payment-success" element={<PaymentSuccess />} />
                 <Route path="*" element={<NotFound />} />
               </Routes>
               <AIGuide />
