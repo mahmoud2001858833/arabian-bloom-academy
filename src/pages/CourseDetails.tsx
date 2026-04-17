@@ -333,7 +333,7 @@ const CourseDetails = () => {
             <div className="lg:col-span-2 space-y-6">
               <Card className="overflow-hidden bg-card/50 backdrop-blur-sm border-border/50">
                 <CardContent className="p-0">
-                  {isEnrolled || course.is_free || selectedLesson?.is_free_preview ? (
+                  {user && (isEnrolled || course.is_free || selectedLesson?.is_free_preview) ? (
                     selectedLesson?.video_url ? (
                       <VideoPlayer 
                         videoKey={selectedLesson.video_url} 
