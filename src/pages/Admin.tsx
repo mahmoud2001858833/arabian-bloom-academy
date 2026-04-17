@@ -1175,14 +1175,29 @@ const Admin = () => {
               </div>
               
               <div className="grid gap-2">
-                <Label className="font-bold">السعر ($)</Label>
-                <Input
-                  type="number"
-                  value={courseForm.price}
-                  onChange={(e) => setCourseForm({ ...courseForm, price: Number(e.target.value) })}
-                  disabled={courseForm.is_free}
-                  className="rounded-xl border-border"
-                />
+                <Label className="font-bold">السعر</Label>
+                <div className="flex gap-2">
+                  <Input
+                    type="number"
+                    value={courseForm.price}
+                    onChange={(e) => setCourseForm({ ...courseForm, price: Number(e.target.value) })}
+                    disabled={courseForm.is_free}
+                    className="rounded-xl border-border flex-1"
+                  />
+                  <Select
+                    value={courseForm.currency}
+                    onValueChange={(v) => setCourseForm({ ...courseForm, currency: v })}
+                    disabled={courseForm.is_free}
+                  >
+                    <SelectTrigger className="rounded-xl border-border w-28">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="USD">USD ($)</SelectItem>
+                      <SelectItem value="JOD">JOD (د.أ)</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
               </div>
             </div>
             
