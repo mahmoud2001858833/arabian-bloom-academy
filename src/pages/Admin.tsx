@@ -244,6 +244,7 @@ const Admin = () => {
     const { data, error } = await supabase
       .from('courses')
       .select('*')
+      .order('sort_order', { ascending: true })
       .order('created_at', { ascending: false });
 
     if (error) {

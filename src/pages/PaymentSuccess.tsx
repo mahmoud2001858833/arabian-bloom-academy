@@ -1,8 +1,7 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { useSearchParams, useNavigate, Link } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
-import { useLanguage } from '@/i18n/LanguageContext';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
 import PageTransition from '@/components/layout/PageTransition';
@@ -13,62 +12,60 @@ const PaymentSuccess = () => {
   const [searchParams] = useSearchParams();
   const courseId = searchParams.get('course');
   const navigate = useNavigate();
-  const { user } = useAuth();
-  const { t } = useLanguage();
+  const { user, loading: authLoading } = useAuth();
   const [courseName, setCourseName] = useState('');
   const [enrolled, setEnrolled] = useState(false);
-  const [checking, setChecking] = useState(true);
+  const [working, setWorking] = useState(true);
+  const ranRef = useRef(false);
 
   useEffect(() => {
     if (!courseId) return;
-
-    const fetchCourse = async () => {
-      const { data } = await supabase
-        .from('courses')
-        .select('title')
-        .eq('id', courseId)
-        .maybeSingle();
-      if (data) setCourseName(data.title);
-    };
-
-    fetchCourse();
+    supabase
+      .from('courses')
+      .select('title')
+      .eq('id', courseId)
+      .maybeSingle()
+      .then(({ data }) => data && setCourseName(data.title));
   }, [courseId]);
 
-  // Poll for enrollment (webhook may take a moment)
+  // Immediately ensure enrollment exists (client-side fallback) then redirect
   useEffect(() => {
-    if (!courseId || !user) return;
+    if (!courseId || authLoading || ranRef.current) return;
+    if (!user) {
+      // Need login — send to auth then back here
+      navigate(`/auth?redirect=/payment-success?course=${courseId}`);
+      return;
+    }
+    ranRef.current = true;
 
-    let attempts = 0;
-    const maxAttempts = 15;
-
-    const checkEnrollment = async () => {
-      const { data } = await supabase
+    const ensureEnrollmentAndGo = async () => {
+      // Check existing
+      const { data: existing } = await supabase
         .from('enrollments')
         .select('id')
         .eq('course_id', courseId)
         .eq('user_id', user.id)
         .maybeSingle();
 
-      if (data) {
-        setEnrolled(true);
-        setChecking(false);
-        return true;
+      if (!existing) {
+        // Create instantly (RLS allows users to insert their own)
+        await supabase.from('enrollments').insert({
+          course_id: courseId,
+          user_id: user.id,
+        });
       }
-      return false;
+
+      setEnrolled(true);
+      setWorking(false);
+
+      // Auto-redirect after a short celebratory pause
+      setTimeout(() => {
+        navigate(`/courses/${courseId}`);
+      }, 1500);
     };
 
-    const poll = async () => {
-      const found = await checkEnrollment();
-      if (!found && attempts < maxAttempts) {
-        attempts++;
-        setTimeout(poll, 2000);
-      } else if (!found) {
-        setChecking(false);
-      }
-    };
-
-    poll();
-  }, [courseId, user]);
+    ensureEnrollmentAndGo();
+  }, [courseId, user, authLoading, navigate]);
 
   return (
     <PageTransition>
@@ -89,15 +86,15 @@ const PaymentSuccess = () => {
               : 'تم إتمام عملية الدفع بنجاح'}
           </p>
 
-          {checking ? (
+          {working ? (
             <div className="flex items-center justify-center gap-2 text-muted-foreground">
               <Loader2 className="w-5 h-5 animate-spin" />
-              <span>جاري تفعيل الكورس...</span>
+              <span>جاري تفعيل الكورس وفتحه...</span>
             </div>
-          ) : enrolled ? (
+          ) : (
             <div className="space-y-3">
               <p className="text-green-600 font-medium">
-                ✅ تم تفعيل الكورس — يمكنك البدء فوراً!
+                ✅ تم تفعيل الكورس — يتم فتحه الآن...
               </p>
               <Button
                 size="lg"
@@ -106,20 +103,6 @@ const PaymentSuccess = () => {
               >
                 <BookOpen className="w-5 h-5 ml-2" />
                 ابدأ الدراسة الآن
-              </Button>
-            </div>
-          ) : (
-            <div className="space-y-3">
-              <p className="text-amber-600 text-sm">
-                قد يستغرق تفعيل الكورس دقيقة واحدة. يمكنك الانتقال للكورس وتحديث الصفحة.
-              </p>
-              <Button
-                size="lg"
-                className="w-full"
-                onClick={() => navigate(`/courses/${courseId}`)}
-              >
-                <BookOpen className="w-5 h-5 ml-2" />
-                الذهاب للكورس
               </Button>
             </div>
           )}
