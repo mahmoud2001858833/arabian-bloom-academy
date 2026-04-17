@@ -503,7 +503,7 @@ const CourseDetails = () => {
                     {lessons.map((lesson, index) => {
                       const isCompleted = isLessonCompleted(lesson.id);
                       const isSelected = selectedLesson?.id === lesson.id;
-                      const canAccess = isEnrolled || course.is_free || lesson.is_free_preview;
+                      const canAccess = !!user && (isEnrolled || course.is_free || lesson.is_free_preview);
 
                       return (
                         <button
