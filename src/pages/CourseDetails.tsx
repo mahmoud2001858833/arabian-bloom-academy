@@ -353,13 +353,21 @@ const CourseDetails = () => {
                         <div className="w-20 h-20 mx-auto mb-6 rounded-full bg-accent/10 flex items-center justify-center">
                           <Lock className="w-10 h-10 text-accent" />
                         </div>
-                        <h3 className="text-xl font-bold mb-2">{t('courseDetails.contentLocked')}</h3>
+                        <h3 className="text-xl font-bold mb-2">
+                          {!user ? t('courseDetails.loginRequired') : t('courseDetails.contentLocked')}
+                        </h3>
                         <p className="text-muted-foreground mb-6 max-w-sm">
-                          {t('courseDetails.subscribeToAccess')}
+                          {!user ? 'يجب تسجيل الدخول لمشاهدة الدروس حتى المعاينة المجانية' : t('courseDetails.subscribeToAccess')}
                         </p>
-                        <Button onClick={handleEnroll} disabled={enrolling} className="gap-2">
-                          {enrolling ? t('courseDetails.enrolling') : t('courseDetails.subscribeNow')}
-                        </Button>
+                        {!user ? (
+                          <Button onClick={() => navigate('/auth')} className="gap-2">
+                            تسجيل الدخول
+                          </Button>
+                        ) : (
+                          <Button onClick={handleEnroll} disabled={enrolling} className="gap-2">
+                            {enrolling ? t('courseDetails.enrolling') : t('courseDetails.subscribeNow')}
+                          </Button>
+                        )}
                       </div>
                     </div>
                   )}
