@@ -34,6 +34,7 @@ import AudioRecorder from '@/components/admin/AudioRecorder';
 import AdminDashboard from '@/components/admin/AdminDashboard';
 import OffersManagement from '@/components/admin/OffersManagement';
 import BookManagement from '@/components/admin/BookManagement';
+import SortableCoursesList from '@/components/admin/SortableCoursesList';
 
 interface Course {
   id: string;
@@ -244,6 +245,7 @@ const Admin = () => {
     const { data, error } = await supabase
       .from('courses')
       .select('*')
+      .order('sort_order', { ascending: true })
       .order('created_at', { ascending: false });
 
     if (error) {
@@ -932,79 +934,18 @@ const Admin = () => {
                     </Button>
                   </div>
                 ) : (
-                  <div className="divide-y divide-white/10">
-                    <AnimatePresence>
-                      {courses.map((course) => (
-                        <motion.div
-                          key={course.id}
-                          initial={{ opacity: 0 }}
-                          animate={{ opacity: 1 }}
-                          exit={{ opacity: 0 }}
-                          onClick={() => selectCourse(course)}
-                          className={`p-4 cursor-pointer transition-all ${
-                            selectedCourse?.id === course.id 
-                              ? 'bg-accent/20 border-r-4 border-accent' 
-                              : 'hover:bg-white/5'
-                          }`}
-                        >
-                          <div className="flex items-start justify-between gap-3">
-                            <div className="flex-1 min-w-0">
-                              <h4 className="font-bold text-white truncate">{course.title}</h4>
-                              <div className="flex flex-wrap items-center gap-2 mt-2">
-                                <Badge 
-                                  className={`text-xs ${
-                                    course.is_published 
-                                      ? 'bg-emerald-500/20 text-emerald-400 border-emerald-500/30' 
-                                      : 'bg-white/10 text-white/60 border-white/20'
-                                  }`}
-                                >
-                                  {course.is_published ? 'منشور' : 'مسودة'}
-                                </Badge>
-                                <Badge className={`text-xs border ${levelColors[course.level as keyof typeof levelColors]}`}>
-                                  {levelLabels[course.level as keyof typeof levelLabels]}
-                                </Badge>
-                                {course.is_free ? (
-                                  <Badge className="bg-accent/20 text-accent border-accent/30 text-xs">مجاني</Badge>
-                                ) : (
-                                  <Badge className="bg-white/10 text-white/70 border-white/20 text-xs">${course.price}</Badge>
-                                )}
-                              </div>
-                            </div>
-                            <div className="flex items-center gap-1">
-                              <Button
-                                size="icon"
-                                variant="ghost"
-                                className="h-8 w-8 text-white/60 hover:text-accent hover:bg-accent/10"
-                                onClick={(e) => { e.stopPropagation(); togglePublish(course.id, course.is_published); }}
-                              >
-                                {course.is_published ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-                              </Button>
-                              <Button
-                                size="icon"
-                                variant="ghost"
-                                className="h-8 w-8 text-white/60 hover:text-accent hover:bg-accent/10"
-                                onClick={(e) => { e.stopPropagation(); openEditCourse(course); }}
-                              >
-                                <Edit className="h-4 w-4" />
-                              </Button>
-                              <Button
-                                size="icon"
-                                variant="ghost"
-                                className="h-8 w-8 text-white/60 hover:text-destructive hover:bg-destructive/10"
-                                onClick={(e) => { 
-                                  e.stopPropagation(); 
-                                  setDeleteTarget({ type: 'course', id: course.id });
-                                  setShowDeleteDialog(true);
-                                }}
-                              >
-                                <Trash2 className="h-4 w-4" />
-                              </Button>
-                            </div>
-                          </div>
-                        </motion.div>
-                      ))}
-                    </AnimatePresence>
-                  </div>
+                  <SortableCoursesList
+                    courses={courses}
+                    setCourses={setCourses}
+                    selectedId={selectedCourse?.id}
+                    onSelect={selectCourse}
+                    onTogglePublish={togglePublish}
+                    onEdit={openEditCourse}
+                    onDelete={(id) => {
+                      setDeleteTarget({ type: 'course', id });
+                      setShowDeleteDialog(true);
+                    }}
+                  />
                 )}
               </div>
             </div>
