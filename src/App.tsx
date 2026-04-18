@@ -28,6 +28,7 @@ import Reviews from "./pages/Reviews";
 import Offers from "./pages/Offers";
 import Books from "./pages/Books";
 import PaymentSuccess from "./pages/PaymentSuccess";
+import BookPaymentSuccess from "./pages/BookPaymentSuccess";
 
 // Create query client instance
 const queryClient = new QueryClient({
@@ -72,6 +73,7 @@ function App() {
                 <Route path="/offers" element={<Offers />} />
                 <Route path="/books" element={<Books />} />
                 <Route path="/payment-success" element={<PaymentSuccess />} />
+                <Route path="/book-success" element={<BookPaymentSuccess />} />
                 <Route path="*" element={<NotFound />} />
               </Routes>
               <AIGuide />

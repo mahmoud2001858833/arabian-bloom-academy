@@ -7,6 +7,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { useLanguage } from '@/i18n/LanguageContext';
 import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/hooks/use-toast';
+import { usePaddleCheckout } from '@/hooks/usePaddleCheckout';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
 import PageTransition from '@/components/layout/PageTransition';
@@ -21,10 +22,16 @@ interface Book {
   cover_image_url: string | null;
 }
 
+// Map book UUIDs to Paddle price IDs (must match payments-webhook PRODUCT_TO_BOOK)
+const BOOK_PRICE_MAP: Record<string, string> = {
+  'fc989232-a403-465d-a582-ba66d70fa308': 'book_electrical_camel_onetime',
+};
+
 const Books = () => {
   const { t } = useLanguage();
   const { user } = useAuth();
   const { toast } = useToast();
+  const { openCheckout } = usePaddleCheckout();
   const [books, setBooks] = useState<Book[]>([]);
   const [purchases, setPurchases] = useState<string[]>([]);
   const [loading, setLoading] = useState(true);
@@ -48,27 +55,70 @@ const Books = () => {
   };
 
   const handleBuy = async (book: Book) => {
-    if (!user) { toast({ title: t('exams.loginRequired'), variant: 'destructive' }); return; }
+    if (!user) {
+      toast({ title: t('exams.loginRequired'), variant: 'destructive' });
+      return;
+    }
+
+    // Free book — record completed purchase directly
     if (book.price === 0) {
-      // Free book - create completed purchase
       setBuying(book.id);
-      await supabase.from('book_purchases').insert({ user_id: user.id, book_id: book.id, amount: 0, status: 'completed' });
+      await supabase.from('book_purchases').insert({
+        user_id: user.id,
+        book_id: book.id,
+        amount: 0,
+        status: 'completed',
+      });
       toast({ title: t('books.purchaseSuccess') });
       fetchPurchases();
       setBuying(null);
       return;
     }
-    // For paid books, just mark as pending (admin will approve)
+
+    // Paid book — open Paddle checkout
+    const priceId = BOOK_PRICE_MAP[book.id];
+    if (!priceId) {
+      toast({
+        title: 'الدفع غير متاح',
+        description: 'هذا الكتاب غير مربوط بنظام الدفع بعد. يرجى التواصل مع الدعم.',
+        variant: 'destructive',
+      });
+      return;
+    }
+
     setBuying(book.id);
-    await supabase.from('book_purchases').insert({ user_id: user.id, book_id: book.id, amount: book.price, status: 'completed' });
-    toast({ title: t('books.purchaseSuccess') });
-    fetchPurchases();
-    setBuying(null);
+    try {
+      await openCheckout({
+        priceId,
+        customerEmail: user.email,
+        customData: { userId: user.id, bookId: book.id },
+        successUrl: `${window.location.origin}/book-success?book=${book.id}`,
+      });
+    } catch (e) {
+      toast({ title: 'تعذر فتح صفحة الدفع', variant: 'destructive' });
+    } finally {
+      setBuying(null);
+    }
   };
 
   const handleDownload = async (book: Book) => {
-    if (!book.pdf_url) return;
-    const { data, error } = await supabase.storage.from('book-files').createSignedUrl(book.pdf_url, 3600);
+    if (!book.pdf_url) {
+      toast({ title: 'لا يوجد ملف للتحميل بعد', variant: 'destructive' });
+      return;
+    }
+    // Re-verify the purchase server-side via RLS
+    const { data: ok } = await supabase
+      .from('book_purchases')
+      .select('id')
+      .eq('user_id', user!.id)
+      .eq('book_id', book.id)
+      .eq('status', 'completed')
+      .maybeSingle();
+    if (!ok) {
+      toast({ title: 'الشراء غير مؤكد بعد', variant: 'destructive' });
+      return;
+    }
+    const { data } = await supabase.storage.from('book-files').createSignedUrl(book.pdf_url, 3600);
     if (data?.signedUrl) {
       window.open(data.signedUrl, '_blank');
     } else {
