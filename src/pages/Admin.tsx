@@ -35,6 +35,7 @@ import AdminDashboard from '@/components/admin/AdminDashboard';
 import OffersManagement from '@/components/admin/OffersManagement';
 import BookManagement from '@/components/admin/BookManagement';
 import SortableCoursesList from '@/components/admin/SortableCoursesList';
+import SortableLessonsList from '@/components/admin/SortableLessonsList';
 
 interface Course {
   id: string;
@@ -995,77 +996,16 @@ const Admin = () => {
                     </Button>
                   </div>
                 ) : (
-                  <div className="divide-y divide-white/10">
-                    <AnimatePresence>
-                      {lessons.map((lesson, index) => (
-                        <motion.div 
-                          key={lesson.id} 
-                          initial={{ opacity: 0, x: 20 }}
-                          animate={{ opacity: 1, x: 0 }}
-                          exit={{ opacity: 0, x: -20 }}
-                          transition={{ delay: index * 0.05 }}
-                          className="p-4 hover:bg-white/5 transition-colors"
-                        >
-                          <div className="flex items-center gap-4">
-                            <div className="flex items-center justify-center w-12 h-12 rounded-xl bg-accent/20 text-accent font-black text-lg">
-                              {index + 1}
-                            </div>
-                            <div className="flex-1 min-w-0">
-                              <h4 className="font-bold text-white">{lesson.title}</h4>
-                              <p className="text-sm text-white/50 truncate">{lesson.description}</p>
-                              <div className="flex items-center gap-3 mt-1 text-xs text-white/40">
-                                {lesson.duration_minutes > 0 && (
-                                  <span>{lesson.duration_minutes} دقيقة</span>
-                                )}
-                                {lesson.video_url && (
-                                  <Badge className="bg-primary/20 text-primary-foreground border-0 text-xs">
-                                    <Sparkles className="h-3 w-3 ml-1" />
-                                    فيديو
-                                  </Badge>
-                                )}
-                                {lesson.pdf_url && (
-                                  <Badge className="bg-blue-500/20 text-blue-400 border-0 text-xs">
-                                    <FileUp className="h-3 w-3 ml-1" />
-                                    PDF
-                                  </Badge>
-                                )}
-                              </div>
-                            </div>
-                            <div className="flex items-center gap-1">
-                              <Button
-                                size="icon"
-                                variant="ghost"
-                                className="h-9 w-9 text-white/60 hover:text-blue-400 hover:bg-blue-500/10"
-                                onClick={() => openQuizDialog(lesson)}
-                                title="إدارة الأسئلة"
-                              >
-                                <HelpCircle className="h-4 w-4" />
-                              </Button>
-                              <Button
-                                size="icon"
-                                variant="ghost"
-                                className="h-9 w-9 text-white/60 hover:text-accent hover:bg-accent/10"
-                                onClick={() => openEditLesson(lesson)}
-                              >
-                                <Edit className="h-4 w-4" />
-                              </Button>
-                              <Button
-                                size="icon"
-                                variant="ghost"
-                                className="h-9 w-9 text-white/60 hover:text-destructive hover:bg-destructive/10"
-                                onClick={() => {
-                                  setDeleteTarget({ type: 'lesson', id: lesson.id });
-                                  setShowDeleteDialog(true);
-                                }}
-                              >
-                                <Trash2 className="h-4 w-4" />
-                              </Button>
-                            </div>
-                          </div>
-                        </motion.div>
-                      ))}
-                    </AnimatePresence>
-                  </div>
+                  <SortableLessonsList
+                    lessons={lessons as any}
+                    setLessons={(l) => setLessons(l as any)}
+                    onEdit={(l) => openEditLesson(l as any)}
+                    onQuiz={(l) => openQuizDialog(l as any)}
+                    onDelete={(id) => {
+                      setDeleteTarget({ type: 'lesson', id });
+                      setShowDeleteDialog(true);
+                    }}
+                  />
                 )}
               </div>
             </div>
