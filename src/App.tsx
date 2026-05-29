@@ -29,7 +29,6 @@ import Offers from "./pages/Offers";
 import Books from "./pages/Books";
 import PaymentSuccess from "./pages/PaymentSuccess";
 import BookPaymentSuccess from "./pages/BookPaymentSuccess";
-import PaymentOverlay from "./components/PaymentOverlay";
 
 // Create query client instance
 const queryClient = new QueryClient({
@@ -80,7 +79,6 @@ function App() {
               <AIGuide />
               <SupportChat />
             </BrowserRouter>
-            <PaymentOverlay />
           </TooltipProvider>
         </AuthProvider>
       </LanguageProvider>
