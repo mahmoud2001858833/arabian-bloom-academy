@@ -405,18 +405,16 @@ const Admin = () => {
         toast({ title: 'تم بنجاح', description: 'تم إنشاء الدرس الجديد' });
         // Auto-generate subtitles (speech-to-text + translation) for new lessons with video.
         if (inserted?.id && lessonData.video_url) {
-          toast({ title: 'جارٍ توليد الترجمة', description: 'يتم تفريغ صوت الفيديو وترجمته لكل اللغات في الخلفية.' });
-          supabase.functions
-            .invoke('transcribe-lesson-video', { body: { lesson_id: inserted.id } })
-            .then(({ error: fnError }) => {
-              if (fnError) {
-                console.error('Subtitle generation failed:', fnError);
-                toast({ title: 'فشل توليد الترجمة', description: 'يمكنك إعادة المحاولة من زر الترجمة بجانب الدرس', variant: 'destructive' });
-              } else {
-                toast({ title: 'تمت الترجمة', description: 'أصبحت ترجمة الدرس متاحة للطلاب' });
-              }
-              fetchLessons(selectedCourse.id);
-            });
+          toast({ title: 'جارٍ توليد الترجمة', description: 'يتم تفريغ صوت الفيديو وترجمته لكل اللغات، لا تغلق الصفحة.' });
+          generateLessonSubtitles(inserted.id, lessonData.video_url)
+            .then(() => {
+              toast({ title: 'تمت الترجمة', description: 'أصبحت ترجمة الدرس متاحة للطلاب' });
+            })
+            .catch((fnError) => {
+              console.error('Subtitle generation failed:', fnError);
+              toast({ title: 'فشل توليد الترجمة', description: 'يمكنك إعادة المحاولة من زر الترجمة بجانب الدرس', variant: 'destructive' });
+            })
+            .finally(() => fetchLessons(selectedCourse.id));
         }
         fetchLessons(selectedCourse.id); setShowLessonDialog(false);
       }
