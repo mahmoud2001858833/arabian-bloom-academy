@@ -22,6 +22,7 @@ import { motion } from 'framer-motion';
 import { useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
+import { generateLessonSubtitles } from '@/lib/generateSubtitles';
 
 interface Lesson {
   id: string;
@@ -198,6 +199,7 @@ const SortableLessonsList = ({ lessons, setLessons, onEdit, onDelete, onQuiz }: 
   };
 
   const handleSubtitles = async (lesson: Lesson) => {
+    if (!lesson.video_url) return;
     setBusyId(lesson.id);
     setLessons(
       lessons.map((l) => (l.id === lesson.id ? { ...l, subtitle_status: 'processing' } : l)),
@@ -207,11 +209,9 @@ const SortableLessonsList = ({ lessons, setLessons, onEdit, onDelete, onQuiz }: 
       description: 'يتم تفريغ الصوت وترجمته لجميع اللغات، قد يستغرق ذلك دقائق.',
     });
     try {
-      const { data, error } = await supabase.functions.invoke('transcribe-lesson-video', {
-        body: { lesson_id: lesson.id },
+      await generateLessonSubtitles(lesson.id, lesson.video_url, (message) => {
+        toast({ title: 'توليد الترجمة', description: message });
       });
-      if (error) throw error;
-      if ((data as { error?: string })?.error) throw new Error((data as { error: string }).error);
       setLessons(lessons.map((l) => (l.id === lesson.id ? { ...l, subtitle_status: 'ready' } : l)));
       toast({ title: 'تمت الترجمة', description: 'أصبحت الترجمة متاحة للطلاب بكل اللغات' });
     } catch (e) {
