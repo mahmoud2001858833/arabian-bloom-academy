@@ -1121,7 +1121,7 @@ const Admin = () => {
               <div className="grid gap-2">
                 <Label className="font-bold">المستوى</Label>
                 <Select value={courseForm.level} onValueChange={(v) => setCourseForm({ ...courseForm, level: v })}>
-                  <SelectTrigger className="rounded-xl border-border">
+                  <SelectTrigger className="rounded-xl border-border [&>svg]:h-5 [&>svg]:w-5 [&>svg]:opacity-100 [&>svg]:text-primary">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent className="bg-card border-border">
