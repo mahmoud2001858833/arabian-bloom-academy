@@ -20,3 +20,6 @@ verify_jwt = false
 
 [functions.payments-webhook]
 verify_jwt = false
+
+[functions.transcribe-lesson-video]
+verify_jwt = false
