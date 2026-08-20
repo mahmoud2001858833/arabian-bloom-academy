@@ -17,8 +17,9 @@ import {
 import { CSS } from '@dnd-kit/utilities';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Edit, FileUp, GripVertical, HelpCircle, Sparkles, Trash2 } from 'lucide-react';
+import { Edit, FileUp, GripVertical, HelpCircle, Languages, Loader2, Sparkles, Trash2 } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 
@@ -31,6 +32,7 @@ interface Lesson {
   pdf_url?: string | null;
   duration_minutes: number;
   order_index: number;
+  subtitle_status?: string | null;
 }
 
 interface SortableRowProps {
@@ -39,9 +41,11 @@ interface SortableRowProps {
   onEdit: (l: Lesson) => void;
   onDelete: (id: string) => void;
   onQuiz: (l: Lesson) => void;
+  onSubtitles: (l: Lesson) => void;
+  subtitleBusy: boolean;
 }
 
-const SortableRow = ({ lesson, index, onEdit, onDelete, onQuiz }: SortableRowProps) => {
+const SortableRow = ({ lesson, index, onEdit, onDelete, onQuiz, onSubtitles, subtitleBusy }: SortableRowProps) => {
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } =
     useSortable({ id: lesson.id });
 
@@ -88,9 +92,39 @@ const SortableRow = ({ lesson, index, onEdit, onDelete, onQuiz }: SortableRowPro
                 PDF
               </Badge>
             )}
+            {lesson.video_url && lesson.subtitle_status && lesson.subtitle_status !== 'none' && (
+              <Badge
+                className={
+                  lesson.subtitle_status === 'ready'
+                    ? 'bg-green-500/20 text-green-400 border-0 text-xs'
+                    : lesson.subtitle_status === 'failed'
+                      ? 'bg-destructive/20 text-destructive border-0 text-xs'
+                      : 'bg-accent/20 text-accent border-0 text-xs'
+                }
+              >
+                <Languages className="h-3 w-3 ml-1" />
+                {lesson.subtitle_status === 'ready'
+                  ? 'الترجمة جاهزة'
+                  : lesson.subtitle_status === 'failed'
+                    ? 'فشلت الترجمة'
+                    : 'جارٍ توليد الترجمة'}
+              </Badge>
+            )}
           </div>
         </div>
         <div className="flex items-center gap-1">
+          {lesson.video_url && (
+            <Button
+              size="icon"
+              variant="ghost"
+              className="h-9 w-9 text-white/60 hover:text-accent hover:bg-accent/10"
+              onClick={() => onSubtitles(lesson)}
+              disabled={subtitleBusy}
+              title="توليد الترجمة التلقائية"
+            >
+              {subtitleBusy ? <Loader2 className="h-4 w-4 animate-spin" /> : <Languages className="h-4 w-4" />}
+            </Button>
+          )}
           <Button
             size="icon"
             variant="ghost"
@@ -132,6 +166,7 @@ interface Props {
 
 const SortableLessonsList = ({ lessons, setLessons, onEdit, onDelete, onQuiz }: Props) => {
   const { toast } = useToast();
+  const [busyId, setBusyId] = useState<string | null>(null);
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 5 } }),
     useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates })
@@ -162,6 +197,36 @@ const SortableLessonsList = ({ lessons, setLessons, onEdit, onDelete, onQuiz }: 
     }
   };
 
+  const handleSubtitles = async (lesson: Lesson) => {
+    setBusyId(lesson.id);
+    setLessons(
+      lessons.map((l) => (l.id === lesson.id ? { ...l, subtitle_status: 'processing' } : l)),
+    );
+    toast({
+      title: 'جارٍ توليد الترجمة',
+      description: 'يتم تفريغ الصوت وترجمته لجميع اللغات، قد يستغرق ذلك دقائق.',
+    });
+    try {
+      const { data, error } = await supabase.functions.invoke('transcribe-lesson-video', {
+        body: { lesson_id: lesson.id },
+      });
+      if (error) throw error;
+      if ((data as { error?: string })?.error) throw new Error((data as { error: string }).error);
+      setLessons(lessons.map((l) => (l.id === lesson.id ? { ...l, subtitle_status: 'ready' } : l)));
+      toast({ title: 'تمت الترجمة', description: 'أصبحت الترجمة متاحة للطلاب بكل اللغات' });
+    } catch (e) {
+      console.error('Subtitle generation failed:', e);
+      setLessons(lessons.map((l) => (l.id === lesson.id ? { ...l, subtitle_status: 'failed' } : l)));
+      toast({
+        title: 'فشل توليد الترجمة',
+        description: e instanceof Error ? e.message : 'حدث خطأ غير متوقع',
+        variant: 'destructive',
+      });
+    } finally {
+      setBusyId(null);
+    }
+  };
+
   return (
     <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
       <SortableContext items={lessons.map((l) => l.id)} strategy={verticalListSortingStrategy}>
@@ -174,6 +239,8 @@ const SortableLessonsList = ({ lessons, setLessons, onEdit, onDelete, onQuiz }: 
               onEdit={onEdit}
               onDelete={onDelete}
               onQuiz={onQuiz}
+              onSubtitles={handleSubtitles}
+              subtitleBusy={busyId === lesson.id}
             />
           ))}
         </div>
