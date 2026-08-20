@@ -36,6 +36,7 @@ import OffersManagement from '@/components/admin/OffersManagement';
 import BookManagement from '@/components/admin/BookManagement';
 import SortableCoursesList from '@/components/admin/SortableCoursesList';
 import SortableLessonsList from '@/components/admin/SortableLessonsList';
+import { generateLessonSubtitles } from '@/lib/generateSubtitles';
 
 interface Course {
   id: string;
