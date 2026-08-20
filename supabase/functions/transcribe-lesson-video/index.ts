@@ -6,7 +6,6 @@ const corsHeaders = {
     "authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version",
 };
 
-const WORKER_URL = "https://bitter-cloud-d66f.janamuhmad.workers.dev";
 const GATEWAY = "https://ai.gateway.lovable.dev/v1/chat/completions";
 
 const TARGET_LANGUAGES = [
@@ -21,21 +20,6 @@ interface Segment {
   start: number;
   end: number;
   text: string;
-}
-
-function buildVideoUrl(videoKey: string): string {
-  if (!videoKey) return "";
-  let key = videoKey;
-  if (key.startsWith("http")) {
-    try {
-      const url = new URL(key);
-      const parts = url.pathname.split("/");
-      key = parts[parts.length - 1];
-    } catch {
-      return key;
-    }
-  }
-  return `${WORKER_URL}/video/${key}`;
 }
 
 function stripFence(raw: string): string {
