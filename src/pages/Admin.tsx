@@ -36,6 +36,7 @@ import OffersManagement from '@/components/admin/OffersManagement';
 import BookManagement from '@/components/admin/BookManagement';
 import SortableCoursesList from '@/components/admin/SortableCoursesList';
 import SortableLessonsList from '@/components/admin/SortableLessonsList';
+import { generateLessonSubtitles } from '@/lib/generateSubtitles';
 
 interface Course {
   id: string;
@@ -394,11 +395,28 @@ const Admin = () => {
         fetchLessons(selectedCourse.id); setShowLessonDialog(false);
       }
     } else {
-      const { error } = await supabase.from('lessons').insert({ ...lessonData, course_id: selectedCourse.id, order_index: lessons.length });
+      const { data: inserted, error } = await supabase
+        .from('lessons')
+        .insert({ ...lessonData, course_id: selectedCourse.id, order_index: lessons.length })
+        .select('id')
+        .maybeSingle();
       if (error) {
         toast({ title: 'خطأ', description: 'فشل في إنشاء الدرس', variant: 'destructive' });
       } else {
         toast({ title: 'تم بنجاح', description: 'تم إنشاء الدرس الجديد' });
+        // Auto-generate subtitles (speech-to-text + translation) for new lessons with video.
+        if (inserted?.id && lessonData.video_url) {
+          toast({ title: 'جارٍ توليد الترجمة', description: 'يتم تفريغ صوت الفيديو وترجمته لكل اللغات، لا تغلق الصفحة.' });
+          generateLessonSubtitles(inserted.id, lessonData.video_url)
+            .then(() => {
+              toast({ title: 'تمت الترجمة', description: 'أصبحت ترجمة الدرس متاحة للطلاب' });
+            })
+            .catch((fnError) => {
+              console.error('Subtitle generation failed:', fnError);
+              toast({ title: 'فشل توليد الترجمة', description: 'يمكنك إعادة المحاولة من زر الترجمة بجانب الدرس', variant: 'destructive' });
+            })
+            .finally(() => fetchLessons(selectedCourse.id));
+        }
         fetchLessons(selectedCourse.id); setShowLessonDialog(false);
       }
     }

@@ -337,6 +337,7 @@ const CourseDetails = () => {
                     selectedLesson?.video_url ? (
                       <VideoPlayer 
                         videoKey={selectedLesson.video_url} 
+                        lessonId={selectedLesson.id}
                         className="w-full"
                       />
                     ) : (

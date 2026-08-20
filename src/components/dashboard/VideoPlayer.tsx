@@ -1,19 +1,27 @@
 import { useRef, useState, useEffect } from 'react';
-import { Play, Pause, Volume2, VolumeX, Maximize, Loader2 } from 'lucide-react';
+import { Play, Pause, Volume2, VolumeX, Maximize, Loader2, Subtitles } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useCloudflareVideoUrl } from '@/hooks/useCloudflareVideoUrl';
+import { useLessonSubtitles, getSubtitleLabel } from '@/hooks/useLessonSubtitles';
+import { useLanguage } from '@/i18n/LanguageContext';
 
 interface VideoPlayerProps {
   videoKey: string;
   className?: string;
   autoPlay?: boolean;
   showControls?: boolean;
+  /** When provided, generated subtitles for this lesson are attached to the player. */
+  lessonId?: string | null;
 }
 
-const VideoPlayer = ({ videoKey, className, autoPlay = false, showControls = true }: VideoPlayerProps) => {
+const VideoPlayer = ({ videoKey, className, autoPlay = false, showControls = true, lessonId }: VideoPlayerProps) => {
   const videoRef = useRef<HTMLVideoElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const { getVideoUrl } = useCloudflareVideoUrl();
+  const { language } = useLanguage();
+  const { tracks } = useLessonSubtitles(lessonId);
+  const [activeSubtitle, setActiveSubtitle] = useState<string | null>(null);
+  const [showSubtitleMenu, setShowSubtitleMenu] = useState(false);
   
   const [isPlaying, setIsPlaying] = useState(false);
   const [isMuted, setIsMuted] = useState(false);
@@ -24,6 +32,27 @@ const VideoPlayer = ({ videoKey, className, autoPlay = false, showControls = tru
   const [showControlsOverlay, setShowControlsOverlay] = useState(true);
 
   const videoUrl = getVideoUrl(videoKey);
+
+  // Default the subtitle track to the learner's interface language.
+  useEffect(() => {
+    if (tracks.length === 0) {
+      setActiveSubtitle(null);
+      return;
+    }
+    const preferred = tracks.find((t) => t.language === language) ?? tracks[0];
+    setActiveSubtitle(preferred.language);
+  }, [tracks, language]);
+
+  // Keep native text tracks in sync with the selected language.
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video) return;
+    const textTracks = video.textTracks;
+    for (let i = 0; i < textTracks.length; i++) {
+      const track = textTracks[i];
+      track.mode = track.language === activeSubtitle ? 'showing' : 'disabled';
+    }
+  }, [activeSubtitle, tracks]);
 
   useEffect(() => {
     const video = videoRef.current;
@@ -133,7 +162,19 @@ const VideoPlayer = ({ videoKey, className, autoPlay = false, showControls = tru
         autoPlay={autoPlay}
         className="w-full h-full object-contain"
         onClick={togglePlay}
-      />
+        crossOrigin="anonymous"
+      >
+        {tracks.map((track) => (
+          <track
+            key={track.language}
+            kind="subtitles"
+            src={track.url}
+            srcLang={track.language}
+            label={getSubtitleLabel(track.language)}
+            default={track.language === activeSubtitle}
+          />
+        ))}
+      </video>
 
       {/* Loading Overlay */}
       {isLoading && (
@@ -184,12 +225,53 @@ const VideoPlayer = ({ videoKey, className, autoPlay = false, showControls = tru
               </span>
             </div>
             
-            <button
-              onClick={toggleFullscreen}
-              className="p-2 rounded-full bg-white/10 hover:bg-white/20 transition-colors"
-            >
-              <Maximize className="h-5 w-5 text-white" />
-            </button>
+            <div className="flex items-center gap-1">
+              {tracks.length > 0 && (
+                <div className="relative">
+                  <button
+                    onClick={() => setShowSubtitleMenu((v) => !v)}
+                    className={cn(
+                      'p-2 rounded-full bg-white/10 hover:bg-white/20 transition-colors',
+                      activeSubtitle && 'bg-accent/80 hover:bg-accent',
+                    )}
+                    title="الترجمة"
+                  >
+                    <Subtitles className="h-5 w-5 text-white" />
+                  </button>
+                  {showSubtitleMenu && (
+                    <div className="absolute bottom-12 left-0 min-w-[10rem] rounded-xl bg-black/90 p-2 backdrop-blur-md">
+                      <button
+                        onClick={() => { setActiveSubtitle(null); setShowSubtitleMenu(false); }}
+                        className={cn(
+                          'block w-full text-right px-3 py-1.5 text-sm rounded-lg text-white/80 hover:bg-white/10',
+                          !activeSubtitle && 'text-accent',
+                        )}
+                      >
+                        بدون ترجمة
+                      </button>
+                      {tracks.map((track) => (
+                        <button
+                          key={track.language}
+                          onClick={() => { setActiveSubtitle(track.language); setShowSubtitleMenu(false); }}
+                          className={cn(
+                            'block w-full text-right px-3 py-1.5 text-sm rounded-lg text-white/80 hover:bg-white/10',
+                            activeSubtitle === track.language && 'text-accent',
+                          )}
+                        >
+                          {getSubtitleLabel(track.language)}
+                        </button>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              )}
+              <button
+                onClick={toggleFullscreen}
+                className="p-2 rounded-full bg-white/10 hover:bg-white/20 transition-colors"
+              >
+                <Maximize className="h-5 w-5 text-white" />
+              </button>
+            </div>
           </div>
         </div>
       )}

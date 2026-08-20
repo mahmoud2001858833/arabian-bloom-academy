@@ -447,6 +447,41 @@ export type Database = {
           },
         ]
       }
+      lesson_subtitles: {
+        Row: {
+          content: string
+          created_at: string
+          id: string
+          language: string
+          lesson_id: string
+          updated_at: string
+        }
+        Insert: {
+          content: string
+          created_at?: string
+          id?: string
+          language: string
+          lesson_id: string
+          updated_at?: string
+        }
+        Update: {
+          content?: string
+          created_at?: string
+          id?: string
+          language?: string
+          lesson_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "lesson_subtitles_lesson_id_fkey"
+            columns: ["lesson_id"]
+            isOneToOne: false
+            referencedRelation: "lessons"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       lessons: {
         Row: {
           course_id: string
@@ -463,6 +498,9 @@ export type Database = {
           is_free_preview: boolean
           order_index: number
           pdf_url: string | null
+          subtitle_error: string | null
+          subtitle_generated_at: string | null
+          subtitle_status: string
           title: string
           title_en: string | null
           title_fr: string | null
@@ -487,6 +525,9 @@ export type Database = {
           is_free_preview?: boolean
           order_index?: number
           pdf_url?: string | null
+          subtitle_error?: string | null
+          subtitle_generated_at?: string | null
+          subtitle_status?: string
           title: string
           title_en?: string | null
           title_fr?: string | null
@@ -511,6 +552,9 @@ export type Database = {
           is_free_preview?: boolean
           order_index?: number
           pdf_url?: string | null
+          subtitle_error?: string | null
+          subtitle_generated_at?: string | null
+          subtitle_status?: string
           title?: string
           title_en?: string | null
           title_fr?: string | null
