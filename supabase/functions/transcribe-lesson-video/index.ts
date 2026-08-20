@@ -143,6 +143,7 @@ Deno.serve(async (req) => {
     }
 
     const payload = await req.json();
+    const action: string = payload?.action ?? "finalize";
     lessonId = payload?.lesson_id ?? null;
     if (!lessonId) {
       return new Response(JSON.stringify({ error: "lesson_id مطلوب" }), {
@@ -151,59 +152,69 @@ Deno.serve(async (req) => {
       });
     }
 
-    const { data: lesson, error: lessonError } = await admin
-      .from("lessons")
-      .select("id, title, video_url")
-      .eq("id", lessonId)
-      .maybeSingle();
+    // --- Step 1: transcribe one audio chunk (Arabic speech -> timed text) ---
+    if (action === "transcribe_chunk") {
+      const audioBase64: string = payload?.audio_base64 ?? "";
+      const offset: number = Number(payload?.offset) || 0;
+      if (!audioBase64) {
+        return new Response(JSON.stringify({ error: "المقطع الصوتي مفقود" }), {
+          status: 400,
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        });
+      }
 
-    if (lessonError) throw lessonError;
-    if (!lesson?.video_url) {
-      return new Response(JSON.stringify({ error: "لا يوجد فيديو لهذا الدرس" }), {
-        status: 400,
+      await admin
+        .from("lessons")
+        .update({ subtitle_status: "processing", subtitle_error: null })
+        .eq("id", lessonId);
+
+      const raw = await callGateway(LOVABLE_API_KEY, {
+        model: "google/gemini-2.5-flash",
+        messages: [
+          {
+            role: "user",
+            content: [
+              {
+                type: "text",
+                text:
+                  `فرّغ الكلام العربي المنطوق في هذا التسجيل إلى نص مع التوقيتات.\n` +
+                  `أعد JSON صالحاً فقط بدون أي شرح أو أسوار كود بالشكل:\n` +
+                  `{"segments":[{"start":0,"end":4.5,"text":"..."}]}\n` +
+                  `start و end بالثواني من بداية هذا التسجيل، وكل مقطع من 3 إلى 8 ثوانٍ وجملة قصيرة مقروءة.`,
+              },
+              { type: "input_audio", input_audio: { data: audioBase64, format: "wav" } },
+            ],
+          },
+        ],
+      });
+
+      let parsedSegments: Segment[] = [];
+      try {
+        const parsed = JSON.parse(stripFence(raw));
+        parsedSegments = Array.isArray(parsed) ? parsed : (parsed.segments ?? []);
+      } catch {
+        throw new Error("تعذّر قراءة نتيجة التفريغ الصوتي");
+      }
+
+      const chunkSegments = parsedSegments
+        .map((s) => ({
+          start: (Number(s.start) || 0) + offset,
+          end: (Number(s.end) || 0) + offset,
+          text: String(s.text ?? "").trim(),
+        }))
+        .filter((s) => s.text);
+
+      return new Response(JSON.stringify({ success: true, segments: chunkSegments }), {
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
 
-    await admin
-      .from("lessons")
-      .update({ subtitle_status: "processing", subtitle_error: null })
-      .eq("id", lessonId);
-
-    const videoUrl = buildVideoUrl(lesson.video_url);
-
-    // 1) Speech to text (Arabic) with timings.
-    const transcriptRaw = await callGateway(LOVABLE_API_KEY, {
-      model: "google/gemini-2.5-flash",
-      messages: [
-        {
-          role: "user",
-          content: [
-            {
-              type: "text",
-              text:
-                `فرّغ الكلام المنطوق في هذا الفيديو التعليمي إلى نص عربي دقيق مع التوقيتات.\n` +
-                `أعد JSON صالحاً فقط بدون أي شرح أو أسوار كود، بالشكل:\n` +
-                `{"segments":[{"start":0,"end":4.5,"text":"..."}]}\n` +
-                `start و end بالثواني (أرقام)، وكل مقطع من 3 إلى 8 ثوانٍ تقريباً وجملة قصيرة مقروءة.`,
-            },
-            { type: "video_url", video_url: { url: videoUrl } },
-          ],
-        },
-      ],
-    });
-
-    let segments: Segment[] = [];
-    try {
-      const parsed = JSON.parse(stripFence(transcriptRaw));
-      segments = Array.isArray(parsed) ? parsed : (parsed.segments ?? []);
-    } catch {
-      throw new Error("تعذّر قراءة نتيجة التفريغ الصوتي");
-    }
-
-    segments = segments
-      .map((s) => ({ start: Number(s.start) || 0, end: Number(s.end) || 0, text: String(s.text ?? "") }))
-      .filter((s) => s.text.trim());
+    // --- Step 2: translate the full transcript and store the subtitle files ---
+    const incoming: Segment[] = Array.isArray(payload?.segments) ? payload.segments : [];
+    const segments: Segment[] = incoming
+      .map((s) => ({ start: Number(s.start) || 0, end: Number(s.end) || 0, text: String(s.text ?? "").trim() }))
+      .filter((s) => s.text)
+      .sort((a, b) => a.start - b.start);
 
     if (segments.length === 0) {
       throw new Error("لم يتم العثور على كلام قابل للتفريغ في الفيديو");
@@ -213,7 +224,7 @@ Deno.serve(async (req) => {
       { lesson_id: lessonId, language: "ar", content: toVtt(segments) },
     ];
 
-    // 2) Translate the segments into every supported language.
+    // Translate the transcript into every supported language.
     for (const lang of TARGET_LANGUAGES) {
       try {
         const raw = await callGateway(LOVABLE_API_KEY, {
