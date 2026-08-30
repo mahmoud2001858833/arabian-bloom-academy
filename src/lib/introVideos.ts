@@ -42,8 +42,10 @@ export const fetchIntroVideos = async (): Promise<IntroVideo[]> => {
       const parsed = JSON.parse(list);
       if (Array.isArray(parsed)) {
         return parsed
-          .map((item) => (typeof item === 'string' ? { key: item } : { key: item?.key, title: item?.title }))
-          .filter((item): item is IntroVideo => Boolean(item.key));
+          .map((item): IntroVideo =>
+            typeof item === 'string' ? { key: item } : { key: String(item?.key ?? ''), title: item?.title },
+          )
+          .filter((item) => Boolean(item.key));
       }
     } catch {
       /* fall through to legacy */
