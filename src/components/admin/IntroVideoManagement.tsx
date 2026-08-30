@@ -1,76 +1,51 @@
 import { useState, useEffect } from 'react';
-import { Video, Upload, Trash2, AlertTriangle } from 'lucide-react';
+import { Video, Upload, Trash2, AlertTriangle, ArrowUp, ArrowDown } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog';
 import DualVideoUploader from '@/components/dashboard/DualVideoUploader';
 import VideoPlayer from '@/components/dashboard/VideoPlayer';
+import { fetchIntroVideos, saveIntroVideos, type IntroVideo } from '@/lib/introVideos';
 
 const IntroVideoManagement = () => {
   const { toast } = useToast();
-  const [savedUrl, setSavedUrl] = useState('');
+  const [videos, setVideos] = useState<IntroVideo[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [showUploader, setShowUploader] = useState(false);
-  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [deleteIndex, setDeleteIndex] = useState<number | null>(null);
 
   useEffect(() => {
-    fetchIntroVideo();
+    fetchIntroVideos().then(setVideos);
   }, []);
 
-  const fetchIntroVideo = async () => {
-    const { data, error } = await supabase
-      .from('site_settings')
-      .select('value')
-      .eq('key', 'intro_video_url')
-      .single();
-
-    if (!error && data?.value) {
-      setSavedUrl(data.value);
-    }
-  };
-
-  const persistIntroVideo = async (value: string) => {
-    const timestamp = new Date().toISOString();
-    const { data: existingSetting, error: fetchError } = await supabase
-      .from('site_settings')
-      .select('id')
-      .eq('key', 'intro_video_url')
-      .maybeSingle();
-
-    if (fetchError) throw fetchError;
-
-    if (existingSetting?.id) {
-      const { error } = await supabase
-        .from('site_settings')
-        .update({ value, updated_at: timestamp })
-        .eq('id', existingSetting.id);
-      if (error) throw error;
-      return;
-    }
-
-    const { error } = await supabase
-      .from('site_settings')
-      .insert({ key: 'intro_video_url', value, updated_at: timestamp });
-    if (error) throw error;
-  };
-
-  const handleRemove = async () => {
+  const persist = async (next: IntroVideo[]) => {
     setIsLoading(true);
-    const { error } = await supabase
-      .from('site_settings')
-      .update({ value: '', updated_at: new Date().toISOString() })
-      .eq('key', 'intro_video_url');
-
-    if (error) {
-      toast({ title: 'خطأ', description: 'فشل في حذف الفيديو', variant: 'destructive' });
-    } else {
-      setSavedUrl('');
-      toast({ title: 'تم بنجاح', description: 'تم حذف الفيديو التعريفي' });
+    try {
+      await saveIntroVideos(next);
+      setVideos(next);
+      return true;
+    } catch {
+      toast({ title: 'خطأ', description: 'فشل في حفظ الفيديوهات التعريفية', variant: 'destructive' });
+      return false;
+    } finally {
+      setIsLoading(false);
     }
-    setIsLoading(false);
+  };
+
+  const move = (index: number, direction: -1 | 1) => {
+    const target = index + direction;
+    if (target < 0 || target >= videos.length) return;
+    const next = [...videos];
+    [next[index], next[target]] = [next[target], next[index]];
+    persist(next);
+  };
+
+  const rename = (index: number, title: string) => {
+    setVideos((prev) => prev.map((v, i) => (i === index ? { ...v, title } : v)));
   };
 
   return (
@@ -79,35 +54,63 @@ const IntroVideoManagement = () => {
         <CardHeader>
           <CardTitle className="flex items-center gap-2 text-foreground">
             <Video className="h-5 w-5 text-primary" />
-            الفيديو التعريفي
+            الفيديوهات التعريفية
           </CardTitle>
           <p className="text-sm text-muted-foreground">
-            ارفع الفيديو التعريفي الذي سيظهر في الصفحة الرئيسية
+            يمكنك رفع أكثر من فيديو تعريفي، وسيظهرون جميعاً في صفحة الفيديو التعريفي بالترتيب المحدد.
           </p>
         </CardHeader>
         <CardContent className="space-y-6">
-          {/* Current Video Preview */}
-          {savedUrl && (
-            <div className="space-y-3">
-              <Label className="text-foreground font-semibold">الفيديو الحالي</Label>
-              <div className="rounded-xl overflow-hidden border border-primary/10">
-                <VideoPlayer videoKey={savedUrl} />
-              </div>
-              <Button
-                variant="destructive"
-                size="sm"
-                onClick={() => setShowDeleteConfirm(true)}
-                disabled={isLoading}
-                className="rounded-xl"
-              >
-                <Trash2 className="ml-2 h-4 w-4" />
-                حذف الفيديو التعريفي
-              </Button>
+          {videos.length > 0 && (
+            <div className="space-y-5">
+              {videos.map((video, index) => (
+                <div key={video.key} className="space-y-3 rounded-2xl border border-primary/10 p-4">
+                  <div className="flex items-center justify-between gap-3">
+                    <span className="text-xs font-bold text-primary">
+                      {index === 0 ? 'الفيديو الرئيسي (يظهر بالصفحة الرئيسية)' : `فيديو رقم ${index + 1}`}
+                    </span>
+                    <div className="flex items-center gap-1">
+                      <Button variant="ghost" size="icon" disabled={index === 0 || isLoading} onClick={() => move(index, -1)}>
+                        <ArrowUp className="h-4 w-4" />
+                      </Button>
+                      <Button variant="ghost" size="icon" disabled={index === videos.length - 1 || isLoading} onClick={() => move(index, 1)}>
+                        <ArrowDown className="h-4 w-4" />
+                      </Button>
+                      <Button variant="destructive" size="icon" disabled={isLoading} onClick={() => setDeleteIndex(index)}>
+                        <Trash2 className="h-4 w-4" />
+                      </Button>
+                    </div>
+                  </div>
+
+                  <div className="rounded-xl overflow-hidden border border-primary/10">
+                    <VideoPlayer videoKey={video.key} />
+                  </div>
+
+                  <div className="flex flex-col gap-2 sm:flex-row">
+                    <Input
+                      value={video.title ?? ''}
+                      placeholder="عنوان الفيديو (اختياري)"
+                      onChange={(e) => rename(index, e.target.value)}
+                      className="rounded-xl"
+                    />
+                    <Button
+                      variant="outline"
+                      className="rounded-xl"
+                      disabled={isLoading}
+                      onClick={async () => {
+                        const ok = await persist(videos);
+                        if (ok) toast({ title: 'تم الحفظ', description: 'تم تحديث عنوان الفيديو' });
+                      }}
+                    >
+                      حفظ العنوان
+                    </Button>
+                  </div>
+                </div>
+              ))}
             </div>
           )}
 
-          {/* Delete Confirmation Dialog */}
-          <AlertDialog open={showDeleteConfirm} onOpenChange={setShowDeleteConfirm}>
+          <AlertDialog open={deleteIndex !== null} onOpenChange={(open) => !open && setDeleteIndex(null)}>
             <AlertDialogContent>
               <AlertDialogHeader>
                 <AlertDialogTitle className="flex items-center gap-2">
@@ -115,13 +118,19 @@ const IntroVideoManagement = () => {
                   تأكيد حذف الفيديو التعريفي
                 </AlertDialogTitle>
                 <AlertDialogDescription>
-                  هل أنت متأكد من حذف الفيديو التعريفي؟ سيتم إزالته من الصفحة الرئيسية.
+                  هل أنت متأكد من حذف هذا الفيديو؟ سيتم إزالته من صفحة الفيديو التعريفي.
                 </AlertDialogDescription>
               </AlertDialogHeader>
               <AlertDialogFooter className="gap-2">
                 <AlertDialogCancel>إلغاء</AlertDialogCancel>
                 <AlertDialogAction
-                  onClick={handleRemove}
+                  onClick={async () => {
+                    if (deleteIndex === null) return;
+                    const next = videos.filter((_, i) => i !== deleteIndex);
+                    setDeleteIndex(null);
+                    const ok = await persist(next);
+                    if (ok) toast({ title: 'تم بنجاح', description: 'تم حذف الفيديو التعريفي' });
+                  }}
                   className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
                 >
                   حذف
@@ -132,7 +141,7 @@ const IntroVideoManagement = () => {
 
           {/* Upload Section */}
           <div className="space-y-3">
-            <Label className="text-foreground font-semibold">رفع فيديو جديد</Label>
+            <Label className="text-foreground font-semibold">إضافة فيديو تعريفي جديد</Label>
             <Button
               variant="outline"
               onClick={() => setShowUploader(!showUploader)}
@@ -141,18 +150,13 @@ const IntroVideoManagement = () => {
               <Upload className="ml-2 h-4 w-4" />
               {showUploader ? 'إخفاء أداة الرفع' : 'رفع فيديو من جهازك'}
             </Button>
-            
+
             {showUploader && (
               <DualVideoUploader
                 onUploadComplete={async (_url, key) => {
                   setShowUploader(false);
-                  try {
-                    await persistIntroVideo(key);
-                    setSavedUrl(key);
-                    toast({ title: 'تم بنجاح', description: 'تم حفظ الفيديو التعريفي' });
-                  } catch {
-                    toast({ title: 'خطأ', description: 'فشل في حفظ الفيديو التعريفي', variant: 'destructive' });
-                  }
+                  const ok = await persist([...videos, { key, title: '' }]);
+                  if (ok) toast({ title: 'تم بنجاح', description: 'تمت إضافة الفيديو التعريفي' });
                 }}
               />
             )}
