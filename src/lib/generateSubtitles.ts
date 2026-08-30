@@ -40,6 +40,7 @@ export async function generateLessonSubtitles(
       action: 'transcribe_chunk',
       lesson_id: lessonId,
       offset: chunks[i].offset,
+      duration: chunks[i].duration,
       audio_base64: chunks[i].base64,
     });
     allSegments.push(...(result.segments ?? []));
