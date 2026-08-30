@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { useAuth } from '@/contexts/AuthContext';
 import { useLanguage } from '@/i18n/LanguageContext';
 import LanguageSwitcher from './LanguageSwitcher';
-import logoAsset from '@/assets/najat-logo-transparent.png.asset.json';
+import logoAsset from '@/assets/najat-logo.png.asset.json';
 const logo = logoAsset.url;
 
 const WHATSAPP_NUMBER = "962799431399";
