@@ -161,10 +161,15 @@ Deno.serve(async (req) => {
               {
                 type: "text",
                 text:
-                  `فرّغ الكلام العربي المنطوق في هذا التسجيل إلى نص مع التوقيتات.\n` +
+                  `فرّغ الكلام العربي المنطوق في هذا التسجيل إلى نص مع التوقيتات الدقيقة.\n` +
+                  `مدة التسجيل بالثواني: ${Number(payload?.duration) || 0}.\n` +
                   `أعد JSON صالحاً فقط بدون أي شرح أو أسوار كود بالشكل:\n` +
                   `{"segments":[{"start":0,"end":4.5,"text":"..."}]}\n` +
-                  `start و end بالثواني من بداية هذا التسجيل، وكل مقطع من 3 إلى 8 ثوانٍ وجملة قصيرة مقروءة.`,
+                  `قواعد صارمة: start و end بالثواني من بداية هذا التسجيل تحديداً، ` +
+                  `ويجب أن يكون start مساوياً للحظة نطق أول كلمة في المقطع (لا قبلها)، ` +
+                  `و end لحظة انتهاء آخر كلمة. التوقيتات تصاعدية ولا تتداخل، ` +
+                  `وآخر end لا يتجاوز مدة التسجيل. كل مقطع من 3 إلى 8 ثوانٍ وجملة قصيرة مقروءة. ` +
+                  `لا تضغط التوقيتات في بداية التسجيل، وزّعها على كامل المدة حسب الصوت الفعلي.`,
               },
               { type: "input_audio", input_audio: { data: audioBase64, format: "wav" } },
             ],
@@ -180,18 +185,50 @@ Deno.serve(async (req) => {
         throw new Error("تعذّر قراءة نتيجة التفريغ الصوتي");
       }
 
-      const chunkSegments = parsedSegments
+      const duration = Number(payload?.duration) || 0;
+
+      // Clean, then repair the model's timings so the text stays glued to the audio.
+      let local = parsedSegments
         .map((s) => ({
-          start: (Number(s.start) || 0) + offset,
-          end: (Number(s.end) || 0) + offset,
+          start: Math.max(0, Number(s.start) || 0),
+          end: Math.max(0, Number(s.end) || 0),
           text: String(s.text ?? "").trim(),
         }))
-        .filter((s) => s.text);
+        .filter((s) => s.text)
+        .sort((a, b) => a.start - b.start);
+
+      if (local.length > 0 && duration > 0) {
+        const maxEnd = Math.max(...local.map((s) => s.end || s.start));
+        // The model often compresses (subtitles run ahead of the voice) or
+        // overshoots the clip; rescale linearly onto the real chunk duration.
+        if (maxEnd > 0 && (maxEnd < duration * 0.9 || maxEnd > duration * 1.02)) {
+          const scale = duration / maxEnd;
+          local = local.map((s) => ({ ...s, start: s.start * scale, end: s.end * scale }));
+        }
+      }
+
+      // Enforce monotonic, non-overlapping, readable cues.
+      let prevEnd = 0;
+      local = local.map((s) => {
+        const start = Math.max(s.start, prevEnd);
+        let end = s.end > start ? s.end : start + 2.5;
+        if (duration > 0) end = Math.min(end, duration);
+        if (end <= start) end = start + 1.2;
+        prevEnd = end;
+        return { start, end, text: s.text };
+      });
+
+      const chunkSegments = local.map((s) => ({
+        start: s.start + offset,
+        end: s.end + offset,
+        text: s.text,
+      }));
 
       return new Response(JSON.stringify({ success: true, segments: chunkSegments }), {
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
+
 
     // --- Step 2: translate the full transcript and store the subtitle files ---
     const incoming: Segment[] = Array.isArray(payload?.segments) ? payload.segments : [];
