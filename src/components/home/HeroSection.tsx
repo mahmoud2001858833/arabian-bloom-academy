@@ -4,7 +4,9 @@ import { BookOpen, Play } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useLanguage } from '@/i18n/LanguageContext';
 import { supabase } from '@/integrations/supabase/client';
-import heroLogo from '@/assets/new-logo.png';
+import heroLogoAsset from '@/assets/najat-logo.png.asset.json';
+
+const heroLogo = heroLogoAsset.url;
 
 const HeroSection = () => {
   const { t } = useLanguage();
