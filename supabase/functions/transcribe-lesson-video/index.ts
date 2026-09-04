@@ -46,7 +46,80 @@ function toVtt(segments: Segment[]): string {
   return `WEBVTT\n\n${body}\n`;
 }
 
+const GOOGLE_MODEL = "gemini-2.5-flash";
+
+type OaiMessage = {
+  role: string;
+  content: string | Array<Record<string, any>>;
+};
+
+/** Calls Google Generative Language API directly with the user's own API key. */
+async function callGoogle(apiKey: string, body: any): Promise<string> {
+  const messages: OaiMessage[] = body?.messages ?? [];
+  let systemInstruction: unknown = undefined;
+  const contents: unknown[] = [];
+
+  for (const msg of messages) {
+    const parts: unknown[] = [];
+    if (typeof msg.content === "string") {
+      parts.push({ text: msg.content });
+    } else {
+      for (const part of msg.content) {
+        if (part.type === "text") parts.push({ text: part.text });
+        else if (part.type === "input_audio") {
+          parts.push({
+            inline_data: {
+              mime_type: `audio/${part.input_audio?.format ?? "wav"}`,
+              data: part.input_audio?.data,
+            },
+          });
+        }
+      }
+    }
+    if (msg.role === "system") systemInstruction = { parts };
+    else contents.push({ role: "user", parts });
+  }
+
+  const url =
+    `https://generativelanguage.googleapis.com/v1beta/models/${GOOGLE_MODEL}:generateContent?key=${apiKey}`;
+
+  let attempt = 0;
+  while (true) {
+    const res = await fetch(url, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        contents,
+        ...(systemInstruction ? { systemInstruction } : {}),
+        generationConfig: { temperature: 0.2 },
+      }),
+    });
+
+    if (res.ok) {
+      const data = await res.json();
+      const parts = data?.candidates?.[0]?.content?.parts ?? [];
+      return parts.map((p: { text?: string }) => p.text ?? "").join("").trim();
+    }
+
+    const errorText = await res.text();
+    console.error(`Google AI error [${res.status}]: ${errorText}`);
+
+    if (res.status === 429 || res.status >= 500) {
+      attempt++;
+      if (attempt > 3) throw new Error(`[${res.status}]: ${errorText}`);
+      await new Promise((r) => setTimeout(r, Math.min(20000, 2000 * 2 ** (attempt - 1))));
+      continue;
+    }
+
+    throw new Error(`[${res.status}]: ${errorText}`);
+  }
+}
+
 async function callGateway(apiKey: string, body: unknown): Promise<string> {
+  // Prefer the project's own Google AI key when available.
+  const googleKey = Deno.env.get("GOOGLE_API_KEY") ?? Deno.env.get("GEMINI_API_KEY");
+  if (googleKey) return callGoogle(googleKey, body);
+
   let attempt = 0;
   // Only 429 / 5xx are retryable, with bounded backoff.
   while (true) {
