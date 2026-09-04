@@ -299,8 +299,23 @@ Deno.serve(async (req) => {
       { headers: { ...corsHeaders, "Content-Type": "application/json" } },
     );
   } catch (error) {
-    const message = error instanceof Error ? error.message : String(error);
-    console.error("transcribe-lesson-video failed:", message);
+    const raw = error instanceof Error ? error.message : String(error);
+    console.error("transcribe-lesson-video failed:", raw);
+
+    // Map AI gateway billing/policy errors to a clear, user-facing message.
+    let status = 500;
+    let message = raw;
+    if (raw.startsWith("[402]")) {
+      status = 402;
+      message = "لا يوجد رصيد كافٍ للذكاء الاصطناعي. يرجى شحن رصيد المنصة ثم إعادة المحاولة.";
+    } else if (raw.startsWith("[403]")) {
+      status = 403;
+      message = "خدمة الذكاء الاصطناعي غير مفعّلة أو تم بلوغ حد الاستخدام.";
+    } else if (raw.startsWith("[429]")) {
+      status = 429;
+      message = "تم تجاوز حد الطلبات مؤقتاً. يرجى المحاولة بعد قليل.";
+    }
+
     if (lessonId) {
       await admin
         .from("lessons")
@@ -308,7 +323,7 @@ Deno.serve(async (req) => {
         .eq("id", lessonId);
     }
     return new Response(JSON.stringify({ error: message }), {
-      status: 500,
+      status,
       headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
   }
