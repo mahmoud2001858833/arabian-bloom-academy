@@ -169,8 +169,9 @@ Deno.serve(async (req) => {
   let lessonId: string | null = null;
 
   try {
-    const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
-    if (!LOVABLE_API_KEY) {
+    const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY") ?? "";
+    const HAS_AI_KEY = !!(Deno.env.get("GOOGLE_API_KEY") ?? Deno.env.get("GEMINI_API_KEY") ?? LOVABLE_API_KEY);
+    if (!HAS_AI_KEY) {
       return new Response(
         JSON.stringify({ error: "خدمة الذكاء الاصطناعي غير مهيأة" }),
         { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } },
