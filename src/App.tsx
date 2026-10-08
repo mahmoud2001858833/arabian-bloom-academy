@@ -29,6 +29,7 @@ import Offers from "./pages/Offers";
 import Books from "./pages/Books";
 import PaymentSuccess from "./pages/PaymentSuccess";
 import BookPaymentSuccess from "./pages/BookPaymentSuccess";
+import AdsAdvisor from "./pages/AdsAdvisor";
 
 // Create query client instance
 const queryClient = new QueryClient({
@@ -63,6 +64,8 @@ function App() {
                 <Route path="/blog/:postId" element={<BlogDetails />} />
                 <Route path="/dashboard" element={<Dashboard />} />
                 <Route path="/admin" element={<Admin />} />
+                <Route path="/admin/ads-advisor" element={<AdsAdvisor />} />
+                <Route path="/admin/ads-advisor/:threadId" element={<AdsAdvisor />} />
                 <Route path="/exams" element={<Exams />} />
                 <Route path="/exams/:examId" element={<ExamTake />} />
                 <Route path="/privacy" element={<Privacy />} />

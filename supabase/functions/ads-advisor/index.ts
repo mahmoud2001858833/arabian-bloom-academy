@@ -1,6 +1,6 @@
 import { createClient } from "npm:@supabase/supabase-js@2";
-import { createGoogleGenerativeAI } from "npm:@ai-sdk/google@2";
-import { convertToModelMessages, streamText, type UIMessage } from "npm:ai@5";
+import { createGoogleGenerativeAI } from "npm:@ai-sdk/google";
+import { convertToModelMessages, streamText, type UIMessage } from "npm:ai@7";
 import { z } from "npm:zod@3";
 
 const corsHeaders = {
@@ -145,7 +145,7 @@ Deno.serve(async (req) => {
     const result = streamText({
       model: google("gemini-2.5-flash"),
       system: SYSTEM_PROMPT(snapshot),
-      messages: convertToModelMessages(messages),
+      messages: await convertToModelMessages(messages),
       tools: { google_search: google.tools.googleSearch({}) },
       abortSignal: req.signal,
     });

@@ -895,6 +895,10 @@ const Admin = () => {
                 <FileText className="h-4 w-4" />
                 الكتب
               </TabsTrigger>
+              <button type="button" onClick={() => navigate('/admin/ads-advisor')} className="inline-flex items-center gap-2 text-sm font-medium text-foreground/70 hover:bg-accent/15 rounded-lg px-4 py-2">
+                <TrendingUp className="h-4 w-4" />
+                الذكاء الاصطناعي للإعلانات
+              </button>
             </TabsList>
 
             {/* Courses Tab */}
