@@ -23,3 +23,6 @@ verify_jwt = false
 
 [functions.transcribe-lesson-video]
 verify_jwt = false
+
+[functions.ads-advisor]
+verify_jwt = false
