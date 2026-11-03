@@ -257,6 +257,7 @@ export type Database = {
       }
       courses: {
         Row: {
+          access_duration_days: number | null
           created_at: string
           currency: string
           description: string | null
@@ -281,6 +282,7 @@ export type Database = {
           updated_at: string
         }
         Insert: {
+          access_duration_days?: number | null
           created_at?: string
           currency?: string
           description?: string | null
@@ -305,6 +307,7 @@ export type Database = {
           updated_at?: string
         }
         Update: {
+          access_duration_days?: number | null
           created_at?: string
           currency?: string
           description?: string | null
@@ -335,6 +338,7 @@ export type Database = {
           completed_at: string | null
           course_id: string
           enrolled_at: string
+          expires_at: string | null
           id: string
           user_id: string
         }
@@ -342,6 +346,7 @@ export type Database = {
           completed_at?: string | null
           course_id: string
           enrolled_at?: string
+          expires_at?: string | null
           id?: string
           user_id: string
         }
@@ -349,6 +354,7 @@ export type Database = {
           completed_at?: string | null
           course_id?: string
           enrolled_at?: string
+          expires_at?: string | null
           id?: string
           user_id?: string
         }
