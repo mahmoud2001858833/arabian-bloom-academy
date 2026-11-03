@@ -69,6 +69,8 @@ const CourseDetails = () => {
   const [lessons, setLessons] = useState<Lesson[]>([]);
   const [progress, setProgress] = useState<LessonProgress[]>([]);
   const [isEnrolled, setIsEnrolled] = useState(false);
+  const [isExpired, setIsExpired] = useState(false);
+  const [enrollmentExpiresAt, setEnrollmentExpiresAt] = useState<string | null>(null);
   const [selectedLesson, setSelectedLesson] = useState<Lesson | null>(null);
   const [loading, setLoading] = useState(true);
   const [enrolling, setEnrolling] = useState(false);
@@ -116,12 +118,16 @@ const CourseDetails = () => {
       if (user) {
         const { data: enrollmentData } = await supabase
           .from('enrollments')
-          .select('id')
+          .select('id, expires_at')
           .eq('course_id', courseId)
           .eq('user_id', user.id)
           .maybeSingle();
 
-        setIsEnrolled(!!enrollmentData);
+        const expiresAt = enrollmentData?.expires_at ?? null;
+        const expired = !!expiresAt && new Date(expiresAt).getTime() <= Date.now();
+        setEnrollmentExpiresAt(expiresAt);
+        setIsExpired(!!enrollmentData && expired);
+        setIsEnrolled(!!enrollmentData && !expired);
 
         if (enrollmentData) {
           const { data: progressData } = await supabase
@@ -166,6 +172,7 @@ const CourseDetails = () => {
       if (error) throw error;
 
       setIsEnrolled(true);
+      setIsExpired(false);
       toast.success(t('courseDetails.enrollSuccess'));
     } catch (error) {
       console.error('Error enrolling:', error);
@@ -458,8 +465,19 @@ const CourseDetails = () => {
                   <CardTitle className="text-lg">{getLocalizedField(course, 'title', language)}</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
+                  {(course as any).access_duration_days > 0 && (
+                    <p className="text-sm text-muted-foreground">
+                      {language === 'ar' ? 'مدة الاشتراك: ' : 'Subscription: '}
+                      {formatDuration((course as any).access_duration_days, language)}
+                    </p>
+                  )}
                   {!isEnrolled ? (
                     <div className="space-y-3">
+                      {isExpired && (
+                        <p className="text-sm text-center text-destructive font-medium">
+                          {language === 'ar' ? 'انتهت مدة اشتراكك في هذا الكورس، جدّد الاشتراك للمتابعة' : 'Your subscription to this course has expired. Renew to continue.'}
+                        </p>
+                      )}
                       <Button 
                         onClick={handleEnroll} 
                         className="w-full gap-2"
@@ -477,6 +495,12 @@ const CourseDetails = () => {
                     </div>
                   ) : (
                     <div className="space-y-3">
+                      {enrollmentExpiresAt && (
+                        <p className="text-xs text-muted-foreground">
+                          {language === 'ar' ? 'ينتهي اشتراكك في: ' : 'Access until: '}
+                          {new Date(enrollmentExpiresAt).toLocaleDateString(language === 'ar' ? 'ar' : 'en')}
+                        </p>
+                      )}
                       <div className="flex items-center justify-between text-sm">
                         <span>{t('dashboard.progress')}</span>
                         <span className="text-accent font-medium">
@@ -600,3 +624,10 @@ const CourseDetails = () => {
 };
 
 export default CourseDetails;
+
+function formatDuration(days: number, language: string) {
+  const ar = language === 'ar';
+  if (days % 365 === 0) { const n = days / 365; return ar ? (n === 1 ? 'سنة' : `${n} سنوات`) : `${n} year${n > 1 ? 's' : ''}`; }
+  if (days % 30 === 0) { const n = days / 30; return ar ? (n === 1 ? 'شهر' : `${n} أشهر`) : `${n} month${n > 1 ? 's' : ''}`; }
+  return ar ? `${days} يوم` : `${days} days`;
+}

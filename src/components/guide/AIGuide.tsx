@@ -139,7 +139,7 @@ const AIGuide = () => {
       {/* Floating Button */}
       <motion.button
         onClick={() => setIsOpen(true)}
-        className="fixed bottom-6 right-6 z-50 w-14 h-14 bg-gradient-to-br from-primary to-accent rounded-full shadow-lg shadow-primary/30 flex items-center justify-center text-white hover:scale-110 transition-transform"
+        className="fixed bottom-6 left-6 z-50 w-14 h-14 bg-gradient-to-br from-primary to-accent rounded-full shadow-lg shadow-primary/30 flex items-center justify-center text-white hover:scale-110 transition-transform"
         whileHover={{ scale: 1.1 }}
         whileTap={{ scale: 0.95 }}
         initial={{ opacity: 0, y: 20 }}
@@ -155,7 +155,7 @@ const AIGuide = () => {
             initial={{ opacity: 0, scale: 0.9, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.9, y: 20 }}
-            className="fixed bottom-24 right-6 z-50 w-[360px] h-[500px] bg-background/95 backdrop-blur-xl border border-primary/20 rounded-3xl shadow-2xl shadow-primary/20 flex flex-col overflow-hidden"
+            className="fixed bottom-24 left-6 z-50 w-[360px] h-[500px] bg-background/95 backdrop-blur-xl border border-primary/20 rounded-3xl shadow-2xl shadow-primary/20 flex flex-col overflow-hidden"
           >
             {/* Header */}
             <div className="p-4 bg-gradient-to-r from-primary to-accent text-white flex items-center justify-between">
