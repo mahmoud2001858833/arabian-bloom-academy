@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom';
 import { ArrowUp, Mail } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useLanguage } from '@/i18n/LanguageContext';
-import logo from '@/assets/new-logo.png';
+const logo = 'https://jysmsvdjablmirloluiy.supabase.co/storage/v1/object/public/offer-images/site/footer-logo.png';
 
 const Footer = () => {
   const { t, language } = useLanguage();
@@ -38,7 +38,7 @@ const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
           {/* Logo & Description */}
           <div className="space-y-6">
-            <img src={logo} alt={t('footer.platformName')} className="h-24 w-auto" />
+            <img src={logo} alt={t('footer.platformName')} className="h-32 w-32 object-contain" />
             <p className="text-white/70 leading-relaxed">
               {t('footer.description')}
             </p>
