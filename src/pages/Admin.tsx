@@ -1171,7 +1171,7 @@ const Admin = () => {
               <div className="grid grid-cols-2 gap-3">
                 <Select
                   value={[0, 30, 90, 180, 365].includes(courseForm.access_duration_days) ? String(courseForm.access_duration_days) : 'custom'}
-                  onValueChange={(v) => setCourseForm({ ...courseForm, access_duration_days: v === 'custom' ? (courseForm.access_duration_days || 60) : Number(v) })}
+                  onValueChange={(v) => setCourseForm({ ...courseForm, access_duration_days: v === 'custom' ? 60 : Number(v) })}
                 >
                   <SelectTrigger><SelectValue /></SelectTrigger>
                   <SelectContent>
