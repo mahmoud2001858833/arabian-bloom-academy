@@ -120,6 +120,7 @@ const Admin = () => {
     is_published: true,
     currency: 'USD',
     sort_order: 0,
+    access_duration_days: 0,
     title_en: '', title_fr: '', title_ms: '', title_ur: '', title_id: '',
     description_en: '', description_fr: '', description_ms: '', description_ur: '', description_id: '',
   });
@@ -343,6 +344,7 @@ const Admin = () => {
       is_published: courseForm.is_published,
       currency: courseForm.currency,
       sort_order: courseForm.sort_order,
+      access_duration_days: courseForm.access_duration_days > 0 ? courseForm.access_duration_days : null,
       title_en: courseForm.title_en || null, title_fr: courseForm.title_fr || null,
       title_ms: courseForm.title_ms || null, title_ur: courseForm.title_ur || null, title_id: courseForm.title_id || null,
       description_en: courseForm.description_en || null, description_fr: courseForm.description_fr || null,
@@ -481,6 +483,7 @@ const Admin = () => {
       is_published: course.is_published,
       currency: course.currency || 'USD',
       sort_order: course.sort_order || 0,
+      access_duration_days: course.access_duration_days || 0,
       title_en: course.title_en || '', title_fr: course.title_fr || '', title_ms: course.title_ms || '',
       title_ur: course.title_ur || '', title_id: course.title_id || '',
       description_en: course.description_en || '', description_fr: course.description_fr || '', description_ms: course.description_ms || '',
@@ -492,7 +495,7 @@ const Admin = () => {
   const openNewCourse = () => {
     setCourseForm({
       id: '', title: '', description: '', thumbnail_url: '', price: 0, is_free: true, level: 'beginner', is_published: true,
-      currency: 'USD', sort_order: courses.length,
+      currency: 'USD', sort_order: courses.length, access_duration_days: 0,
       ...i18nFields,
     });
     setShowCourseDialog(true);
@@ -1163,6 +1166,36 @@ const Admin = () => {
               </div>
             </div>
             
+            <div className="space-y-2">
+              <Label>مدة الاشتراك</Label>
+              <div className="grid grid-cols-2 gap-3">
+                <Select
+                  value={[0, 30, 90, 180, 365].includes(courseForm.access_duration_days) ? String(courseForm.access_duration_days) : 'custom'}
+                  onValueChange={(v) => setCourseForm({ ...courseForm, access_duration_days: v === 'custom' ? (courseForm.access_duration_days || 60) : Number(v) })}
+                >
+                  <SelectTrigger><SelectValue /></SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="0">مدى الحياة (بدون انتهاء)</SelectItem>
+                    <SelectItem value="30">شهر</SelectItem>
+                    <SelectItem value="90">3 أشهر</SelectItem>
+                    <SelectItem value="180">6 أشهر</SelectItem>
+                    <SelectItem value="365">سنة</SelectItem>
+                    <SelectItem value="custom">مدة مخصصة (بالأيام)</SelectItem>
+                  </SelectContent>
+                </Select>
+                {![0, 30, 90, 180, 365].includes(courseForm.access_duration_days) && (
+                  <Input
+                    type="number"
+                    min={1}
+                    value={courseForm.access_duration_days}
+                    onChange={(e) => setCourseForm({ ...courseForm, access_duration_days: Math.max(1, Number(e.target.value) || 1) })}
+                    placeholder="عدد الأيام"
+                  />
+                )}
+              </div>
+              <p className="text-xs text-muted-foreground">يبدأ العد من تاريخ اشتراك الطالب، وبعد انتهاء المدة يُقفل الكورس حتى يجدد الاشتراك.</p>
+            </div>
+
             <div className="flex items-center justify-between gap-4 p-4 rounded-xl bg-muted/50">
               <div className="flex items-center gap-3">
                 <Switch
