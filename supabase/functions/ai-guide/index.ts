@@ -1,5 +1,5 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
-import { aiEndpoint } from "../_shared/ai.ts";
+import { aiEndpoint, fetchAiChat } from "../_shared/ai.ts";
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -65,8 +65,7 @@ serve(async (req) => {
 
     console.log("Calling Lovable AI Gateway...");
 
-    const response = await fetch(
-      ai.url,
+    const response = await fetchAiChat(ai,
       {
         method: 'POST',
         headers: {

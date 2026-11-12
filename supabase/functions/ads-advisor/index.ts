@@ -143,7 +143,7 @@ Deno.serve(async (req) => {
     const google = createGoogleGenerativeAI({ apiKey });
 
     const result = streamText({
-      model: google("gemini-2.5-flash-lite"),
+      model: google("gemini-3.5-flash-lite"),
       system: SYSTEM_PROMPT(snapshot),
       messages: await convertToModelMessages(messages),
       tools: { google_search: google.tools.googleSearch({}) },

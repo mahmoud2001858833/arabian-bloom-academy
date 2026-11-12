@@ -1,5 +1,5 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
-import { aiEndpoint } from "../_shared/ai.ts";
+import { aiEndpoint, fetchAiChat } from "../_shared/ai.ts";
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -50,7 +50,7 @@ OUTPUT FORMAT:
 ${LANGUAGES.map(lang => `  "${lang.code}": { "title": "translated title in ${lang.name}"${description ? `, "description": "translated description in ${lang.name}"` : ''} }`).join(',\n')}
 }`;
 
-    const response = await fetch(ai.url, {
+    const response = await fetchAiChat(ai, {
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${ai.apiKey}`,

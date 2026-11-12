@@ -46,7 +46,8 @@ function toVtt(segments: Segment[]): string {
   return `WEBVTT\n\n${body}\n`;
 }
 
-const GOOGLE_MODEL = "gemini-2.5-flash-lite";
+// gemini-2.5-flash-lite is closed to new Google accounts: try 3.1, then 3.5.
+const GOOGLE_MODELS = ["gemini-3.1-flash-lite", "gemini-3.5-flash-lite"];
 
 type OaiMessage = {
   role: string;
@@ -80,12 +81,13 @@ async function callGoogle(apiKey: string, body: any): Promise<string> {
     else contents.push({ role: "user", parts });
   }
 
-  const url =
-    `https://generativelanguage.googleapis.com/v1beta/models/${GOOGLE_MODEL}:generateContent?key=${apiKey}`;
+  let modelIndex = 0;
+  const urlFor = (i: number) =>
+    `https://generativelanguage.googleapis.com/v1beta/models/${GOOGLE_MODELS[i]}:generateContent?key=${apiKey}`;
 
   let attempt = 0;
   while (true) {
-    const res = await fetch(url, {
+    const res = await fetch(urlFor(modelIndex), {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -103,6 +105,12 @@ async function callGoogle(apiKey: string, body: any): Promise<string> {
 
     const errorText = await res.text();
     console.error(`Google AI error [${res.status}]: ${errorText}`);
+
+    // Model not available for this key: move to the next model without counting it as a retry.
+    if (res.status === 404 && modelIndex < GOOGLE_MODELS.length - 1) {
+      modelIndex++;
+      continue;
+    }
 
     if (res.status === 429 || res.status >= 500) {
       attempt++;
