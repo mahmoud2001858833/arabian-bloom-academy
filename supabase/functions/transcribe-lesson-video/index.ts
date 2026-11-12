@@ -46,7 +46,7 @@ function toVtt(segments: Segment[]): string {
   return `WEBVTT\n\n${body}\n`;
 }
 
-const GOOGLE_MODEL = "gemini-2.5-flash";
+const GOOGLE_MODEL = "gemini-2.5-flash-lite";
 
 type OaiMessage = {
   role: string;
@@ -227,7 +227,7 @@ Deno.serve(async (req) => {
         .eq("id", lessonId);
 
       const raw = await callGateway(LOVABLE_API_KEY, {
-        model: "google/gemini-2.5-flash",
+        model: "google/gemini-2.5-flash-lite",
         messages: [
           {
             role: "user",
@@ -323,7 +323,7 @@ Deno.serve(async (req) => {
     for (const lang of TARGET_LANGUAGES) {
       try {
         const raw = await callGateway(LOVABLE_API_KEY, {
-          model: "google/gemini-2.5-flash",
+          model: "google/gemini-2.5-flash-lite",
           messages: [
             {
               role: "system",

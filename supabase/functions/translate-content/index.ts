@@ -1,4 +1,5 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+import { aiEndpoint } from "../_shared/ai.ts";
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -28,8 +29,8 @@ serve(async (req) => {
       );
     }
 
-    const LOVABLE_API_KEY = Deno.env.get('LOVABLE_API_KEY');
-    if (!LOVABLE_API_KEY) {
+    const ai = aiEndpoint();
+    if (!ai) {
       return new Response(
         JSON.stringify({ error: 'Translation service not configured' }),
         { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
@@ -49,14 +50,14 @@ OUTPUT FORMAT:
 ${LANGUAGES.map(lang => `  "${lang.code}": { "title": "translated title in ${lang.name}"${description ? `, "description": "translated description in ${lang.name}"` : ''} }`).join(',\n')}
 }`;
 
-    const response = await fetch('https://ai.gateway.lovable.dev/v1/chat/completions', {
+    const response = await fetch(ai.url, {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer ${LOVABLE_API_KEY}`,
+        'Authorization': `Bearer ${ai.apiKey}`,
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        model: 'google/gemini-2.5-flash-lite',
+        model: ai.model,
         messages: [
           { role: 'system', content: 'You are a professional translator. Always respond with valid JSON only.' },
           { role: 'user', content: prompt }

@@ -121,7 +121,7 @@ Deno.serve(async (req) => {
     const { data: thread } = await admin.from("ad_advisor_threads").select("id, title, user_id").eq("id", threadId).maybeSingle();
     if (!thread || thread.user_id !== userId) return json({ error: "المحادثة غير موجودة" }, 404);
 
-    const apiKey = Deno.env.get("GOOGLE_API_KEY");
+    const apiKey = Deno.env.get("GEMINI_API_KEY") ?? Deno.env.get("GOOGLE_API_KEY");
     if (!apiKey) return json({ error: "مفتاح الذكاء الاصطناعي غير مضبوط" }, 500);
 
     // Save the latest user message
@@ -143,7 +143,7 @@ Deno.serve(async (req) => {
     const google = createGoogleGenerativeAI({ apiKey });
 
     const result = streamText({
-      model: google("gemini-2.5-flash"),
+      model: google("gemini-2.5-flash-lite"),
       system: SYSTEM_PROMPT(snapshot),
       messages: await convertToModelMessages(messages),
       tools: { google_search: google.tools.googleSearch({}) },
